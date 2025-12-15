@@ -2,7 +2,7 @@
 -- 계정등록 권한
 ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 
--- madang 계정 생성
+-- przo 계정 생성
 create user przo IDENTIFIED BY 12345;
 
 -- 등록할 수 있는 권한
