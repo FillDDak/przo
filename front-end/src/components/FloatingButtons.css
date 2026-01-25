@@ -35,6 +35,14 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
+.floating-btn--kakao {
+  border-radius: 32px 32px 0 0;
+}
+
+.floating-btn--top {
+  border-radius: 0 0 32px 32px;
+}
+
 /* 버튼 사이 구분선 */
 .floating-btn::after {
   content: "";
@@ -142,19 +150,27 @@
 }
 
 .phone-tooltip__copy-btn {
-  background: linear-gradient(90deg, #51C488 0%, #78FFB5 100%);
-  color: #fff;
+  background: transparent;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 0;
   cursor: pointer;
   transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
 .phone-tooltip__copy-btn:hover {
-  opacity: 0.85;
+  opacity: 0.7;
+}
+
+.phone-tooltip__copy-icon {
+  width: 24px;
+  height: 24px;
+  filter: invert(58%) sepia(65%) saturate(432%) hue-rotate(103deg) brightness(92%) contrast(87%);
 }
 
 /* 반응형 */
@@ -167,6 +183,14 @@
   .floating-btn {
     width: 48px;
     height: 48px;
+  }
+
+  .floating-btn--kakao {
+    border-radius: 28px 28px 0 0;
+  }
+
+  .floating-btn--top {
+    border-radius: 0 0 28px 28px;
   }
 
   .floating-btn__icon {

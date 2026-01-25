@@ -6,11 +6,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+    host: true,
+    allowedHosts: [
+      'nonviolative-superfluous-cris.ngrok-free.dev'
+    ],
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
       }
-    }
+    },
   }
 })
