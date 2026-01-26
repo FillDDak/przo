@@ -1,10 +1,22 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Header.css";
 import logoWhite from "../assets/przo-logo-white.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -15,7 +27,7 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
+    <header className={`header ${isScrolled ? "header--scrolled" : ""}`}>
       <div className="header__container">
         <Link to="/" className="header__logo">
           <img src={logoWhite} alt="PRZO" />

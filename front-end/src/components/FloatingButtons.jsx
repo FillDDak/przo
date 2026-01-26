@@ -10,6 +10,7 @@ const PHONE_NUMBER = "1670-2335";
 
 const FloatingButtons = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const tooltipRef = useRef(null);
   const phoneButtonRef = useRef(null);
 
@@ -57,7 +58,10 @@ const FloatingButtons = () => {
 
   const handleCopyNumber = () => {
     navigator.clipboard.writeText(PHONE_NUMBER.replace(/-/g, ""));
-    alert("전화번호가 복사되었습니다.");
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1500);
   };
 
   const handleScrollTop = () => {
@@ -111,6 +115,7 @@ const FloatingButtons = () => {
                   className="phone-tooltip__copy-icon"
                 />
               </button>
+              {isCopied && <span className="phone-tooltip__copied">복사됨!</span>}
             </div>
           )}
         </div>
