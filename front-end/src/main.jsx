@@ -7,7 +7,7 @@ import "./index.css";
 import MainLayout from "./layouts/MainLayout";
 
 // 페이지
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
