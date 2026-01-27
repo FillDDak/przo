@@ -12,8 +12,7 @@
 .footer__top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
+  align-items: flex-start;
 }
 
 .footer__left {
@@ -52,7 +51,7 @@
 
 .footer__nav {
   display: flex;
-  gap: 25px;
+  gap: 0;
   align-items: center;
 }
 
@@ -61,34 +60,39 @@
   text-decoration: none;
   font-size: 14px;
   white-space: nowrap;
+  padding: 0 12px;
+  position: relative;
+}
+
+.footer__nav a:first-child {
+  padding-left: 0;
+}
+
+.footer__nav a:last-child {
+  padding-right: 0;
+}
+
+.footer__nav a:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 10px;
+  background-color: #ddd;
 }
 
 .footer__nav a:hover {
   color: #4caf50;
 }
 
-.footer__contact {
-  text-align: right;
-}
-
-.footer__tel {
-  font-size: 18px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 3px;
-}
-
-.footer__tel-sub {
-  font-size: 13px;
-  color: #666;
-}
-
-.footer__bottom {
+.footer__center {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  padding-top: 20px;
-  border-top: 1px solid #e5e5e5;
+  align-self: stretch;
 }
 
 .footer__copyright {
@@ -96,24 +100,60 @@
   font-size: 12px;
 }
 
+.footer__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.footer__tel-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.footer__tel {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.footer__tel-sub {
+  font-size: 14px;
+  color: #111111;
+}
+
 .footer__info {
   display: flex;
-  gap: 0;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+
+.footer__info-row {
+  display: flex;
   align-items: center;
 }
 
-.footer__info span {
+.footer__info-row span {
   color: #666;
   font-size: 12px;
-  padding: 0 12px;
+  padding: 0 10px;
   position: relative;
+  line-height: 2;
+  white-space: nowrap;
 }
 
-.footer__info span:first-child {
+.footer__info-row span:last-child {
+  padding-right: 0;
+}
+
+.footer__info-row span:first-child {
   padding-left: 0;
 }
 
-.footer__info span:not(:last-child)::after {
+.footer__info-row span:not(:last-child)::after {
   content: "";
   position: absolute;
   right: 0;
@@ -136,12 +176,9 @@
     padding: 30px 60px;
   }
 
-  .footer__nav {
-    gap: 15px;
-  }
-
   .footer__nav a {
     font-size: 13px;
+    padding: 0 10px;
   }
 }
 
@@ -152,33 +189,39 @@
 
   .footer__top {
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 25px;
+    align-items: flex-start;
+  }
+
+  .footer__center {
+    order: 3;
+    width: 100%;
+    align-items: flex-start;
+    padding-top: 0;
   }
 
   .footer__nav {
-    order: 3;
-    width: 100%;
     justify-content: flex-start;
   }
 
-  .footer__contact {
-    text-align: left;
+  .footer__nav a:first-child {
+    padding-left: 0;
   }
 
-  .footer__bottom {
-    flex-direction: column;
+  .footer__right {
     align-items: flex-start;
-    gap: 15px;
   }
 
-  .footer__info {
-    flex-wrap: wrap;
-  }
 }
 
 @media (max-width: 768px) {
   .footer__container {
     padding: 25px 20px;
+  }
+
+  .footer__top {
+    flex-direction: column;
+    gap: 25px;
   }
 
   .footer__left {
@@ -187,23 +230,51 @@
     gap: 12px;
   }
 
+  .footer__center {
+    align-items: flex-start;
+    padding-top: 0;
+  }
+
   .footer__nav {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 
-  .footer__info {
+  .footer__nav a {
+    padding: 0;
+  }
+
+  .footer__nav a:not(:last-child)::after {
+    display: none;
+  }
+
+  .footer__right {
+    align-items: flex-start;
+  }
+
+  .footer__tel-wrapper {
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
   }
 
-  .footer__info span {
-    padding: 0;
+  .footer__info {
+    gap: 5px;
   }
 
-  .footer__info span:not(:last-child)::after {
+  .footer__info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .footer__info-row span {
+    padding: 0;
+    line-height: 1.6;
+  }
+
+  .footer__info-row span:not(:last-child)::after {
     display: none;
   }
 }
