@@ -134,7 +134,39 @@ const Home = () => {
 
       <section className="home__section home__section--4">
         <div className="home__content">
-          {/* 네 번째 섹션 내용 */}
+          <div className="home__section4-wrapper">
+            <div className="home__section4-text">
+              <h2 className="home__section4-title">
+                <span className="home__section4-highlight">신뢰</span>와{" "}
+                <span className="home__section4-highlight">전문성</span>을 담은
+                <br />
+                프르조만의 약속
+              </h2>
+              <p className="home__section4-desc">
+                안심할 수 있는 위생 환경을
+                <br />
+                만들어 드립니다.
+              </p>
+            </div>
+            <div className="home__section4-gallery">
+              <div
+                className="home__section4-gallery-item home__section4-gallery-item--offset"
+                style={{ backgroundImage: `url(${gallery1})` }}
+              ></div>
+              <div
+                className="home__section4-gallery-item"
+                style={{ backgroundImage: `url(${gallery2})` }}
+              ></div>
+              <div
+                className="home__section4-gallery-item home__section4-gallery-item--offset"
+                style={{ backgroundImage: `url(${gallery3})` }}
+              ></div>
+              <div
+                className="home__section4-gallery-item"
+                style={{ backgroundImage: `url(${gallery4})` }}
+              ></div>
+            </div>
+          </div>
         </div>
       </section>
 

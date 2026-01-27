@@ -1,6 +1,6 @@
 import "./Footer.css";
 
-import logoGreen from "../assets/przo-logo-green.png";
+import logoGreen from "../assets/logo/przo-logo-green.png";
 import kakaotalkIcon from "../assets/footer-icon/kakao-icon.svg";
 import instaIcon from "../assets/footer-icon/insta-icon.svg";
 import youtubeIcon from "../assets/footer-icon/youtube-icon.svg";

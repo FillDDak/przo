@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./Header.css";
-import logoWhite from "../assets/przo-logo-white.png";
+import logoWhite from "../assets/logo/przo-logo-white.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
