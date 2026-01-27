@@ -160,6 +160,23 @@
   font-weight: 600;
 }
 
+.home__section2-gallery-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  z-index: 2;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.home__section2-gallery-item.active .home__section2-gallery-number {
+  opacity: 0;
+}
+
 .home__section2-dots {
   display: flex;
   gap: 10px;

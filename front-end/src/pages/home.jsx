@@ -85,6 +85,9 @@ const Home = () => {
                   ) : (
                     <div className="home__section2-placeholder">{item.alt}</div>
                   )}
+                  <span className="home__section2-gallery-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
               ))}
             </div>
