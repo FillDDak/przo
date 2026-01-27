@@ -3,6 +3,9 @@ import "./FloatingButtons.css";
 import kakaoIcon from "../assets/floating-button/kakao-icon-floating.svg";
 import telIcon from "../assets/floating-button/tel-icon-floating.svg";
 import topIcon from "../assets/floating-button/top-icon-floating.svg";
+import kakaoIconMobile from "../assets/floating-button/kakao-icon-floating-mobile.svg";
+import telIconMobile from "../assets/floating-button/tel-icon-floating-mobile.svg";
+import topIconMobile from "../assets/floating-button/top-icon-floating-mobile.svg";
 import telInfoIcon from "../assets/floating-button/telinfo-icon.svg";
 import telCopyIcon from "../assets/floating-button/telcopy-icon.svg";
 
@@ -11,8 +14,21 @@ const PHONE_NUMBER = "1670-2335";
 const FloatingButtons = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth <= 768);
   const tooltipRef = useRef(null);
   const phoneButtonRef = useRef(null);
+
+  // 화면 크기 감지
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleKakaoClick = () => {
     window.open("https://open.kakao.com/o/sYCdK5og", "_blank");
@@ -77,7 +93,7 @@ const FloatingButtons = () => {
           aria-label="카카오톡 상담"
           title="카카오톡 상담"
         >
-          <img src={kakaoIcon} alt="카카오톡" className="floating-btn__icon" />
+          <img src={isMobileScreen ? kakaoIconMobile : kakaoIcon} alt="카카오톡" className="floating-btn__icon" />
         </button>
         <div className="floating-btn-wrapper">
           <button
@@ -87,7 +103,7 @@ const FloatingButtons = () => {
             aria-label="전화 상담"
             title="전화 상담"
           >
-            <img src={telIcon} alt="전화" className="floating-btn__icon" />
+            <img src={isMobileScreen ? telIconMobile : telIcon} alt="전화" className="floating-btn__icon" />
           </button>
           {isModalOpen && (
             <div ref={tooltipRef} className="phone-tooltip">
@@ -125,7 +141,7 @@ const FloatingButtons = () => {
           aria-label="맨 위로"
           title="맨 위로"
         >
-          <img src={topIcon} alt="맨 위로" className="floating-btn__icon" />
+          <img src={isMobileScreen ? topIconMobile : topIcon} alt="맨 위로" className="floating-btn__icon" />
         </button>
       </div>
     </>

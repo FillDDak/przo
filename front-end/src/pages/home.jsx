@@ -3,10 +3,10 @@ import "./home.css";
 import banner1 from "../assets/image/banner1.png";
 
 // 섹션 2 갤러리 이미지
-import gallery1 from "../assets/section2-gallery/gallery-item1.png";
-import gallery2 from "../assets/section2-gallery/gallery-item2.png";
-import gallery3 from "../assets/section2-gallery/gallery-item3.png";
-import gallery4 from "../assets/section2-gallery/gallery-item4.png";
+import gallery1_1 from "../assets/section2-gallery/gallery1-item1.png";
+import gallery1_2 from "../assets/section2-gallery/gallery1-item2.png";
+import gallery1_3 from "../assets/section2-gallery/gallery1-item3.png";
+import gallery1_4 from "../assets/section2-gallery/gallery1-item4.png";
 
 // 섹션 3 아이콘
 import homeIcon from "../assets/section3-icon/icon-01-home.svg";
@@ -19,15 +19,21 @@ import hotelIcon from "../assets/section3-icon/icon-07-hotel.svg";
 import medicalIcon from "../assets/section3-icon/icon-08-medical.svg";
 import cultureIcon from "../assets/section3-icon/icon-09-culture.svg";
 
+// 섹션 4 갤러리 이미지
+import gallery2_1 from "../assets/section4-gallery/gallery2-item1.png";
+import gallery2_2 from "../assets/section4-gallery/gallery2-item2.png";
+import gallery2_3 from "../assets/section4-gallery/gallery2-item3.png";
+import gallery2_4 from "../assets/section4-gallery/gallery2-item4.png";
+
 const Home = () => {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
 
   // 섹션 2 갤러리 데이터
-  const galleries = [
-    { id: 1, src: gallery1, alt: "갤러리1" },
-    { id: 2, src: gallery2, alt: "갤러리2" },
-    { id: 3, src: gallery3, alt: "갤러리3" },
-    { id: 4, src: gallery4, alt: "갤러리4" },
+  const galleries1 = [
+    { id: 1, src: gallery1_1, alt: "갤러리1" },
+    { id: 2, src: gallery1_2, alt: "갤러리2" },
+    { id: 3, src: gallery1_3, alt: "갤러리3" },
+    { id: 4, src: gallery1_4, alt: "갤러리4" },
   ];
 
   // 섹션 3 아이콘 버튼 데이터
@@ -42,12 +48,26 @@ const Home = () => {
     { id: 8, icon: medicalIcon, label: "의료 시설" },
     { id: 9, icon: cultureIcon, label: "문화 시설" },
   ];
+
+  // 섹션 4 갤러리 데이터
+  const galleries2 = [
+    { id: 1, src: gallery2_1, alt: "갤러리1" },
+    { id: 2, src: gallery2_2, alt: "갤러리2" },
+    { id: 3, src: gallery2_3, alt: "갤러리3" },
+    { id: 4, src: gallery2_4, alt: "갤러리4" },
+  ];
+
   return (
     <div className="home">
-      <section className="home__section home__section--1" style={{ backgroundImage: `url(${banner1})` }}>
+      <section
+        className="home__section home__section--1"
+        style={{ backgroundImage: `url(${banner1})` }}
+      >
         <div className="home__content">
           <div className="home__section1-wrapper">
-            <p className="home__section1-subtitle">방역 전문가들의 맞춤 솔루션</p>
+            <p className="home__section1-subtitle">
+              방역 전문가들의 맞춤 솔루션
+            </p>
             <h1 className="home__section1-title">
               당신의 소중한 공간을
               <br />
@@ -68,13 +88,14 @@ const Home = () => {
               단계별 방역 과정
             </h2>
             <p className="home__section2-desc">
-              2~3개월간 진행되는 이 관리 기간은 단순한 해충 제거를 넘어, 서식과 발생
-              원인을 근본적으로 억제하고 단계별 방역 과정을 통해 남은 해충까지
-              점진적으로 퇴치하여 공간을 안전하게 유지하는 종합적인 과정입니다.
+              2~3개월간 진행되는 이 관리 기간은 단순한 해충 제거를 넘어, 서식과
+              발생 원인을 근본적으로 억제하고 단계별 방역 과정을 통해 남은
+              해충까지 점진적으로 퇴치하여 공간을 안전하게 유지하는 종합적인
+              과정입니다.
             </p>
 
             <div className="home__section2-gallery">
-              {galleries.map((item, index) => (
+              {galleries1.map((item, index) => (
                 <div
                   key={item.id}
                   className={`home__section2-gallery-item ${activeGalleryIndex === index ? "active" : ""}`}
@@ -93,7 +114,7 @@ const Home = () => {
             </div>
 
             <div className="home__section2-dots">
-              {galleries.map((_, index) => (
+              {galleries2.map((_, index) => (
                 <span
                   key={index}
                   className={`home__section2-dot ${activeGalleryIndex === index ? "active" : ""}`}
@@ -116,9 +137,11 @@ const Home = () => {
                 맞춤형 방역 솔루션
               </h2>
               <p className="home__section3-desc">
-                사람이 생활하고 일하는 모든 공간은 보이지 않는 해충과 세균의 위협에 노출되어 있습니다.
+                사람이 생활하고 일하는 모든 공간은 보이지 않는 해충과 세균의
+                위협에 노출되어 있습니다.
                 <br />
-                쾌적하고 안전한 환경을 위해서는 단순한 청소를 넘어선 전문적인 방역 관리가 필요합니다.
+                쾌적하고 안전한 환경을 위해서는 단순한 청소를 넘어선 전문적인
+                방역 관리가 필요합니다.
               </p>
               <button className="home__section3-btn">자세히 보기</button>
             </div>
@@ -154,19 +177,19 @@ const Home = () => {
             <div className="home__section4-gallery">
               <div
                 className="home__section4-gallery-item home__section4-gallery-item--offset"
-                style={{ backgroundImage: `url(${gallery1})` }}
+                style={{ backgroundImage: `url(${gallery2_1})` }}
               ></div>
               <div
                 className="home__section4-gallery-item"
-                style={{ backgroundImage: `url(${gallery2})` }}
+                style={{ backgroundImage: `url(${gallery2_2})` }}
               ></div>
               <div
                 className="home__section4-gallery-item home__section4-gallery-item--offset"
-                style={{ backgroundImage: `url(${gallery3})` }}
+                style={{ backgroundImage: `url(${gallery2_3})` }}
               ></div>
               <div
                 className="home__section4-gallery-item"
-                style={{ backgroundImage: `url(${gallery4})` }}
+                style={{ backgroundImage: `url(${gallery2_4})` }}
               ></div>
             </div>
           </div>
@@ -174,21 +197,15 @@ const Home = () => {
       </section>
 
       <section className="home__section home__section--5">
-        <div className="home__content">
-          {/* 다섯 번째 섹션 내용 */}
-        </div>
+        <div className="home__content">{/* 다섯 번째 섹션 내용 */}</div>
       </section>
 
       <section className="home__section home__section--6">
-        <div className="home__content">
-          {/* 여섯 번째 섹션 내용 */}
-        </div>
+        <div className="home__content">{/* 여섯 번째 섹션 내용 */}</div>
       </section>
 
       <section className="home__section home__section--7">
-        <div className="home__content">
-          {/* 일곱 번째 섹션 내용 */}
-        </div>
+        <div className="home__content">{/* 일곱 번째 섹션 내용 */}</div>
       </section>
     </div>
   );
