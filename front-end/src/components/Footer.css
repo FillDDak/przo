@@ -278,3 +278,22 @@
     display: none;
   }
 }
+
+/* Admin variant */
+.footer--admin {
+  background-color: transparent;
+  border-top: 1px solid #dddddd;
+}
+
+.footer--admin .footer__nav a,
+.footer--admin .footer__tel,
+.footer--admin .footer__tel-sub,
+.footer--admin .footer__info-row span,
+.footer--admin .footer__copyright {
+  color: #fff;
+}
+
+.footer--admin .footer__nav a:not(:last-child)::after,
+.footer--admin .footer__info-row span:not(:last-child)::after {
+  background-color: rgba(255, 255, 255, 0.3);
+}

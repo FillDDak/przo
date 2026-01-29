@@ -1,0 +1,165 @@
+.admin-login {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-login__box {
+    width: 530px;
+    height: 579px;
+    border-radius: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 50px;
+    box-sizing: border-box;
+}
+
+.admin-login__logo {
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.admin-login__text {
+    color: #BCBCBC;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 70px;
+}
+
+.admin-login__form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-login__input {
+    width: 100%;
+    height: 60px;
+    padding: 0 24px;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+    background-color: transparent;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+    color: #fff;
+}
+
+.admin-login__input::placeholder {
+    color: #999;
+}
+
+.admin-login__input:focus {
+    border-color: #fff;
+}
+
+.admin-login__button {
+    width: 100%;
+    height: 80px;
+    margin-top: 60px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #78FFB5 0%, #51C488 100%);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.admin-login__button:hover {
+    background: linear-gradient(90deg, #51C488 0%, #4A976F 100%);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .admin-login__box {
+        width: 480px;
+        height: auto;
+        padding: 50px 40px;
+        border-radius: 40px;
+    }
+
+    .admin-login__text {
+        margin-bottom: 50px;
+    }
+
+    .admin-login__button {
+        height: 70px;
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-login {
+        padding: 20px;
+    }
+
+    .admin-login__box {
+        width: 100%;
+        max-width: 400px;
+        padding: 40px 30px;
+        border-radius: 30px;
+    }
+
+    .admin-login__logo {
+        height: 26px;
+    }
+
+    .admin-login__text {
+        font-size: 16px;
+        margin-bottom: 40px;
+    }
+
+    .admin-login__input {
+        height: 54px;
+        font-size: 15px;
+        padding: 0 20px;
+    }
+
+    .admin-login__button {
+        height: 60px;
+        font-size: 16px;
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-login__box {
+        padding: 30px 24px;
+        border-radius: 24px;
+        margin: 60px 0;
+    }
+
+    .admin-login__logo {
+        height: 24px;
+    }
+
+    .admin-login__text {
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .admin-login__form {
+        gap: 20px;
+    }
+
+    .admin-login__input {
+        height: 50px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .admin-login__button {
+        height: 54px;
+        font-size: 15px;
+        border-radius: 10px;
+        margin-top: 24px;
+    }
+}

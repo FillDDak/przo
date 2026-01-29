@@ -1,18 +1,20 @@
 import "./Footer.css";
 
 import logoGreen from "../assets/logo/przo-logo-green.png";
+import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.png";
 import kakaotalkIcon from "../assets/footer-icon/kakao-icon.svg";
 import instaIcon from "../assets/footer-icon/insta-icon.svg";
 import youtubeIcon from "../assets/footer-icon/youtube-icon.svg";
 import naverblogIcon from "../assets/footer-icon/naverblog-icon.svg";
 
-const Footer = () => {
+const Footer = ({ variant = "default" }) => {
+  const isAdmin = variant === "admin";
   return (
-    <footer className="footer">
+    <footer className={`footer ${isAdmin ? "footer--admin" : ""}`}>
       <div className="footer__container">
         <div className="footer__top">
           <div className="footer__left">
-            <img src={logoGreen} alt="PRZO Logo" className="footer__logo" />
+            <img src={isAdmin ? logoGreenGradation : logoGreen} alt="PRZO Logo" className="footer__logo" />
             <div className="footer__social">
               <a href="https://open.kakao.com/o/sYCdK5og" target="_blank" rel="noopener noreferrer">
                 <img src={kakaotalkIcon} alt="kakaotalk" />

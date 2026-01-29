@@ -199,3 +199,14 @@
     z-index: 1000;
   }
 }
+
+/* Admin variant */
+.header--admin {
+  background-color: transparent;
+  border-bottom: 1px solid #dddddd;
+}
+
+.header--admin.header--scrolled {
+  background-color: transparent;
+  box-shadow: none;
+}

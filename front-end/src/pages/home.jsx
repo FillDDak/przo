@@ -30,10 +30,34 @@ const Home = () => {
 
   // 섹션 2 갤러리 데이터
   const galleries1 = [
-    { id: 1, src: gallery1_1, alt: "갤러리1" },
-    { id: 2, src: gallery1_2, alt: "갤러리2" },
-    { id: 3, src: gallery1_3, alt: "갤러리3" },
-    { id: 4, src: gallery1_4, alt: "갤러리4" },
+    {
+      id: 1,
+      src: gallery1_1,
+      alt: "갤러리1",
+      title: <>해충 종류와 서식 환경 분석</>,
+      desc: <>시설을 진단하고 서식하는 해충의 종류를 파악한 뒤,<br />필요한 약제와 방제 공법을 선택합니다.</>,
+    },
+    {
+      id: 2,
+      src: gallery1_2,
+      alt: "갤러리2",
+      title: <>초기 집중 방제</>,
+      desc: <>선별된 공법과 약제를 적용해<br />해충 성충·유충의 약 50%를 1차로 제거합니다.</>,
+    },
+    {
+      id: 3,
+      src: gallery1_3,
+      alt: "갤러리3",
+      title: <>남아 있는 해충 추가 제거</>,
+      desc: <>1차 퇴치 후 남은 해충 중<br />성충·유충의 약 40%를 추가로 제거합니다.</>,
+    },
+    {
+      id: 4,
+      src: gallery1_4,
+      alt: "갤러리4",
+      title: <>재발 방지 시스템 관리</>,
+      desc: <>초기 관리 이후 정기 점검을 통해<br />외부 유입을 차단하고 재서식을 예방합니다.</>,
+    },
   ];
 
   // 섹션 3 아이콘 버튼 데이터
@@ -109,6 +133,10 @@ const Home = () => {
                   <span className="home__section2-gallery-number">
                     {String(index + 1).padStart(2, "0")}
                   </span>
+                  <div className="home__section2-gallery-info">
+                    <h3 className="home__section2-gallery-title">{item.title}</h3>
+                    <p className="home__section2-gallery-desc">{item.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>

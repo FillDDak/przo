@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./Header.css";
 import logoWhite from "../assets/logo/przo-logo-white.png";
+import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.png";
 
-const Header = () => {
+const Header = ({ variant = "default" }) => {
+  const isAdmin = variant === "admin";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -27,10 +29,10 @@ const Header = () => {
   };
 
   return (
-    <header className={`header ${isScrolled ? "header--scrolled" : ""}`}>
+    <header className={`header ${isScrolled ? "header--scrolled" : ""} ${isAdmin ? "header--admin" : ""}`}>
       <div className="header__container">
         <Link to="/" className="header__logo">
-          <img src={logoWhite} alt="PRZO" />
+          <img src={isAdmin ? logoGreenGradation : logoWhite} alt="PRZO" />
         </Link>
 
         <button className="header__menu-btn" onClick={toggleMenu} aria-label="메뉴">
