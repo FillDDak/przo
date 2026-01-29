@@ -369,7 +369,9 @@
 .home__section4-gallery {
   display: flex;
   gap: 40px;
-  width: 100%;
+  width: calc(100% + 200px);
+  margin-left: -100px;
+  margin-right: -100px;
   height: 530px;
 }
 
