@@ -38,7 +38,7 @@ import pestMidge from "../assets/section5-bugs/깔따구.jpg";
 
 const Home = () => {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
-  const [pestIndex, setPestIndex] = useState(2);
+  const [pestIndex, setPestIndex] = useState(0);
   const [isMosaic, setIsMosaic] = useState(true);
 
   // 섹션 2 갤러리 데이터
@@ -86,79 +86,105 @@ const Home = () => {
     { id: 9, icon: cultureIcon, label: "문화 시설" },
   ];
 
-  // 섹션 5 해충 라이브러리 데이터
+  // 섹션 5 해충 라이브러리 데이터 (집파리부터 시작)
   const pestLibrary = [
     {
       id: 1,
-      name: "애집개미",
-      engName: "Monomorium pharaonis",
-      src: pestAnt,
-      desc: "열대 지방 원산의 작은 개미로, 따뜻한 실내 환경을 선호합니다. 음식물 주변에서 자주 발견되며 집단으로 서식합니다.",
-    },
-    {
-      id: 2,
-      name: "시궁쥐",
-      engName: "R. norvegicus",
-      src: pestRat,
-      desc: "도시 환경에서 가장 흔한 쥐 종류입니다. 하수구나 지하실에 서식하며 각종 질병을 옮길 수 있습니다.",
-    },
-    {
-      id: 3,
       name: "집파리",
       engName: "housefly",
       src: pestFly,
       desc: "집파릿과의 곤충으로, 몸은 검은 갈색이며 주로 여름에 번식하여 집 안에 모여듭니다. 유충은 쓰레기, 퇴비, 가축 분뇨 따위의 부패물에 자라고 성충은 반찬, 우유, 당분이 많은 음식물을 먹고 삽니다. 세균을 운반하여 식품을 오염시켜 전염병을 옮깁니다.",
     },
     {
-      id: 4,
+      id: 2,
       name: "독일 바퀴",
       engName: "Blattella germanica",
       src: pestRoach,
-      desc: "가장 흔한 바퀴벌레 종으로, 주방이나 욕실 등 따뜻하고 습한 곳에서 서식합니다. 야행성이며 번식력이 매우 강합니다.",
+      desc: "독일바퀴는 실내에서 가장 흔히 발견되는 바퀴벌레입니다. 주방과 음식물 주변을 중심으로 서식하며 각종 세균을 옮깁니다.번식력이 매우 강해 전문적인 방제가 필요합니다.",
     },
     {
-      id: 5,
+      id: 3,
       name: "나방",
       engName: "Moth",
       src: pestMoth,
-      desc: "옷이나 식품을 손상시키는 해충입니다. 유충이 섬유나 곡물을 먹어 피해를 줍니다.",
+      desc: "나방은 옷장, 식품 보관 공간 등에서 자주 발견됩니다. 유충이 의류나 곡물류를 손상시켜 재산 피해를 유발할 수 있습니다. 습기와 어두운 공간을 좋아해 관리가 중요합니다.",
     },
     {
-      id: 6,
+      id: 4,
       name: "지네",
       engName: "Centipede",
       src: pestCentipede,
-      desc: "습한 환경에서 서식하며 다른 곤충을 잡아먹습니다. 독이 있어 물리면 통증이 발생할 수 있습니다.",
+      desc: "지네는 습하고 어두운 환경에서 서식하는 절지동물입니다. 독성을 가진 종도 있어 물릴 경우 통증과 부종을 유발할 수 있습니다. 배수구, 욕실, 지하 공간에서 자주 발견됩니다.",
+    },
+    {
+      id: 5,
+      name: "꼽등이",
+      engName: "Camel cricket",
+      src: pestCricket,
+      desc: "꼽등이는 습하고 어두운 환경을 좋아하는 야행성 곤충입니다. 주로 지하, 하수구, 욕실, 창고 등에서 서식하며 여름철에 실내로 유입되는 경우가 많습니다. 사람을 직접 해치지는 않지만 외형과 갑작스러운 출현으로 큰 불쾌감과 공포감을 유발합니다.",
+    },
+    {
+      id: 6,
+      name: "깔따구",
+      engName: "Chironomidae",
+      src: pestMidge,
+      desc: "깔따구는 작은 날벌레로 주로 습한 환경과 하수구 주변에서 발생합니다. 사람을 물지는 않지만 대량 발생 시 실내로 유입되어 불쾌감을 유발합니다. 배수구, 화분 흙, 물이 고인 공간에서 번식하며 위생 관리가 필요합니다.",
     },
     {
       id: 7,
       name: "모기",
       engName: "Mosquito",
       src: pestMosquito,
-      desc: "피를 빨아먹는 해충으로 뎅기열, 말라리아 등 각종 질병을 옮깁니다. 고인 물에서 번식합니다.",
+      desc: "모기는 흡혈성 해충으로 여름철에 급격히 번식합니다. 사람의 피를 빨아 가려움과 염증을 유발하며, 각종 질병을 옮길 수 있습니다. 고인 물과 습한 환경에서 서식하므로 지속적인 관리가 필요합니다.",
     },
     {
       id: 8,
-      name: "꼽등이",
-      engName: "Camel cricket",
-      src: pestCricket,
-      desc: "습하고 어두운 곳에서 서식하는 곤충입니다. 지하실이나 창고에서 자주 발견됩니다.",
+      name: "애집개미",
+      engName: "Monomorium pharaonis",
+      src: pestAnt,
+      desc: "애집개미는 실내에서 자주 발견되는 소형 개미로 주방과 거실을 중심으로 서식합니다. 음식물 찌꺼기와 당분을 따라 무리를 지어 이동하며 빠르게 번식합니다. 식품을 오염시키고 틈새에 둥지를 형성해 위생 문제를 일으킬 수 있어 관리가 필요합니다.",
     },
     {
       id: 9,
-      name: "깔따구",
-      engName: "Chironomidae",
-      src: pestMidge,
-      desc: "물가 주변에서 대량 발생하는 곤충입니다. 직접적인 피해는 적지만 불쾌감을 유발합니다.",
+      name: "시궁쥐",
+      engName: "R. norvegicus",
+      src: pestRat,
+      desc: "시궁쥐는 하수구와 건물 내부를 오가며 서식하는 대표적인 위생 해충입니다. 음식물과 쓰레기를 먹고 살며 각종 세균과 질병을 옮길 위험이 높습니다. 전선, 배관 등을 갉아 시설 피해를 유발할 수 있어 조기 방제와 지속 관리가 필요합니다.",
     },
   ];
 
   const handlePestPrev = () => {
     setPestIndex((prev) => (prev === 0 ? pestLibrary.length - 1 : prev - 1));
+    setIsMosaic(true);
   };
 
   const handlePestNext = () => {
     setPestIndex((prev) => (prev === pestLibrary.length - 1 ? 0 : prev + 1));
+    setIsMosaic(true);
+  };
+
+  // 섹션 5 카드 위치 계산 (활성-비활성 간격 24px, 비활성-비활성 간격 24px)
+  const getCardOffset = (position) => {
+    if (position === 0) return 0;
+    const sign = position > 0 ? 1 : -1;
+    const absPos = Math.abs(position);
+    // 활성 카드(450/2=225) + 간격(24) + 비활성 카드(300/2=150) = 399
+    const firstOffset = 225 + 24 + 150;
+    // 비활성 카드 간격: 150 + 24 + 150 = 324
+    const subsequentOffset = 150 + 24 + 150;
+    if (absPos === 1) return sign * firstOffset;
+    return sign * (firstOffset + (absPos - 1) * subsequentOffset);
+  };
+
+  // 순환 position 계산 (무한 루프)
+  const getCircularPosition = (index, activeIndex, total) => {
+    let position = index - activeIndex;
+    if (position > total / 2) {
+      position -= total;
+    } else if (position < -total / 2) {
+      position += total;
+    }
+    return position;
   };
 
   // 섹션 4 갤러리 데이터
@@ -357,7 +383,7 @@ const Home = () => {
 
                 <div className="home__section5-cards">
                   {pestLibrary.map((pest, index) => {
-                    const position = index - pestIndex;
+                    const position = getCircularPosition(index, pestIndex, pestLibrary.length);
                     const isActive = index === pestIndex;
 
                     return (
@@ -365,16 +391,23 @@ const Home = () => {
                         key={pest.id}
                         className={`home__section5-card ${isActive ? "active" : ""}`}
                         style={{
-                          transform: `translate(calc(-50% + ${position * 400}px), -50%) scale(${isActive ? 1 : 0.95})`,
+                          transform: `translate(calc(-50% + ${getCardOffset(position)}px), -50%) scale(${isActive ? 1 : 0.95})`,
                           zIndex: isActive ? 10 : 5 - Math.abs(position),
-                          opacity: Math.abs(position) > 2 ? 0 : 1,
+                          opacity: Math.abs(position) > 3 ? 0 : 1,
                         }}
-                        onClick={() => setPestIndex(index)}
+                        onClick={() => {
+                          if (!isActive) {
+                            setPestIndex(index);
+                            setIsMosaic(true);
+                          }
+                        }}
                       >
-                        <div
-                          className={`home__section5-card-image ${!isActive || isMosaic ? "mosaic" : ""}`}
-                          style={{ backgroundImage: `url(${pest.src})` }}
-                        ></div>
+                        <div className="home__section5-card-image-wrapper">
+                          <div
+                            className={`home__section5-card-image ${!isActive || isMosaic ? "mosaic" : ""}`}
+                            style={{ backgroundImage: `url(${pest.src})` }}
+                          ></div>
+                        </div>
                         <div className="home__section5-card-info">
                           <div className="home__section5-card-header">
                             <h3 className="home__section5-card-name">{pest.name}</h3>
