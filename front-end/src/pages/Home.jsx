@@ -25,8 +25,21 @@ import gallery2_2 from "../assets/section4-gallery/gallery2-item2.png";
 import gallery2_3 from "../assets/section4-gallery/gallery2-item3.png";
 import gallery2_4 from "../assets/section4-gallery/gallery2-item4.png";
 
+// 섹션 5 해충 이미지
+import pestAnt from "../assets/section5-bugs/애집개미.webp";
+import pestRat from "../assets/section5-bugs/시궁쥐.jpg";
+import pestFly from "../assets/section5-bugs/집파리.jpg";
+import pestRoach from "../assets/section5-bugs/독일바퀴.jpg";
+import pestMoth from "../assets/section5-bugs/나방.jpg";
+import pestCentipede from "../assets/section5-bugs/지네.webp";
+import pestMosquito from "../assets/section5-bugs/모기.jpg";
+import pestCricket from "../assets/section5-bugs/꼽등이.webp";
+import pestMidge from "../assets/section5-bugs/깔따구.jpg";
+
 const Home = () => {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const [pestIndex, setPestIndex] = useState(2);
+  const [isMosaic, setIsMosaic] = useState(true);
 
   // 섹션 2 갤러리 데이터
   const galleries1 = [
@@ -73,12 +86,111 @@ const Home = () => {
     { id: 9, icon: cultureIcon, label: "문화 시설" },
   ];
 
+  // 섹션 5 해충 라이브러리 데이터
+  const pestLibrary = [
+    {
+      id: 1,
+      name: "애집개미",
+      engName: "Monomorium pharaonis",
+      src: pestAnt,
+      desc: "열대 지방 원산의 작은 개미로, 따뜻한 실내 환경을 선호합니다. 음식물 주변에서 자주 발견되며 집단으로 서식합니다.",
+    },
+    {
+      id: 2,
+      name: "시궁쥐",
+      engName: "R. norvegicus",
+      src: pestRat,
+      desc: "도시 환경에서 가장 흔한 쥐 종류입니다. 하수구나 지하실에 서식하며 각종 질병을 옮길 수 있습니다.",
+    },
+    {
+      id: 3,
+      name: "집파리",
+      engName: "housefly",
+      src: pestFly,
+      desc: "집파릿과의 곤충으로, 몸은 검은 갈색이며 주로 여름에 번식하여 집 안에 모여듭니다. 유충은 쓰레기, 퇴비, 가축 분뇨 따위의 부패물에 자라고 성충은 반찬, 우유, 당분이 많은 음식물을 먹고 삽니다. 세균을 운반하여 식품을 오염시켜 전염병을 옮깁니다.",
+    },
+    {
+      id: 4,
+      name: "독일 바퀴",
+      engName: "Blattella germanica",
+      src: pestRoach,
+      desc: "가장 흔한 바퀴벌레 종으로, 주방이나 욕실 등 따뜻하고 습한 곳에서 서식합니다. 야행성이며 번식력이 매우 강합니다.",
+    },
+    {
+      id: 5,
+      name: "나방",
+      engName: "Moth",
+      src: pestMoth,
+      desc: "옷이나 식품을 손상시키는 해충입니다. 유충이 섬유나 곡물을 먹어 피해를 줍니다.",
+    },
+    {
+      id: 6,
+      name: "지네",
+      engName: "Centipede",
+      src: pestCentipede,
+      desc: "습한 환경에서 서식하며 다른 곤충을 잡아먹습니다. 독이 있어 물리면 통증이 발생할 수 있습니다.",
+    },
+    {
+      id: 7,
+      name: "모기",
+      engName: "Mosquito",
+      src: pestMosquito,
+      desc: "피를 빨아먹는 해충으로 뎅기열, 말라리아 등 각종 질병을 옮깁니다. 고인 물에서 번식합니다.",
+    },
+    {
+      id: 8,
+      name: "꼽등이",
+      engName: "Camel cricket",
+      src: pestCricket,
+      desc: "습하고 어두운 곳에서 서식하는 곤충입니다. 지하실이나 창고에서 자주 발견됩니다.",
+    },
+    {
+      id: 9,
+      name: "깔따구",
+      engName: "Chironomidae",
+      src: pestMidge,
+      desc: "물가 주변에서 대량 발생하는 곤충입니다. 직접적인 피해는 적지만 불쾌감을 유발합니다.",
+    },
+  ];
+
+  const handlePestPrev = () => {
+    setPestIndex((prev) => (prev === 0 ? pestLibrary.length - 1 : prev - 1));
+  };
+
+  const handlePestNext = () => {
+    setPestIndex((prev) => (prev === pestLibrary.length - 1 ? 0 : prev + 1));
+  };
+
   // 섹션 4 갤러리 데이터
   const galleries2 = [
-    { id: 1, src: gallery2_1, alt: "갤러리1" },
-    { id: 2, src: gallery2_2, alt: "갤러리2" },
-    { id: 3, src: gallery2_3, alt: "갤러리3" },
-    { id: 4, src: gallery2_4, alt: "갤러리4" },
+    {
+      id: 1,
+      src: gallery2_1,
+      alt: "갤러리1",
+      title: "무료 상담",
+      desc: "전문가와 직접 상담하며 상황에 맞는 방역 방향을 무료로 안내받으세요",
+    },
+    {
+      id: 2,
+      src: gallery2_2,
+      alt: "갤러리2",
+      title: "안전 인증 약품 사용",
+      desc: "사람과 반려동물 모두 안심할 수 있는 안전 인증 약품만을 사용합니다",
+    },
+    {
+      id: 3,
+      src: gallery2_3,
+      alt: "갤러리3",
+      title: "무료 방문 점검",
+      desc: "전문 인력이 직접 방문하여 꼼꼼히 점검하고 무료로 진단해드립니다",
+    },
+    {
+      id: 4,
+      src: gallery2_4,
+      alt: "갤러리4",
+      title: "사후 관리 & 보증제",
+      desc: "시공 후에도 정기 점검을 실시하며 무상 보증 서비스를 제공합니다",
+    },
   ];
 
   return (
@@ -203,29 +315,105 @@ const Home = () => {
               </p>
             </div>
             <div className="home__section4-gallery">
-              <div
-                className="home__section4-gallery-item home__section4-gallery-item--offset"
-                style={{ backgroundImage: `url(${gallery2_1})` }}
-              ></div>
-              <div
-                className="home__section4-gallery-item"
-                style={{ backgroundImage: `url(${gallery2_2})` }}
-              ></div>
-              <div
-                className="home__section4-gallery-item home__section4-gallery-item--offset"
-                style={{ backgroundImage: `url(${gallery2_3})` }}
-              ></div>
-              <div
-                className="home__section4-gallery-item"
-                style={{ backgroundImage: `url(${gallery2_4})` }}
-              ></div>
+              {galleries2.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`home__section4-gallery-item ${index % 2 === 0 ? "home__section4-gallery-item--bottom" : "home__section4-gallery-item--top"}`}
+                  style={{ backgroundImage: `url(${item.src})` }}
+                >
+                  <div className="home__section4-gallery-content">
+                    <h3 className="home__section4-gallery-title">{item.title}</h3>
+                    <p className="home__section4-gallery-desc">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       <section className="home__section home__section--5">
-        <div className="home__content">{/* 다섯 번째 섹션 내용 */}</div>
+        <div className="home__content">
+          <div className="home__section5-wrapper">
+            <div className="home__section5-header">
+              <h2 className="home__section5-title">해충 라이브러리</h2>
+              <p className="home__section5-desc">
+                집과 공간을 위협하는 해충 정보를 쉽게
+                <br />
+                찾아보세요
+              </p>
+            </div>
+
+            <div className="home__section5-slider">
+              <div className="home__section5-cards-wrapper">
+                <button
+                  className="home__section5-arrow home__section5-arrow--prev"
+                  onClick={handlePestPrev}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+
+                <div className="home__section5-cards">
+                  {pestLibrary.map((pest, index) => {
+                    const position = index - pestIndex;
+                    const isActive = index === pestIndex;
+
+                    return (
+                      <div
+                        key={pest.id}
+                        className={`home__section5-card ${isActive ? "active" : ""}`}
+                        style={{
+                          transform: `translate(calc(-50% + ${position * 400}px), -50%) scale(${isActive ? 1 : 0.95})`,
+                          zIndex: isActive ? 10 : 5 - Math.abs(position),
+                          opacity: Math.abs(position) > 2 ? 0 : 1,
+                        }}
+                        onClick={() => setPestIndex(index)}
+                      >
+                        <div
+                          className={`home__section5-card-image ${!isActive || isMosaic ? "mosaic" : ""}`}
+                          style={{ backgroundImage: `url(${pest.src})` }}
+                        ></div>
+                        <div className="home__section5-card-info">
+                          <div className="home__section5-card-header">
+                            <h3 className="home__section5-card-name">{pest.name}</h3>
+                            {isActive && (
+                              <label className="home__section5-toggle" onClick={(e) => e.stopPropagation()}>
+                                <span>모자이크</span>
+                                <input
+                                  type="checkbox"
+                                  checked={isMosaic}
+                                  onChange={(e) => setIsMosaic(e.target.checked)}
+                                />
+                                <span className="home__section5-toggle-slider"></span>
+                              </label>
+                            )}
+                          </div>
+                          <p className="home__section5-card-eng">{pest.engName}</p>
+                          {isActive && (
+                            <div className="home__section5-card-details">
+                              <p className="home__section5-card-desc">{pest.desc}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <button
+                  className="home__section5-arrow home__section5-arrow--next"
+                  onClick={handlePestNext}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="home__section home__section--6">
