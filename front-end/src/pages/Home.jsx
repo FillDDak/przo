@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./home.css";
+import "./Home.css";
 import banner1 from "../assets/image/banner1.png";
 
 // 섹션 2 갤러리 이미지
@@ -26,15 +26,24 @@ import gallery2_3 from "../assets/section4-gallery/gallery2-item3.png";
 import gallery2_4 from "../assets/section4-gallery/gallery2-item4.png";
 
 // 섹션 5 해충 이미지
-import pestAnt from "../assets/section5-bugs/애집개미.webp";
-import pestRat from "../assets/section5-bugs/시궁쥐.jpg";
-import pestFly from "../assets/section5-bugs/집파리.jpg";
-import pestRoach from "../assets/section5-bugs/독일바퀴.jpg";
-import pestMoth from "../assets/section5-bugs/나방.jpg";
-import pestCentipede from "../assets/section5-bugs/지네.webp";
-import pestMosquito from "../assets/section5-bugs/모기.jpg";
-import pestCricket from "../assets/section5-bugs/꼽등이.webp";
-import pestMidge from "../assets/section5-bugs/깔따구.jpg";
+import pestAnt from "../assets/section5-bugs/pharaoh-ant.webp";
+import pestRat from "../assets/section5-bugs/rat.jpg";
+import pestFly from "../assets/section5-bugs/housefly.jpg";
+import pestRoach from "../assets/section5-bugs/german-cockroach.jpg";
+import pestMoth from "../assets/section5-bugs/moth.jpg";
+import pestCentipede from "../assets/section5-bugs/centipede.webp";
+import pestMosquito from "../assets/section5-bugs/mosquito.jpg";
+import pestCricket from "../assets/section5-bugs/camel-cricket.webp";
+import pestMidge from "../assets/section5-bugs/midge.jpg";
+
+// 섹션 6 배너 이미지
+import section6Banner from "../assets/section6-banner/section6-banner.png";
+import section6Pest from "../assets/section6-banner/section6-pest.png";
+
+// 섹션 7 아이콘
+import kakaoIcon from "../assets/section7-icon/section7-icon-kakao.svg";
+import telIcon from "../assets/section7-icon/section7-icon-tel.svg";
+import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
 
 const Home = () => {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
@@ -449,12 +458,113 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="home__section home__section--6">
-        <div className="home__content">{/* 여섯 번째 섹션 내용 */}</div>
+      <section
+        className="home__section home__section--6"
+        style={{ backgroundImage: `url(${section6Banner})` }}
+      >
+        <div className="home__content">
+          <div className="home__section6-wrapper">
+            <div className="home__section6-text">
+              <h2 className="home__section6-title">
+                프르조와 함께 소중한 공간을 안전하게 이어가세요.
+              </h2>
+              <p className="home__section6-desc">
+                작은 공간까지 세심하게 지켜드립니다.
+              </p>
+            </div>
+            <img
+              src={section6Pest}
+              alt="해충 방제"
+              className="home__section6-pest"
+            />
+          </div>
+        </div>
       </section>
 
       <section className="home__section home__section--7">
-        <div className="home__content">{/* 일곱 번째 섹션 내용 */}</div>
+        <div className="home__content">
+          <div className="home__section7-wrapper">
+            <div className="home__section7-left">
+              <p className="home__section7-subtitle">WE'RE HERE TO HELP YOU</p>
+              <h2 className="home__section7-title">
+                <span className="home__section7-highlight">'프르조'에</span>
+              </h2>
+              <h3 className="home__section7-title2">무료로 문의해보세요</h3>
+              <p className="home__section7-desc">
+                보다 안전하고 효과적인 방역 솔루션이 필요하신가요?
+                <br />
+                공간의 유형과 상황에 맞춘 맞춤형 진단과 시공 방안을 안내해드립니다.
+                <br />
+                아래 정보를 남겨주시면 전문 상담원이 빠르게 연락드리겠습니다.
+              </p>
+              <div className="home__section7-contact">
+                <div className="home__section7-contact-item">
+                  <img src={kakaoIcon} alt="카카오톡" />
+                  <div className="home__section7-contact-info">
+                    <span className="home__section7-contact-label">오픈채팅</span>
+                    <span className="home__section7-contact-value">'프르조'</span>
+                  </div>
+                </div>
+                <div className="home__section7-contact-item">
+                  <img src={telIcon} alt="전화" />
+                  <div className="home__section7-contact-info">
+                    <span className="home__section7-contact-label">전화번호</span>
+                    <span className="home__section7-contact-value">1670-2335</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="home__section7-right">
+              <form className="home__section7-form">
+                <div className="home__section7-form-row">
+                  <div className="home__section7-form-group">
+                    <label>이름</label>
+                    <input type="text" placeholder="홍길동" />
+                  </div>
+                  <div className="home__section7-form-group">
+                    <label>회사 이름</label>
+                    <input type="text" placeholder="프르조" />
+                  </div>
+                </div>
+                <div className="home__section7-form-row">
+                  <div className="home__section7-form-group">
+                    <label>전화번호</label>
+                    <input type="tel" placeholder="01012345678" />
+                  </div>
+                  <div className="home__section7-form-group">
+                    <label>이메일</label>
+                    <input type="email" placeholder="przo@naver.com" />
+                  </div>
+                </div>
+                <div className="home__section7-form-group home__section7-form-group--full">
+                  <label>제목</label>
+                  <input type="text" placeholder="30평 가정집 견적 문의 드립니다." />
+                </div>
+                <div className="home__section7-form-group home__section7-form-group--full">
+                  <label>문의 내용</label>
+                  <textarea placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?" rows="5"></textarea>
+                </div>
+                <div className="home__section7-form-group home__section7-form-group--full">
+                  <label>첨부파일</label>
+                  <div className="home__section7-file-input">
+                    <input type="file" id="contactFile" />
+                    <label htmlFor="contactFile" className="home__section7-file-label">
+                      <img src={fileIcon} alt="첨부파일" />
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" className="home__section7-submit">
+                  <span className="home__section7-submit-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                  <span className="home__section7-submit-text">전송하기</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

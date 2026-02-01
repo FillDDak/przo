@@ -9,6 +9,10 @@ import AdminLayout from "./layouts/AdminLayout";
 
 // 페이지
 import Home from "./pages/Home";
+import About from "./pages/About";
+import Service from "./pages/Service";
+import Qna from "./pages/Qna";
+import Reviews from "./pages/Reviews";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 
@@ -21,6 +25,22 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "service",
+        element: <Service />,
+      },
+      {
+        path: "qna",
+        element: <Qna />,
+      },
+      {
+        path: "reviews",
+        element: <Reviews />,
       },
     ],
   },
