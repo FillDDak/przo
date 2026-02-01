@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import banner1 from "../assets/image/banner1.png";
 
@@ -44,11 +45,19 @@ import section6Pest from "../assets/section6-banner/section6-pest.png";
 import kakaoIcon from "../assets/section7-icon/section7-icon-kakao.svg";
 import telIcon from "../assets/section7-icon/section7-icon-tel.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
+import arrowIcon from "../assets/section7-icon/section7-icon-arrow.svg";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [pestIndex, setPestIndex] = useState(0);
   const [isMosaic, setIsMosaic] = useState(true);
+  const [fileName, setFileName] = useState("");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFileName(file ? file.name : "");
+  };
 
   // 섹션 2 갤러리 데이터
   const galleries1 = [
@@ -318,7 +327,7 @@ const Home = () => {
                 쾌적하고 안전한 환경을 위해서는 단순한 청소를 넘어선 전문적인
                 방역 관리가 필요합니다.
               </p>
-              <button className="home__section3-btn">자세히 보기</button>
+              <button className="home__section3-btn" onClick={() => navigate("/reviews")}>자세히 보기</button>
             </div>
 
             <div className="home__section3-icons">
@@ -547,17 +556,18 @@ const Home = () => {
                 <div className="home__section7-form-group home__section7-form-group--full">
                   <label>첨부파일</label>
                   <div className="home__section7-file-input">
-                    <input type="file" id="contactFile" />
+                    <input type="file" id="contactFile" onChange={handleFileChange} />
                     <label htmlFor="contactFile" className="home__section7-file-label">
                       <img src={fileIcon} alt="첨부파일" />
+                      <span className="home__section7-file-name">
+                        {fileName || "파일을 선택해주세요"}
+                      </span>
                     </label>
                   </div>
                 </div>
                 <button type="submit" className="home__section7-submit">
                   <span className="home__section7-submit-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <img src={arrowIcon} alt="전송" />
                   </span>
                   <span className="home__section7-submit-text">전송하기</span>
                 </button>
