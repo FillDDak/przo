@@ -231,27 +231,46 @@
     gap: 12px;
   }
 
+  .footer__logo {
+    height: 32px;
+  }
+
   .footer__center {
     align-items: flex-start;
     padding-top: 0;
+    gap: 15px;
   }
 
   .footer__nav {
-    flex-direction: column;
+    flex-wrap: wrap;
+    flex-direction: row;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px 0;
   }
 
   .footer__nav a {
-    padding: 0;
+    padding: 0 8px;
+    font-size: 13px;
+  }
+
+  .footer__nav a:first-child {
+    padding-left: 0;
   }
 
   .footer__nav a:not(:last-child)::after {
-    display: none;
+    display: block;
   }
 
   .footer__right {
     align-items: flex-start;
+  }
+
+  .footer__tel {
+    font-size: 16px;
+  }
+
+  .footer__tel-sub {
+    font-size: 13px;
   }
 
   .footer__tel-wrapper {
@@ -265,18 +284,93 @@
   }
 
   .footer__info-row {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .footer__info-row span {
+    padding: 0 8px;
+    line-height: 1.8;
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  .footer__info-row span:first-child {
+    padding-left: 0;
+  }
+
+  .footer__info-row span:not(:last-child)::after {
+    display: block;
+  }
+
+  .footer__copyright {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__container {
+    padding: 20px 16px;
+  }
+
+  .footer__top {
+    gap: 20px;
+  }
+
+  .footer__logo {
+    height: 28px;
+  }
+
+  .footer__social {
+    gap: 10px;
+  }
+
+  .footer__social a,
+  .footer__social img {
+    width: 26px;
+    height: 26px;
+  }
+
+  .footer__nav {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer__nav a {
+    padding: 0;
+    font-size: 12px;
+  }
+
+  .footer__nav a:not(:last-child)::after {
+    display: none;
+  }
+
+  .footer__tel {
+    font-size: 15px;
+  }
+
+  .footer__tel-sub {
+    font-size: 12px;
+  }
+
+  .footer__info-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 5px;
+    gap: 4px;
   }
 
   .footer__info-row span {
     padding: 0;
-    line-height: 1.6;
+    font-size: 11px;
+    line-height: 1.5;
   }
 
   .footer__info-row span:not(:last-child)::after {
     display: none;
+  }
+
+  .footer__copyright {
+    font-size: 10px;
   }
 }
 

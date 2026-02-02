@@ -50,7 +50,7 @@ const Footer = ({ variant = "default" }) => {
             <div className="footer__info">
               <div className="footer__info-row">
                 <span>대표: 김선미</span>
-                <span>인천 계양구 마장로544번길 10</span>
+                <span>인천 계양구 마장로544번길 10 디오아제상가 2층 B1-207호</span>
                 <span>사업자 등록번호: 653-98-00887</span>
               </div>
               <div className="footer__info-row">
