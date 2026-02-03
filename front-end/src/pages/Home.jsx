@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-import banner1 from "../assets/image/banner1.png";
+import home_banner from "../assets/image/home_banner.png";
 
 // 섹션 2 갤러리 이미지
 import gallery1_1 from "../assets/section2-gallery/gallery1-item1.png";
@@ -241,7 +241,7 @@ const Home = () => {
     <div className="home">
       <section
         className="home__section home__section--1"
-        style={{ backgroundImage: `url(${banner1})` }}
+        style={{ backgroundImage: `url(${home_banner})` }}
       >
         <div className="home__content">
           <div className="home__section1-wrapper">
