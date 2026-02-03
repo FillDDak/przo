@@ -1,19 +1,17 @@
-
--- °èÁ¤µî·Ï ±ÇÇÑ
+-- ê´€ë¦¬ì ì„¤ì •
 ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 
--- przo °èÁ¤ »ı¼º
+-- przo ê³„ì • ìƒì„±
 create user przo IDENTIFIED BY 12345;
 
--- µî·ÏÇÒ ¼ö ÀÖ´Â ±ÇÇÑ
+-- ì ‘ì† ë° ë¦¬ì†ŒìŠ¤ ê¶Œí•œ
 grant connect, resource to przo;
 
--- Ãß°¡ ±ÇÇÑ
+-- ì¶”ê°€ ê¶Œí•œ
 grant create view, create sequence, create procedure to przo;
 
--- ¹°¸®Àû ÀúÀå °ø°£
+-- í…Œì´ë¸”ìŠ¤í˜ì´ìŠ¤ ìš©ëŸ‰ ì„¤ì •
 alter user przo DEFAULT TABLESPACE USERS QUOTA UNLIMITED ON USERS;
 
--- °èÁ¤ »èÁ¦
+-- ê³„ì • ì‚­ì œ
 -- drop user przo;
-

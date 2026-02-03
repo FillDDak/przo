@@ -61,3 +61,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### Claude ###
+.claude/
+
+### Environment ###
+.env
+application.properties
