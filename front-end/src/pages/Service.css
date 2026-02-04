@@ -1,0 +1,373 @@
+.service {
+  width: 100%;
+  padding-top: 90px;
+  background-color: #ffffff;
+}
+
+.service__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 배너 섹션 */
+.service__banner {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+}
+
+/* 브레드크럼 */
+.service__breadcrumb {
+  position: absolute;
+  top: 16px;
+  left: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.service__breadcrumb-link {
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.service__breadcrumb-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.service__breadcrumb-separator {
+  color: #767676;
+  font-size: 12px;
+}
+
+.service__breadcrumb-text {
+  color: #767676;
+  font-size: 14px;
+}
+
+.service__breadcrumb-current {
+  color: #51c488;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 메인 컨텐츠 섹션 */
+.service__main {
+  padding: 40px 0 120px;
+}
+
+.service__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 60px 0;
+}
+
+/* 원형 다이어그램 */
+.service__diagram {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 700px;
+  margin: 0 auto 60px;
+}
+
+/* 점선 원 */
+.service__diagram::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  border: 2px dashed #5172C4;
+  border-radius: 50%;
+}
+
+/* 중앙 이미지 */
+.service__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  z-index: 5;
+}
+
+.service__center::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(81, 114, 196, 1) 0%, rgba(81, 114, 196, 0) 70%);
+  z-index: -1;
+}
+
+.service__center-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+}
+
+/* 기능 아이템 */
+.service__feature {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.service__feature-img-wrapper {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service__feature-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.service__feature-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f1f1f;
+  white-space: nowrap;
+}
+
+/* 기능 위치 - 점선 원(500px, 반지름 250px) 위에 이미지 중심 배치 */
+/* 45도 각도: 250 * cos(45°) ≈ 177px */
+.service__feature--top-left {
+  top: 30px;
+  left: 50%;
+  transform: translateX(calc(-50% - 177px));
+}
+
+.service__feature--top-left .service__feature-title {
+  order: -1;
+  margin-bottom: 12px;
+}
+
+.service__feature--top-right {
+  top: 30px;
+  left: 50%;
+  transform: translateX(calc(-50% + 177px));
+}
+
+.service__feature--top-right .service__feature-title {
+  order: -1;
+  margin-bottom: 12px;
+}
+
+.service__feature--bottom-left {
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(calc(-50% - 177px));
+}
+
+.service__feature--bottom-left .service__feature-title {
+  margin-top: 12px;
+}
+
+.service__feature--bottom-right {
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(calc(-50% + 177px));
+}
+
+.service__feature--bottom-right .service__feature-title {
+  margin-top: 12px;
+}
+
+/* 설명 텍스트 */
+.service__description {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.service__description p {
+  font-size: 20px;
+  font-weight: 500;
+  color: #767676;
+  margin: 0 0 8px 0;
+}
+
+.service__description p:last-child {
+  margin-bottom: 0;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .service {
+    padding-top: 70px;
+  }
+
+  .service__content {
+    padding: 0 24px;
+  }
+
+  .service__breadcrumb {
+    left: 24px;
+  }
+
+  .service__diagram {
+    height: 600px;
+  }
+
+  .service__diagram::before {
+    width: 400px;
+    height: 400px;
+  }
+
+  .service__center {
+    width: 150px;
+    height: 150px;
+  }
+
+  .service__center::before {
+    width: 250px;
+    height: 250px;
+  }
+
+  .service__feature-img-wrapper {
+    width: 150px;
+    height: 150px;
+  }
+
+  .service__feature--top-left {
+    top: 40px;
+    transform: translateX(calc(-50% - 142px));
+  }
+
+  .service__feature--top-right {
+    top: 40px;
+    transform: translateX(calc(-50% + 142px));
+  }
+
+  .service__feature--bottom-left {
+    bottom: 40px;
+    transform: translateX(calc(-50% - 142px));
+  }
+
+  .service__feature--bottom-right {
+    bottom: 40px;
+    transform: translateX(calc(-50% + 142px));
+  }
+}
+
+@media (max-width: 768px) {
+  .service {
+    padding-top: 60px;
+  }
+
+  .service__content {
+    padding: 0 20px;
+  }
+
+  .service__breadcrumb {
+    left: 20px;
+  }
+
+  .service__title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .service__diagram {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px 0;
+  }
+
+  .service__diagram::before {
+    display: none;
+  }
+
+  .service__center {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    order: 0;
+  }
+
+  .service__center::before {
+    width: 280px;
+    height: 280px;
+  }
+
+  .service__feature {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+
+  .service__feature--top-left {
+    order: 1;
+  }
+
+  .service__feature--top-left .service__feature-title {
+    order: 0;
+    margin-bottom: 0;
+    margin-top: 12px;
+  }
+
+  .service__feature--top-right {
+    order: 2;
+  }
+
+  .service__feature--top-right .service__feature-title {
+    order: 0;
+    margin-bottom: 0;
+    margin-top: 12px;
+  }
+
+  .service__feature--bottom-left {
+    order: 3;
+  }
+
+  .service__feature--bottom-right {
+    order: 4;
+  }
+
+  .service__feature-img-wrapper {
+    width: 200px;
+    height: 200px;
+  }
+
+  .service__description p {
+    font-size: 16px;
+  }
+
+  .service__main {
+    padding: 20px 0 80px;
+  }
+}
