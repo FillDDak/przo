@@ -1,72 +1,90 @@
+import { Link } from "react-router-dom";
 import "./About.css";
+import greetingsBanner from "../assets/image/greetings_banner.png";
+import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
+import logoGreen from "../assets/logo/przo-logo-green.png";
 
 const About = () => {
   return (
     <div className="about">
-      <section className="about__hero">
-        <div className="about__content">
-          <h1 className="about__hero-title">회사 소개</h1>
-          <p className="about__hero-desc">
-            고객의 건강하고 쾌적한 환경을 위해 최선을 다하는 방역 전문 기업입니다.
-          </p>
+      {/* 배너 섹션 */}
+      <section className="about__banner">
+        <img src={greetingsBanner} alt="인사말 배너" className="about__banner-img" />
+        <div className="about__banner-overlay"></div>
+        {/* 브레드크럼 */}
+        <div className="about__breadcrumb">
+          <Link to="/" className="about__breadcrumb-link">
+            <img src={homeIcon} alt="홈" className="about__breadcrumb-icon" />
+          </Link>
+          <span className="about__breadcrumb-separator">&gt;</span>
+          <span className="about__breadcrumb-current">회사소개</span>
+        </div>
+        <div className="about__banner-content">
+          <h1 className="about__banner-title">프르조 인사말</h1>
+          <p className="about__banner-subtitle">"보이지 않는 위험까지 잡는 위생·방역 파트너, 프르조입니다."</p>
         </div>
       </section>
 
-      <section className="about__section">
+      {/* To our customers 섹션 */}
+      <section className="about__customers">
         <div className="about__content">
-          <h2 className="about__section-title">우리의 <span className="about__highlight">미션</span></h2>
-          <p className="about__section-desc">
-            깨끗하고 안전한 환경은 모든 사람의 기본 권리입니다.<br />
-            저희는 전문적인 방역 서비스를 통해 고객의 일상을 보호하고,<br />
-            건강한 생활 환경을 만들어 나가는 것을 사명으로 합니다.
-          </p>
-        </div>
-      </section>
-
-      <section className="about__section about__section--gray">
-        <div className="about__content">
-          <h2 className="about__section-title">우리의 <span className="about__highlight">비전</span></h2>
-          <p className="about__section-desc">
-            대한민국 최고의 방역 서비스 기업으로 도약하여,<br />
-            고객에게 신뢰받는 파트너가 되겠습니다.
-          </p>
-        </div>
-      </section>
-
-      <section className="about__section">
-        <div className="about__content">
-          <h2 className="about__section-title">핵심 <span className="about__highlight">가치</span></h2>
-          <div className="about__values">
-            <div className="about__value-item">
-              <div className="about__value-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#51c488" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              </div>
-              <h3 className="about__value-title">신뢰</h3>
-              <p className="about__value-desc">고객과의 약속을 지키며 투명한 서비스를 제공합니다.</p>
+          <h2 className="about__customers-title">To our customers</h2>
+          <div className="about__customers-grid">
+            <div className="about__customers-col">
+              <p>
+                저희 프르조는 체계적이고 철저한 교육 과정을 수료한 숙련된 전문가들이 직접 현장을 방문하여, 고객님의 공간에 적합한 맞춤 방역 서비스를 제공하고 있습니다.
+              </p>
+              <p>
+                단순히 약제를 살포하는 방식이 아닌, 사전에 세밀한 환경 분석과 상담을 진행하여 해충 발생 원인을 파악하고, 공간 특성과 상황에 맞는 공법을 선정해 신속하게 문제를 해결합니다.
+              </p>
+              <p>
+                당사의 모든 전문가는 현장 진단 능력, 약제 사용 지식, 안전 관리 지침에 대한 내부 교육을 이수한 인력으로 구성되어 있으며, 주거 공간은 물론 상가, 사무실, 음식점, 창고 등 다양한 공간 환경에도 대응 가능한 전문성을 갖추고 있습니다.
+              </p>
             </div>
-            <div className="about__value-item">
-              <div className="about__value-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#51c488" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 6v6l4 2" />
-                </svg>
-              </div>
-              <h3 className="about__value-title">신속</h3>
-              <p className="about__value-desc">빠른 대응과 정확한 처리로 고객의 시간을 소중히 합니다.</p>
-            </div>
-            <div className="about__value-item">
-              <div className="about__value-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#51c488" strokeWidth="2">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                  <polyline points="22,4 12,14.01 9,11.01" />
-                </svg>
-              </div>
-              <h3 className="about__value-title">전문성</h3>
-              <p className="about__value-desc">끊임없는 연구와 교육으로 최고의 기술력을 유지합니다.</p>
+            <div className="about__customers-col">
+              <p>
+                또한 서비스 종료 후에도 지속적인관리 팁 안내, 유지보수 관련 상담을 진행하여 고객님의 생활 공간이 보다 안전하고 쾌적하게 유지되도록 돕고 있습니다.
+              </p>
+              <p>
+                프르조의 목표는 단순히 해충을 제거하는 것이 아니라, 고객님과 가족, 그리고 이용자 모두가 안심할 수 있는 환경을 조성하는 것입니다. 
+              </p>
+              <p>
+                고객의 입장에서 문제를 바라보고, 정직하고 투명한 서비스를 제공하는 방역 기업으로서 앞으로도 깨끗하고 건강한 공간을 만드는 데 최선을 다하는 프르조가 되겠습니다.
+              </p>
             </div>
           </div>
+          <div className="about__signature">
+            <img src={logoGreen} alt="PRZO" className="about__signature-logo" />
+            <span className="about__signature-name">대표 김선미 올림</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 찾아오시는길 섹션 */}
+      <section className="about__location">
+        <div className="about__content">
+          <div className="about__location-header">
+            <div className="about__location-info">
+              <h2 className="about__location-title">찾아오시는길</h2>
+              <p className="about__location-address">인천 계양구 마장로544번길 10, 제일풍경채 계양위너스카이 A1블럭 B1동 207호</p>
+            </div>
+            <a
+              href="https://map.naver.com/v5/search/인천 계양구 마장로544번길 10, 제일풍경채 계양위너스카이 A1블럭 B1동 207호"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="about__location-link"
+            >
+              네이버지도 바로가기 &gt;
+            </a>
+          </div>
+          <iframe
+            src="https://map.naver.com/p/search/인천%20계양구%20마장로544번길%2010,%20제일풍경채%20계양위너스카이%20A1블럭%20B1동%20207호"
+            className="about__map"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            title="프르조 위치"
+          ></iframe>
         </div>
       </section>
     </div>

@@ -47,7 +47,7 @@ const Header = ({ variant = "default" }) => {
   };
 
   return (
-    <header className={`header ${isScrolled ? "header--scrolled" : ""} ${isAdmin ? "header--admin" : ""} ${!isVisible ? "header--hidden" : ""}`}>
+    <header className={`header ${isScrolled ? "header--scrolled" : ""} ${isAdmin ? "header--admin" : ""} ${isSubPage ? "header--subpage" : ""} ${!isVisible ? "header--hidden" : ""}`}>
       <div className="header__container">
         <Link to="/" className="header__logo">
           <img src={isAdmin ? logoGreenGradation : isSubPage ? logoGreen : logoWhite} alt="PRZO" />

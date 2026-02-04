@@ -204,6 +204,30 @@
   }
 }
 
+/* Subpage variant (회사 소개, 서비스 소개, 상담 문의, 서비스 후기) */
+.header--subpage {
+  background-color: #fff;
+  border-bottom: 1px solid #dddddd;
+}
+
+.header--subpage .header__nav-link {
+  color: #333;
+}
+
+.header--subpage .header__nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.header--subpage .header__menu-icon span {
+  background-color: #333;
+}
+
+.header--subpage.header--scrolled {
+  background-color: #fff;
+  box-shadow: none;
+}
+
 /* Admin variant */
 .header--admin {
   background-color: transparent;
