@@ -121,7 +121,7 @@ public class InquiryController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}/update")
     public ResponseEntity<Map<String, Object>> updateInquiry(
             @PathVariable Long id,
             @RequestParam String name,

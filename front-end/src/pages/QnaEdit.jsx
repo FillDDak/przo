@@ -150,8 +150,8 @@ const QnaEdit = () => {
         submitData.append("attachment", attachment);
       }
 
-      const response = await fetch(`${API_BASE_URL}/inquiries/${id}`, {
-        method: "PUT",
+      const response = await fetch(`${API_BASE_URL}/inquiries/${id}/update`, {
+        method: "POST",
         body: submitData,
       });
 
@@ -191,9 +191,9 @@ const QnaEdit = () => {
             <img src={homeIcon} alt="홈" className="qna-write__breadcrumb-icon" />
           </Link>
           <span className="qna-write__breadcrumb-separator">&gt;</span>
-          <span className="qna-write__breadcrumb-text">상담문의</span>
+          <span className="qna-write__breadcrumb-text">상담 문의</span>
           <span className="qna-write__breadcrumb-separator">&gt;</span>
-          <span className="qna-write__breadcrumb-current">무료문의</span>
+          <span className="qna-write__breadcrumb-current">무료 문의</span>
         </div>
       </section>
 

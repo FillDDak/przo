@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 import logoGreen from "../assets/logo/przo-logo-green.png";
@@ -14,7 +15,11 @@ const Footer = ({ variant = "default" }) => {
       <div className="footer__container">
         <div className="footer__top">
           <div className="footer__left">
-            <img src={isAdmin ? logoGreenGradation : logoGreen} alt="PRZO Logo" className="footer__logo" />
+            <Link to="/" className="footer__logo-link" onClick={() => {
+              window.scrollTo(0, 0);
+            }}>
+              <img src={isAdmin ? logoGreenGradation : logoGreen} alt="PRZO Logo" className="footer__logo" />
+            </Link>
             <div className="footer__social">
               <a href="https://open.kakao.com/o/sYCdK5og" target="_blank" rel="noopener noreferrer">
                 <img src={kakaotalkIcon} alt="kakaotalk" />

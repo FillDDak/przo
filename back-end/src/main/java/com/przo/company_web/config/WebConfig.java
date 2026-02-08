@@ -10,8 +10,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:3000")  // React 개발 서버
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                .allowedOriginPatterns("http://localhost:*", "https://*.ngrok-free.dev", "https://*.ngrok.io")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }

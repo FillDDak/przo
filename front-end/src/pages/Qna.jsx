@@ -64,16 +64,16 @@ const Qna = () => {
             <img src={homeIcon} alt="홈" className="qna__breadcrumb-icon" />
           </Link>
           <span className="qna__breadcrumb-separator">&gt;</span>
-          <span className="qna__breadcrumb-text">상담문의</span>
+          <span className="qna__breadcrumb-text">상담 문의</span>
           <span className="qna__breadcrumb-separator">&gt;</span>
-          <span className="qna__breadcrumb-current">무료문의</span>
+          <span className="qna__breadcrumb-current">무료 문의</span>
         </div>
       </section>
 
       {/* 메인 컨텐츠 */}
       <section className="qna__main">
         <div className="qna__content">
-          <h1 className="qna__title">무료문의</h1>
+          <h1 className="qna__title">무료 문의</h1>
 
           {/* 문의 목록 테이블 */}
           <div className="qna__table-wrapper">

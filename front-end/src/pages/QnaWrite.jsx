@@ -143,16 +143,16 @@ const QnaWrite = () => {
             <img src={homeIcon} alt="홈" className="qna-write__breadcrumb-icon" />
           </Link>
           <span className="qna-write__breadcrumb-separator">&gt;</span>
-          <span className="qna-write__breadcrumb-text">상담문의</span>
+          <span className="qna-write__breadcrumb-text">상담 문의</span>
           <span className="qna-write__breadcrumb-separator">&gt;</span>
-          <span className="qna-write__breadcrumb-current">무료문의</span>
+          <span className="qna-write__breadcrumb-current">무료 문의</span>
         </div>
       </section>
 
       {/* 메인 컨텐츠 */}
       <section className="qna-write__main">
         <div className="qna-write__content">
-          <h1 className="qna-write__title">무료문의</h1>
+          <h1 className="qna-write__title">무료 문의</h1>
 
           <form className="qna-write__form" onSubmit={handleSubmit}>
             {/* 이름 & 업체명/주소 */}

@@ -17,7 +17,7 @@ const About = () => {
             <img src={homeIcon} alt="홈" className="about__breadcrumb-icon" />
           </Link>
           <span className="about__breadcrumb-separator">&gt;</span>
-          <span className="about__breadcrumb-current">회사소개</span>
+          <span className="about__breadcrumb-current">회사 소개</span>
         </div>
         <div className="about__banner-content">
           <h1 className="about__banner-title">프르조 인사말</h1>
