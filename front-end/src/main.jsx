@@ -12,6 +12,9 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Service from "./pages/Service";
 import Qna from "./pages/Qna";
+import QnaWrite from "./pages/QnaWrite";
+import QnaDetail from "./pages/QnaDetail";
+import QnaEdit from "./pages/QnaEdit";
 import Reviews from "./pages/Reviews";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
@@ -37,6 +40,18 @@ const router = createBrowserRouter([
       {
         path: "qna",
         element: <Qna />,
+      },
+      {
+        path: "qna/write",
+        element: <QnaWrite />,
+      },
+      {
+        path: "qna/:id",
+        element: <QnaDetail />,
+      },
+      {
+        path: "qna/:id/edit",
+        element: <QnaEdit />,
       },
       {
         path: "reviews",

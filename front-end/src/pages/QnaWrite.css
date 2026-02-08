@@ -1,0 +1,303 @@
+.qna-write {
+  width: 100%;
+  padding-top: 90px;
+  background-color: #ffffff;
+}
+
+.qna-write__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 배너 섹션 */
+.qna-write__banner {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+}
+
+/* 브레드크럼 */
+.qna-write__breadcrumb {
+  position: absolute;
+  top: 16px;
+  left: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.qna-write__breadcrumb-link {
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.qna-write__breadcrumb-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.qna-write__breadcrumb-separator {
+  color: #767676;
+  font-size: 12px;
+}
+
+.qna-write__breadcrumb-text {
+  color: #767676;
+  font-size: 14px;
+}
+
+.qna-write__breadcrumb-current {
+  color: #51c488;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 메인 컨텐츠 섹션 */
+.qna-write__main {
+  padding: 40px 0 120px;
+}
+
+.qna-write__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 40px 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #dddddd;
+}
+
+/* 폼 */
+.qna-write__form {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+}
+
+.qna-write__row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.qna-write__field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.qna-write__field--full {
+  margin-bottom: 24px;
+}
+
+.qna-write__label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #767676;
+  margin-bottom: 8px;
+}
+
+.qna-write__input {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.qna-write__input:focus {
+  background-color: #f0f0f0;
+}
+
+.qna-write__input::placeholder {
+  font-weight: 500;
+  color: #bcbcbc;
+}
+
+.qna-write__textarea {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  resize: none;
+  min-height: 120px;
+  transition: background-color 0.3s ease;
+}
+
+.qna-write__textarea:focus {
+  background-color: #f0f0f0;
+}
+
+.qna-write__textarea::placeholder {
+  font-weight: 500;
+  color: #bcbcbc;
+}
+
+/* 파일 업로드 */
+.qna-write__file-wrapper {
+  position: relative;
+}
+
+.qna-write__file-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.qna-write__file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #bcbcbc;
+  background-color: #f8f8f8;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.qna-write__file-label:hover {
+  background-color: #f0f0f0;
+}
+
+.qna-write__file-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  filter: brightness(0) saturate(100%) invert(81%) sepia(0%) saturate(0%) hue-rotate(166deg) brightness(91%) contrast(87%);
+}
+
+/* 작성하기 버튼 */
+.qna-write__button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid #dddddd;
+}
+
+.qna-write__submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #ffffff;
+  border: 1px solid #1f1f1f;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qna-write__submit-btn:hover:not(:disabled) {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+.qna-write__submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .qna-write {
+    padding-top: 70px;
+  }
+
+  .qna-write__content {
+    padding: 0 24px;
+  }
+
+  .qna-write__breadcrumb {
+    left: 24px;
+  }
+
+  .qna-write__form {
+    padding: 32px 24px;
+  }
+
+  .qna-write__row {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .qna-write {
+    padding-top: 60px;
+  }
+
+  .qna-write__content {
+    padding: 0 20px;
+  }
+
+  .qna-write__breadcrumb {
+    left: 20px;
+  }
+
+  .qna-write__title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .qna-write__main {
+    padding: 20px 0 80px;
+  }
+
+  .qna-write__form {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .qna-write__row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .qna-write__row .qna-write__field {
+    margin-bottom: 24px;
+  }
+
+  .qna-write__field--full {
+    margin-bottom: 24px;
+  }
+
+  .qna-write__button-wrapper {
+    margin-top: 32px;
+    padding-top: 32px;
+  }
+
+  .qna-write__submit-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}

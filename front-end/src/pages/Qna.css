@@ -1,0 +1,322 @@
+.qna {
+  width: 100%;
+  padding-top: 90px;
+  background-color: #ffffff;
+}
+
+.qna__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 배너 섹션 */
+.qna__banner {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+}
+
+/* 브레드크럼 */
+.qna__breadcrumb {
+  position: absolute;
+  top: 16px;
+  left: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.qna__breadcrumb-link {
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.qna__breadcrumb-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.qna__breadcrumb-separator {
+  color: #767676;
+  font-size: 12px;
+}
+
+.qna__breadcrumb-text {
+  color: #767676;
+  font-size: 14px;
+}
+
+.qna__breadcrumb-current {
+  color: #51c488;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 메인 컨텐츠 섹션 */
+.qna__main {
+  padding: 40px 0 120px;
+}
+
+.qna__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 60px 0;
+}
+
+/* 테이블 */
+.qna__table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.qna__table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid #1f1f1f;
+}
+
+.qna__th {
+  padding: 16px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f1f1f;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fafafa;
+}
+
+.qna__th--number {
+  width: 100px;
+}
+
+.qna__th--title {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.qna__th--date {
+  width: 120px;
+}
+
+.qna__row {
+  transition: background-color 0.2s;
+}
+
+.qna__row:hover {
+  background-color: #f9f9f9;
+}
+
+.qna__td {
+  padding: 16px 12px;
+  font-size: 14px;
+  color: #444;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.qna__td--title {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.qna__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #444;
+  transition: color 0.2s;
+}
+
+.qna__link:hover {
+  color: #51c488;
+}
+
+.qna__lock-icon {
+  width: 16px;
+  height: 16px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.qna__title-text {
+  color: inherit;
+}
+
+.qna__code,
+.qna__name {
+  color: #999;
+  font-size: 13px;
+}
+
+.qna__td--loading,
+.qna__td--empty {
+  text-align: center;
+  padding: 60px 12px;
+  color: #999;
+}
+
+.qna__comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 8px;
+  color: #999;
+  font-size: 13px;
+}
+
+.qna__comment-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* 문의하기 버튼 */
+.qna__button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.qna__write-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #ffffff;
+  border: 1px solid #1f1f1f;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.qna__write-btn:hover {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+/* 페이지네이션 */
+.qna__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+}
+
+.qna__page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  color: #666;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qna__page-btn:hover:not(:disabled) {
+  color: #51c488;
+}
+
+.qna__page-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.qna__page-btn--active {
+  color: #1f1f1f;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.qna__page-btn--prev,
+.qna__page-btn--next {
+  font-size: 16px;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .qna {
+    padding-top: 70px;
+  }
+
+  .qna__content {
+    padding: 0 24px;
+  }
+
+  .qna__breadcrumb {
+    left: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .qna {
+    padding-top: 60px;
+  }
+
+  .qna__content {
+    padding: 0 20px;
+  }
+
+  .qna__breadcrumb {
+    left: 20px;
+  }
+
+  .qna__title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .qna__main {
+    padding: 20px 0 80px;
+  }
+
+  .qna__th--number {
+    width: 60px;
+  }
+
+  .qna__th--date {
+    width: 90px;
+  }
+
+  .qna__th,
+  .qna__td {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+
+  .qna__code {
+    display: none;
+  }
+
+  .qna__write-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+
+  .qna__pagination {
+    margin-top: 32px;
+  }
+
+  .qna__page-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}

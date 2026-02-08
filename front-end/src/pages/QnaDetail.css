@@ -1,0 +1,436 @@
+.qna-detail {
+  width: 100%;
+  padding-top: 90px;
+  background-color: #ffffff;
+}
+
+.qna-detail__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.qna-detail__loading,
+.qna-detail__not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 16px;
+  color: #999;
+}
+
+/* 배너 섹션 */
+.qna-detail__banner {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+}
+
+/* 브레드크럼 */
+.qna-detail__breadcrumb {
+  position: absolute;
+  top: 16px;
+  left: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.qna-detail__breadcrumb-link {
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.qna-detail__breadcrumb-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.qna-detail__breadcrumb-separator {
+  color: #767676;
+  font-size: 12px;
+}
+
+.qna-detail__breadcrumb-text {
+  color: #767676;
+  font-size: 14px;
+}
+
+.qna-detail__breadcrumb-current {
+  color: #51c488;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 메인 컨텐츠 섹션 */
+.qna-detail__main {
+  padding: 40px 0 120px;
+}
+
+.qna-detail__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 40px 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #dddddd;
+}
+
+/* 폼 */
+.qna-detail__form {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+}
+
+.qna-detail__row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.qna-detail__field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.qna-detail__field--full {
+  margin-bottom: 24px;
+}
+
+.qna-detail__label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #767676;
+  margin-bottom: 8px;
+}
+
+.qna-detail__value {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border-radius: 15px;
+}
+
+.qna-detail__value--content {
+  min-height: 120px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+/* 첨부파일 */
+.qna-detail__file {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #f8f8f8;
+  border-radius: 15px;
+}
+
+.qna-detail__file-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #1f1f1f;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.qna-detail__file-link:hover {
+  color: #51c488;
+}
+
+.qna-detail__file-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  filter: brightness(0) saturate(100%) invert(81%) sepia(0%) saturate(0%) hue-rotate(166deg) brightness(91%) contrast(87%);
+}
+
+.qna-detail__file-empty {
+  color: #bcbcbc;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* 버튼 */
+.qna-detail__button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 40px 0;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+
+.qna-detail__list-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #ffffff;
+  border: 1px solid #1f1f1f;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qna-detail__list-btn:hover {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+/* 비밀번호 입력 폼 */
+.qna-detail__password-form {
+  display: flex;
+  justify-content: center;
+  padding: 0 0;
+}
+
+.qna-detail__password-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 80px;
+  background-color: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  width: 100%;
+}
+
+.qna-detail__lock-icon {
+  width: 48px;
+  height: 48px;
+  color: #bcbcbc;
+  margin-bottom: 24px;
+}
+
+.qna-detail__password-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin: 0 0 12px 0;
+}
+
+.qna-detail__password-desc {
+  font-size: 15px;
+  color: #767676;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+.qna-detail__password-input-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.qna-detail__password-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border: none;
+  border-radius: 15px;
+  text-align: center;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.qna-detail__password-input:focus {
+  background-color: #f0f0f0;
+}
+
+.qna-detail__password-input::placeholder {
+  font-weight: 500;
+  color: #bcbcbc;
+}
+
+.qna-detail__password-error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 0;
+}
+
+.qna-detail__password-buttons {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.qna-detail__password-cancel {
+  flex: 1;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #767676;
+  background-color: #f8f8f8;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qna-detail__password-cancel:hover {
+  background-color: #f0f0f0;
+}
+
+.qna-detail__password-submit {
+  flex: 1;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #51c488;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qna-detail__password-submit:hover {
+  background-color: #3da86e;
+}
+
+/* 답변 섹션 */
+.qna-detail__answer {
+  margin-top: 32px;
+}
+
+.qna-detail__answer-content {
+  margin-top: 8px;
+  padding: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border-radius: 15px;
+  line-height: 1.6;
+  min-height: 80px;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .qna-detail {
+    padding-top: 70px;
+  }
+
+  .qna-detail__content {
+    padding: 0 24px;
+  }
+
+  .qna-detail__breadcrumb {
+    left: 24px;
+  }
+
+  .qna-detail__form {
+    padding: 32px 24px;
+  }
+
+  .qna-detail__row {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .qna-detail {
+    padding-top: 60px;
+  }
+
+  .qna-detail__content {
+    padding: 0 20px;
+  }
+
+  .qna-detail__breadcrumb {
+    left: 20px;
+  }
+
+  .qna-detail__title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .qna-detail__main {
+    padding: 20px 0 80px;
+  }
+
+  .qna-detail__form {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .qna-detail__row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .qna-detail__row .qna-detail__field {
+    margin-bottom: 24px;
+  }
+
+  .qna-detail__field--full {
+    margin-bottom: 24px;
+  }
+
+  .qna-detail__button-wrapper {
+    margin: 32px 0;
+    padding-bottom: 32px;
+  }
+
+  .qna-detail__list-btn {
+    width: 100%;
+    padding: 14px 24px;
+  }
+
+  .qna-detail__password-box {
+    padding: 40px 24px;
+    border-radius: 16px;
+  }
+
+  .qna-detail__lock-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .qna-detail__password-title {
+    font-size: 20px;
+  }
+
+  .qna-detail__password-buttons {
+    flex-direction: column;
+  }
+}
