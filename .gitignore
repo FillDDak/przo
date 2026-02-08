@@ -67,3 +67,4 @@ application.properties
 
 ### Database ###
 database/przo_계정_생성.sql
+database/przo_admin.sql
