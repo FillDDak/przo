@@ -150,6 +150,14 @@
   color: inherit;
 }
 
+.qna__message-icon {
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  flex-shrink: 0;
+  filter: brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(95%) contrast(87%);
+}
+
 .qna__code,
 .qna__name {
   color: #999;

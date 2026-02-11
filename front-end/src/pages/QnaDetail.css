@@ -179,11 +179,14 @@
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin: 40px 0;
+  margin: 40px 0 0 0;
   padding-top: 40px;
-  padding-bottom: 40px;
   border-top: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd;
+}
+
+.qna-detail__button-wrapper--no-border {
+  border-top: none;
+  padding-top: 0;
 }
 
 .qna-detail__list-btn {
@@ -205,6 +208,78 @@
 .qna-detail__list-btn:hover {
   background-color: #1f1f1f;
   color: #ffffff;
+}
+
+.qna-detail__list-btn--admin {
+  color: #51c488;
+  border-color: #51c488;
+}
+
+.qna-detail__list-btn--admin:hover {
+  background-color: #51c488;
+  color: #ffffff;
+}
+
+.qna-detail__list-btn--delete {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.qna-detail__list-btn--delete:hover {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+/* 관리자 답변 폼 */
+.qna-detail__reply-form {
+  margin-top: 24px;
+  padding: 24px;
+  background-color: #f8f8f8;
+  border-radius: 15px;
+}
+
+.qna-detail__reply-textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 16px;
+  margin-top: 8px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  color: #1f1f1f;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.qna-detail__reply-textarea:focus {
+  border-color: #51c488;
+}
+
+.qna-detail__reply-submit {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #51c488;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qna-detail__reply-submit:hover {
+  background-color: #3da86e;
+}
+
+.qna-detail__reply-submit:disabled {
+  background-color: #bcbcbc;
+  cursor: not-allowed;
 }
 
 /* 비밀번호 입력 폼 */
@@ -329,6 +404,14 @@
 /* 답변 섹션 */
 .qna-detail__answer {
   margin-top: 32px;
+  border-top: 1px solid #dddddd;
+  padding-top: 40px;
+}
+
+.qna-detail__answer--no-border {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 40px;
 }
 
 .qna-detail__answer-content {

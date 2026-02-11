@@ -2,14 +2,17 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Qna.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
+import messageIcon from "../assets/other-page-icon-image/message-icon.svg";
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL = "/api";
 
 const Qna = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [inquiries, setInquiries] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
+  const pageSize = 10;
 
   useEffect(() => {
     const fetchInquiries = async () => {
@@ -21,6 +24,7 @@ const Qna = () => {
         const data = await response.json();
         setInquiries(data.content);
         setTotalPages(data.totalPages);
+        setTotalElements(data.totalElements);
       } catch (error) {
         console.error("문의 목록을 불러오는데 실패했습니다:", error);
       } finally {
@@ -99,9 +103,11 @@ const Qna = () => {
                     </td>
                   </tr>
                 ) : (
-                  inquiries.map((item) => (
+                  inquiries.map((item, index) => (
                     <tr key={item.id} className="qna__row">
-                      <td className="qna__td qna__td--number">{item.id}</td>
+                      <td className="qna__td qna__td--number">
+                        {totalElements - (currentPage * pageSize) - index}
+                      </td>
                       <td className="qna__td qna__td--title">
                         <Link to={`/qna/${item.id}`} className="qna__link">
                           <svg className="qna__lock-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -109,6 +115,9 @@ const Qna = () => {
                             <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                           <span className="qna__title-text">{item.title}</span>
+                          {item.hasReply && (
+                            <img src={messageIcon} alt="답변완료" className="qna__message-icon" />
+                          )}
                         </Link>
                       </td>
                       <td className="qna__td qna__td--date">{item.createdAt}</td>

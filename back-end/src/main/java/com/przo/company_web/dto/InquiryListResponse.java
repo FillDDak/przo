@@ -12,8 +12,9 @@ public class InquiryListResponse {
     private String title;
     private String name;
     private String createdAt;
+    private boolean hasReply;
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
     public InquiryListResponse(Inquiry inquiry) {
         this.id = inquiry.getId();
@@ -22,5 +23,6 @@ public class InquiryListResponse {
         this.createdAt = inquiry.getCreatedAt() != null
             ? inquiry.getCreatedAt().format(formatter)
             : "";
+        this.hasReply = inquiry.getAdminNote() != null && !inquiry.getAdminNote().trim().isEmpty();
     }
 }

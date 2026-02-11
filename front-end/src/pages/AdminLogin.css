@@ -77,6 +77,26 @@
     background: linear-gradient(90deg, #51C488 0%, #4A976F 100%);
 }
 
+.admin-login__button:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.admin-login__error {
+    color: #ff6b6b;
+    font-size: 14px;
+    text-align: center;
+    margin: 0;
+}
+
+.admin-login__button--logout {
+    background: linear-gradient(90deg, #ff6b6b 0%, #e74c3c 100%);
+}
+
+.admin-login__button--logout:hover {
+    background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1024px) {
     .admin-login__box {

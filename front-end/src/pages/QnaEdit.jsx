@@ -1,20 +1,22 @@
 import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import "./QnaWrite.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL = "/api";
 
 const QnaEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const passedPassword = location.state?.password || "";
   const [formData, setFormData] = useState({
     name: "",
     companyName: "",
     phone: "",
     email: "",
-    password: "",
+    password: passedPassword,
     title: "",
     content: "",
   });
@@ -30,15 +32,15 @@ const QnaEdit = () => {
         const response = await fetch(`${API_BASE_URL}/inquiries/${id}`);
         if (response.ok) {
           const data = await response.json();
-          setFormData({
+          setFormData((prev) => ({
             name: data.name || "",
             companyName: data.companyName || "",
             phone: data.phone || "",
             email: data.email || "",
-            password: "",
+            password: prev.password,
             title: data.title || "",
             content: data.content || "",
-          });
+          }));
           setCurrentAttachment(data.attachment);
         } else {
           alert("문의를 불러올 수 없습니다.");

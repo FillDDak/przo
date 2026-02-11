@@ -4,7 +4,7 @@ import "./QnaWrite.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL = "/api";
 
 const QnaWrite = () => {
   const navigate = useNavigate();

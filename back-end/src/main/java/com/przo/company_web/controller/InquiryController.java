@@ -4,6 +4,7 @@ import com.przo.company_web.dto.InquiryCreateRequest;
 import com.przo.company_web.dto.InquiryDetailResponse;
 import com.przo.company_web.dto.InquiryListResponse;
 import com.przo.company_web.entity.Inquiry;
+import com.przo.company_web.service.AdminService;
 import com.przo.company_web.service.InquiryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ import java.util.UUID;
 public class InquiryController {
 
     private final InquiryService inquiryService;
+    private final AdminService adminService;
 
     @Value("${file.upload-dir:uploads/inquiries}")
     private String uploadDir;
@@ -176,6 +178,70 @@ public class InquiryController {
             response.put("success", false);
             response.put("message", "문의 수정에 실패했습니다: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    // 관리자 전용: 답변 등록
+    @PostMapping("/{id}/reply")
+    public ResponseEntity<Map<String, Object>> addAdminReply(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        // 관리자 인증 확인
+        String token = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+        if (!adminService.validateToken(token)) {
+            response.put("success", false);
+            response.put("message", "관리자 권한이 필요합니다.");
+            return ResponseEntity.status(403).body(response);
+        }
+
+        String adminNote = request.get("adminNote");
+        return inquiryService.addAdminReply(id, adminNote)
+                .map(inquiry -> {
+                    response.put("success", true);
+                    response.put("message", "답변이 등록되었습니다.");
+                    return ResponseEntity.ok(response);
+                })
+                .orElseGet(() -> {
+                    response.put("success", false);
+                    response.put("message", "문의를 찾을 수 없습니다.");
+                    return ResponseEntity.notFound().build();
+                });
+    }
+
+    // 관리자 전용: 문의 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteInquiry(
+            @PathVariable Long id,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        // 관리자 인증 확인
+        String token = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+        if (!adminService.validateToken(token)) {
+            response.put("success", false);
+            response.put("message", "관리자 권한이 필요합니다.");
+            return ResponseEntity.status(403).body(response);
+        }
+
+        if (inquiryService.deleteInquiry(id)) {
+            response.put("success", true);
+            response.put("message", "문의가 삭제되었습니다.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("success", false);
+            response.put("message", "문의를 찾을 수 없습니다.");
+            return ResponseEntity.notFound().build();
         }
     }
 

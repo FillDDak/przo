@@ -92,3 +92,16 @@ VALUES (SEQ_REVIEW_ID.NEXTVAL, 1, '서초구 음식점 정기 방역', TO_DATE('
         '/uploads/reviews/review2.jpg', 'published');
 
 COMMIT;
+
+-- ============================================
+-- 테이블 전체 조회
+-- ============================================
+
+-- 관리자 테이블 전체 조회
+SELECT * FROM ADMINS;
+
+-- 문의 테이블 전체 조회
+SELECT * FROM INQUIRIES;
+
+-- 서비스 후기 테이블 전체 조회
+SELECT * FROM REVIEWS;

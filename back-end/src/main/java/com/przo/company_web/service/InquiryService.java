@@ -74,4 +74,24 @@ public class InquiryService {
                     return inquiryRepository.save(inquiry);
                 });
     }
+
+    @Transactional
+    public Optional<Inquiry> addAdminReply(Long id, String adminNote) {
+        return inquiryRepository.findById(id)
+                .map(inquiry -> {
+                    inquiry.setAdminNote(adminNote);
+                    inquiry.setStatus("completed");
+                    inquiry.setRespondedAt(java.time.LocalDateTime.now());
+                    return inquiryRepository.save(inquiry);
+                });
+    }
+
+    @Transactional
+    public boolean deleteInquiry(Long id) {
+        if (inquiryRepository.existsById(id)) {
+            inquiryRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
