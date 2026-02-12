@@ -1,0 +1,476 @@
+.review-write {
+  width: 100%;
+  padding-top: 90px;
+  background-color: #ffffff;
+}
+
+.review-write__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 배너 섹션 */
+.review-write__banner {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+}
+
+/* 브레드크럼 */
+.review-write__breadcrumb {
+  position: absolute;
+  top: 16px;
+  left: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.review-write__breadcrumb-link {
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.review-write__breadcrumb-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.review-write__breadcrumb-separator {
+  color: #767676;
+  font-size: 12px;
+}
+
+.review-write__breadcrumb-text {
+  color: #767676;
+  font-size: 14px;
+}
+
+.review-write__breadcrumb-current {
+  color: #51c488;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 메인 컨텐츠 섹션 */
+.review-write__main {
+  padding: 40px 0 120px;
+}
+
+.review-write__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 40px 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #dddddd;
+}
+
+/* 폼 */
+.review-write__form {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+}
+
+.review-write__row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.review-write__row .review-write__field {
+  margin-bottom: 0;
+}
+
+.review-write__field--title {
+  flex: 1;
+}
+
+.review-write__field--date {
+  flex: 0 0 200px;
+}
+
+/* 날짜 커스텀 */
+.review-write__date-wrapper {
+  position: relative;
+}
+
+.review-write__date-hidden {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.review-write__date-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.review-write__date-icon {
+  width: 16px;
+  height: 16px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.review-write__field {
+  margin-bottom: 24px;
+}
+
+.review-write__label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #767676;
+  margin-bottom: 8px;
+}
+
+.review-write__input {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border: none;
+  border-radius: 15px;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.review-write__input:focus {
+  background-color: #f0f0f0;
+}
+
+.review-write__input::placeholder {
+  font-weight: 500;
+  color: #bcbcbc;
+}
+
+/* 텍스트 에디터 (Quill) */
+.review-write__editor-wrapper .quill {
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #f8f8f8;
+}
+
+.review-write__editor-wrapper .ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  background-color: #f0f0f0;
+  padding: 10px 12px;
+}
+
+.review-write__editor-wrapper .ql-container.ql-snow {
+  border: none;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+}
+
+.review-write__editor-wrapper .ql-editor {
+  min-height: 200px;
+  padding: 14px 16px;
+  color: #1f1f1f;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+.review-write__editor-wrapper .ql-editor.ql-blank::before {
+  font-style: normal;
+  font-weight: 500;
+  color: #bcbcbc;
+}
+
+.review-write__editor-wrapper .ql-editor img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 12px 0;
+  border-radius: 8px;
+}
+
+/* 사진 관리 영역 */
+.review-write__images-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.review-write__images-header .review-write__label {
+  margin-bottom: 0;
+}
+
+.review-write__upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #51c488;
+  background: #fff;
+  border: 1px solid #51c488;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.review-write__upload-btn:hover {
+  background: #51c488;
+  color: #fff;
+}
+
+.review-write__upload-btn svg {
+  flex-shrink: 0;
+}
+
+.review-write__images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.review-write__image-item {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #e8e8e8;
+  cursor: grab;
+  transition: border-color 0.2s, opacity 0.2s, transform 0.2s;
+}
+
+.review-write__image-item:hover {
+  border-color: #999;
+}
+
+.review-write__image-item--selected {
+  border-color: #51c488;
+  box-shadow: 0 0 0 2px rgba(81, 196, 136, 0.3);
+}
+
+.review-write__image-item--dragging {
+  opacity: 0.4;
+}
+
+.review-write__image-item--drag-over {
+  border-color: #51c488;
+  transform: scale(1.05);
+}
+
+.review-write__image-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  background-color: #f5f5f5;
+}
+
+.review-write__image-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.review-write__image-item:hover .review-write__image-remove {
+  opacity: 1;
+}
+
+.review-write__image-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(81, 196, 136, 0.85);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  padding: 2px 0;
+  pointer-events: none;
+}
+
+.review-write__images-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  background-color: #f8f8f8;
+  border-radius: 15px;
+  border: 2px dashed #ddd;
+  color: #bcbcbc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.review-write__images-empty:hover {
+  border-color: #51c488;
+  color: #51c488;
+}
+
+.review-write__images-empty span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 버튼 영역 */
+.review-write__button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid #dddddd;
+}
+
+.review-write__cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #767676;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.review-write__cancel-btn:hover {
+  color: #1f1f1f;
+  border-color: #1f1f1f;
+}
+
+.review-write__submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #51c488;
+  border: 1px solid #51c488;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.review-write__submit-btn:hover:not(:disabled) {
+  background-color: #3da96f;
+  border-color: #3da96f;
+}
+
+.review-write__submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .review-write {
+    padding-top: 70px;
+  }
+
+  .review-write__content {
+    padding: 0 24px;
+  }
+
+  .review-write__breadcrumb {
+    left: 24px;
+  }
+
+  .review-write__form {
+    padding: 32px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .review-write {
+    padding-top: 60px;
+  }
+
+  .review-write__content {
+    padding: 0 20px;
+  }
+
+  .review-write__breadcrumb {
+    left: 20px;
+  }
+
+  .review-write__title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .review-write__main {
+    padding: 20px 0 80px;
+  }
+
+  .review-write__form {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .review-write__row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .review-write__row .review-write__field {
+    margin-bottom: 24px;
+  }
+
+  .review-write__field--date {
+    flex: unset;
+  }
+
+  .review-write__button-wrapper {
+    margin-top: 32px;
+    padding-top: 32px;
+  }
+
+  .review-write__cancel-btn,
+  .review-write__submit-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}

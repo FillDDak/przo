@@ -76,6 +76,8 @@ const AdminLogin = () => {
                 <form className="admin-login__form" onSubmit={handleSubmit}>
                     <input
                         type="text"
+                        name="username"
+                        autoComplete="username"
                         className="admin-login__input"
                         placeholder="아이디"
                         value={id}
@@ -83,6 +85,8 @@ const AdminLogin = () => {
                     />
                     <input
                         type="password"
+                        name="password"
+                        autoComplete="current-password"
                         className="admin-login__input"
                         placeholder="비밀번호"
                         value={password}

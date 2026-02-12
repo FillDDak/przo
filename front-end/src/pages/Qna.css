@@ -236,7 +236,7 @@
   transition: all 0.2s;
 }
 
-.qna__page-btn:hover:not(:disabled) {
+.qna__page-btn:hover:not(:disabled):not(.qna__page-btn--active) {
   color: #51c488;
 }
 
@@ -245,11 +245,13 @@
   cursor: not-allowed;
 }
 
-.qna__page-btn--active {
+.qna__page-btn--active,
+.qna__page-btn--active:hover {
   color: #1f1f1f;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 4px;
+  cursor: default;
 }
 
 .qna__page-btn--prev,

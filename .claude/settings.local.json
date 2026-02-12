@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(sort:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(dir /s \"c:\\\\Projects\\\\przo\\\\back-end\\\\src\\\\main\\\\java\")",
+      "Bash(npm install:*)"
     ]
   }
 }

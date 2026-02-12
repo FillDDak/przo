@@ -1,0 +1,527 @@
+.reviews {
+  width: 100%;
+  padding-top: 90px;
+  background-color: #ffffff;
+}
+
+.reviews__content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 배너 섹션 */
+.reviews__banner {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+}
+
+/* 브레드크럼 */
+.reviews__breadcrumb {
+  position: absolute;
+  top: 16px;
+  left: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.reviews__breadcrumb-link {
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.reviews__breadcrumb-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.reviews__breadcrumb-separator {
+  color: #767676;
+  font-size: 12px;
+}
+
+.reviews__breadcrumb-text {
+  color: #767676;
+  font-size: 14px;
+}
+
+.reviews__breadcrumb-current {
+  color: #51c488;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 메인 컨텐츠 섹션 */
+.reviews__main {
+  padding: 0 0 120px;
+}
+
+.reviews__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 60px 0;
+}
+
+/* 카드 그리드 */
+.reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px 40px;
+}
+
+.reviews__card {
+  cursor: pointer;
+  padding: 12px;
+}
+
+.reviews__card-thumbnail {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.reviews__card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #f5f5f5;
+}
+
+.reviews__card-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #d9d9d9;
+}
+
+.reviews__card-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 0;
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 12px;
+}
+
+.reviews__card-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+}
+
+.reviews__card:hover .reviews__card-title {
+  text-decoration: underline;
+}
+
+.reviews__card-date {
+  font-size: 14px;
+  color: #999;
+}
+
+.reviews__loading,
+.reviews__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 0;
+  color: #999;
+  font-size: 15px;
+}
+
+/* 페이지네이션 */
+.reviews__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 60px;
+}
+
+.reviews__page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  color: #666;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reviews__page-btn:hover:not(:disabled):not(.reviews__page-btn--active) {
+  color: #51c488;
+}
+
+.reviews__page-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.reviews__page-btn--active,
+.reviews__page-btn--active:hover {
+  color: #1f1f1f;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: default;
+}
+
+.reviews__page-btn--prev,
+.reviews__page-btn--next {
+  font-size: 16px;
+}
+
+/* 모달 */
+.reviews__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 40px 20px;
+}
+
+.reviews__modal {
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.reviews__modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+  z-index: 1;
+}
+
+.reviews__modal-close:hover {
+  color: #1f1f1f;
+}
+
+.reviews__modal-thumbnail {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.reviews__modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reviews__modal-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #d9d9d9;
+}
+
+.reviews__modal-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.reviews__modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.reviews__modal-date {
+  font-size: 14px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.reviews__modal-content {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #444;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+  margin: 0;
+}
+
+.reviews__modal-content p {
+  margin: 0 0 8px 0;
+}
+
+.reviews__modal-content p:last-child {
+  margin-bottom: 0;
+}
+
+.reviews__modal-content ul,
+.reviews__modal-content ol {
+  margin: 0 0 8px 0;
+  padding-left: 24px;
+}
+
+.reviews__modal-content strong {
+  font-weight: 700;
+}
+
+.reviews__modal-content em {
+  font-style: italic;
+}
+
+/* 캐러셀 */
+.reviews__carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+}
+
+.reviews__carousel-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #f5f5f5;
+  display: block;
+}
+
+.reviews__carousel-counter {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+  z-index: 2;
+  letter-spacing: 0.5px;
+}
+
+.reviews__carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  transition: background-color 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.reviews__carousel-btn:hover {
+  background-color: #ffffff;
+}
+
+.reviews__carousel-btn svg {
+  width: 16px;
+  height: 16px;
+  color: #1f1f1f;
+}
+
+.reviews__carousel-btn--prev {
+  left: 10px;
+}
+
+.reviews__carousel-btn--next {
+  right: 10px;
+}
+
+.reviews__carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.reviews__carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.reviews__carousel-dot--active {
+  background-color: #ffffff;
+}
+
+/* 관리자 카드 액션 버튼 */
+.reviews__card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.reviews__card-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #999;
+  transition: all 0.2s;
+}
+
+.reviews__card-action-btn:hover {
+  color: #1f1f1f;
+  border-color: #1f1f1f;
+}
+
+.reviews__card-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 하단 영역 (페이지네이션 + 작성하기 버튼) */
+.reviews__bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: 60px;
+}
+
+.reviews__bottom .reviews__pagination {
+  margin-top: 0;
+}
+
+.reviews__write-btn {
+  position: absolute;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #51c488;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.reviews__write-btn:hover {
+  background-color: #3da96f;
+  color: #ffffff;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .reviews {
+    padding-top: 70px;
+  }
+
+  .reviews__content {
+    padding: 0 24px;
+  }
+
+  .reviews__breadcrumb {
+    left: 24px;
+  }
+
+  .reviews__grid {
+    gap: 32px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviews {
+    padding-top: 60px;
+  }
+
+  .reviews__content {
+    padding: 0 20px;
+  }
+
+  .reviews__breadcrumb {
+    left: 20px;
+  }
+
+  .reviews__title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .reviews__main {
+    padding: 0 0 80px;
+  }
+
+  .reviews__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+  }
+
+  .reviews__card-title {
+    font-size: 13px;
+  }
+
+  .reviews__card-date {
+    font-size: 12px;
+  }
+
+  .reviews__pagination {
+    margin-top: 40px;
+  }
+
+  .reviews__page-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviews__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

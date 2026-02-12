@@ -17,7 +17,7 @@ CREATE TABLE ADMINS (
     PASSWORD        VARCHAR2(255)   NOT NULL,
     ADMIN_NAME      VARCHAR2(100)   NOT NULL,
     EMAIL           VARCHAR2(100),
-    CREATED_AT      DATE            DEFAULT SYSDATE
+    CREATED_AT      TIMESTAMP       DEFAULT SYSTIMESTAMP
 );
 
 -- 관리자 ID 시퀀스
@@ -34,7 +34,7 @@ CREATE TABLE INQUIRIES (
     TITLE           VARCHAR2(200)   NOT NULL,
     CONTENT         CLOB            NOT NULL,
     ATTACHMENT      VARCHAR2(500),
-    STATUS          VARCHAR2(20)    DEFAULT 'pending' CHECK (STATUS IN ('pending', 'in_progress', 'completed')),
+    STATUS          VARCHAR2(20)    DEFAULT 'pending',
     ADMIN_NOTE      CLOB,
     CREATED_AT      TIMESTAMP       DEFAULT SYSTIMESTAMP,
     RESPONDED_AT    TIMESTAMP
@@ -43,32 +43,21 @@ CREATE TABLE INQUIRIES (
 -- 문의 ID 시퀀스
 CREATE SEQUENCE SEQ_INQUIRY_ID START WITH 1 INCREMENT BY 1 NOCACHE;
 
--- 3. 서비스 후기 테이블
+-- 3. 시공 사진(서비스 후기) 테이블
 CREATE TABLE REVIEWS (
     REVIEW_ID       NUMBER          PRIMARY KEY,
-    ADMIN_ID        NUMBER          NOT NULL REFERENCES ADMINS(ADMIN_ID),
     TITLE           VARCHAR2(200)   NOT NULL,
-    SERVICE_DATE    DATE            NOT NULL,
-    CONTENT         CLOB            NOT NULL,
-    IMAGE           VARCHAR2(500),
-    STATUS          VARCHAR2(20)    DEFAULT 'published' CHECK (STATUS IN ('draft', 'published')),
-    CREATED_AT      DATE            DEFAULT SYSDATE,
-    UPDATED_AT      DATE
+    CONTENT         CLOB,
+    THUMBNAIL       VARCHAR2(500),
+    CREATED_AT      TIMESTAMP       DEFAULT SYSTIMESTAMP
 );
 
--- 서비스 후기 ID 시퀀스
+-- 시공 사진 ID 시퀀스
 CREATE SEQUENCE SEQ_REVIEW_ID START WITH 1 INCREMENT BY 1 NOCACHE;
 
 -- ============================================
 -- 예시 데이터
 -- ============================================
-
--- 관리자 예시 데이터
-INSERT INTO ADMINS (ADMIN_ID, USERNAME, PASSWORD, ADMIN_NAME, EMAIL)
-VALUES (SEQ_ADMIN_ID.NEXTVAL, 'admin', '$2a$10$examplehashedpassword1234', '김관리', 'admin@przo.co.kr');
-
-INSERT INTO ADMINS (ADMIN_ID, USERNAME, PASSWORD, ADMIN_NAME, EMAIL)
-VALUES (SEQ_ADMIN_ID.NEXTVAL, 'manager', '$2a$10$examplehashedpassword5678', '이매니저', 'manager@przo.co.kr');
 
 -- 문의 예시 데이터 (비밀번호: 1234)
 INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, STATUS)
@@ -80,16 +69,34 @@ VALUES (SEQ_INQUIRY_ID.NEXTVAL, '최사장', '카페베네', '010-9876-5432', 'c
         '정기 방역 서비스 계약 문의', '매월 정기적으로 방역 서비스를 받고 싶습니다. 가격과 일정 안내 부탁드립니다.', 'completed',
         '월 1회 정기 방역 계약 완료. 매월 첫째 주 월요일 오전 방문 예정.', SYSTIMESTAMP);
 
--- 서비스 후기 예시 데이터
-INSERT INTO REVIEWS (REVIEW_ID, ADMIN_ID, TITLE, SERVICE_DATE, CONTENT, IMAGE, STATUS)
-VALUES (SEQ_REVIEW_ID.NEXTVAL, 1, '강남구 카페 해충 방제 완료', TO_DATE('2025-01-15', 'YYYY-MM-DD'),
-        '강남구 소재 카페에서 UV LED 해충 퇴치기 설치 및 방역 서비스를 완료했습니다. 고객님께서 매우 만족하셨습니다.',
-        '/uploads/reviews/review1.jpg', 'published');
+-- 시공 사진 예시 데이터
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+VALUES (SEQ_REVIEW_ID.NEXTVAL, '강남구 카페 해충 방제 완료',
+        '강남구 소재 카페에서 UV LED 해충 퇴치기 설치 및 방역 서비스를 완료했습니다. 고객님께서 매우 만족하셨습니다.', NULL);
 
-INSERT INTO REVIEWS (REVIEW_ID, ADMIN_ID, TITLE, SERVICE_DATE, CONTENT, IMAGE, STATUS)
-VALUES (SEQ_REVIEW_ID.NEXTVAL, 1, '서초구 음식점 정기 방역', TO_DATE('2025-01-20', 'YYYY-MM-DD'),
-        '서초구 음식점 정기 방역 서비스를 진행했습니다. 주방과 홀 전체에 대한 종합 방역을 실시했습니다.',
-        '/uploads/reviews/review2.jpg', 'published');
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+VALUES (SEQ_REVIEW_ID.NEXTVAL, '서초구 음식점 정기 방역',
+        '서초구 음식점 정기 방역 서비스를 진행했습니다. 주방과 홀 전체에 대한 종합 방역을 실시했습니다.', NULL);
+
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+VALUES (SEQ_REVIEW_ID.NEXTVAL, '인천시 xx가게 방역',
+        '인천시 xx가게 방역을 실시하였습니다. 인천시 xx가게 방역을 실시하였습니다.', NULL);
+
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+VALUES (SEQ_REVIEW_ID.NEXTVAL, '부산시 yy식당 방역',
+        '부산시 yy식당 해충 방제 서비스를 완료했습니다.', NULL);
+
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+VALUES (SEQ_REVIEW_ID.NEXTVAL, '대구시 zz카페 방역',
+        '대구시 zz카페 정기 방역을 진행했습니다.', NULL);
+
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+VALUES (SEQ_REVIEW_ID.NEXTVAL, '수원시 ww마트 방역',
+        '수원시 ww마트 해충 퇴치 서비스를 완료했습니다.', NULL);
+        
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+VALUES (SEQ_REVIEW_ID.NEXTVAL, '수원시 ww마트 방역',
+        '수원시 ww마트 해충 퇴치 서비스를 완료했습니다.', NULL);
 
 COMMIT;
 
@@ -103,5 +110,5 @@ SELECT * FROM ADMINS;
 -- 문의 테이블 전체 조회
 SELECT * FROM INQUIRIES;
 
--- 서비스 후기 테이블 전체 조회
+-- 시공 사진 테이블 전체 조회
 SELECT * FROM REVIEWS;
