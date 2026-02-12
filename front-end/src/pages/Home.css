@@ -775,7 +775,7 @@
 .home__section7-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 80px;
 }
 
@@ -1061,6 +1061,275 @@
   padding: 0 clamp(20px, 15vw, 300px);
 }
 
+/* 모달 스타일 */
+.home__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.home__modal {
+  background: #fff;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modalSlideUp 0.3s ease;
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.home__modal-body {
+  display: flex;
+  padding: 50px;
+  gap: 40px;
+  align-items: center;
+}
+
+.home__modal-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.home__modal-left .home__section7-subtitle {
+  font-size: 16px;
+}
+
+.home__modal-left .home__section7-title {
+  font-size: 50px;
+}
+
+.home__modal-left .home__section7-title2 {
+  font-size: 48px;
+}
+
+.home__modal-left .home__section7-desc {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.home__modal-left .home__section7-contact-item img {
+  width: 60px;
+  height: 60px;
+}
+
+.home__modal-left .home__section7-contact-label {
+  font-size: 16px;
+}
+
+.home__modal-left .home__section7-contact-value {
+  font-size: 22px;
+}
+
+.home__modal-right {
+  flex: 1;
+  min-width: 0;
+}
+
+.home__modal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.home__modal-form .home__section7-form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.home__modal-form .home__section7-form-group {
+  flex: 1;
+}
+
+.home__modal-form .home__section7-form-group--full {
+  margin-bottom: 16px;
+}
+
+.home__modal-form .home__section7-form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #767676;
+  margin-bottom: 6px;
+}
+
+.home__modal-form .home__section7-form-group input,
+.home__modal-form .home__section7-form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+}
+
+.home__modal-form .home__section7-form-group input::placeholder,
+.home__modal-form .home__section7-form-group textarea::placeholder {
+  color: #bcbcbc;
+}
+
+.home__modal-form .home__section7-form-group input:focus,
+.home__modal-form .home__section7-form-group textarea:focus {
+  outline: none;
+}
+
+.home__modal-form .home__section7-form-group textarea {
+  resize: none;
+  min-height: 80px;
+}
+
+.home__modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* 뒤로가기 버튼 */
+.home__modal-btn--back {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 170px;
+  height: 70px;
+  padding: 8px 30px 8px 24px;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: #767676;
+  border: 1px solid #e5e5ec;
+  transition: all 0.3s ease;
+}
+
+.home__modal-btn--back-arrow {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transform: rotate(180deg);
+  filter: brightness(0) saturate(100%) invert(50%);
+  transition: filter 0.3s ease;
+}
+
+.home__modal-btn--back:hover .home__modal-btn--back-arrow {
+  filter: brightness(0) invert(1);
+}
+
+.home__modal-btn--back:hover {
+  background: #767676;
+  color: #fff;
+  border-color: #767676;
+}
+
+
+/* 전송하기 버튼 */
+.home__modal-btn--submit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 170px;
+  height: 70px;
+  padding: 8px 10px;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  background: linear-gradient(90deg, #51c488 0%, #78ffb5 100%);
+  color: #fff;
+  border: none;
+  outline: none;
+  transition: color 0.4s ease;
+}
+
+.home__modal-btn--submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50px;
+  padding: 4px;
+  background: linear-gradient(90deg, #51c488 0%, #78ffb5 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.home__modal-btn-icon {
+  position: absolute;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.4s ease, background 0.4s ease;
+}
+
+.home__modal-btn-icon img {
+  width: 20px;
+  height: 20px;
+  transition: filter 0.4s ease;
+}
+
+.home__modal-btn-text {
+  position: absolute;
+  right: 30px;
+  transition: all 0.4s ease;
+}
+
+.home__modal-btn--submit:hover {
+  background: #fff;
+  color: #51c488;
+  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.home__modal-btn--submit:hover::before {
+  opacity: 1;
+}
+
+.home__modal-btn--submit:hover .home__modal-btn-icon {
+  left: calc(100% - 60px);
+  background: linear-gradient(90deg, #51c488 0%, #78ffb5 100%);
+}
+
+.home__modal-btn--submit:hover .home__modal-btn-icon img {
+  filter: brightness(0) invert(1);
+}
+
+.home__modal-btn--submit:hover .home__modal-btn-text {
+  right: calc(100% - 95px);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1400px) {
   .home__section4-text {
@@ -1289,6 +1558,34 @@
 }
 
 @media (max-width: 768px) {
+  .home__modal-body {
+    flex-direction: column;
+    padding: 30px;
+    gap: 24px;
+  }
+
+  .home__modal-left .home__section7-title {
+    font-size: 28px;
+  }
+
+  .home__modal-left .home__section7-title2 {
+    font-size: 24px;
+  }
+
+  .home__modal-form .home__section7-form-row {
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .home__modal-form .home__section7-form-group {
+    margin-bottom: 12px;
+  }
+
+  .home__modal-form .home__section7-form-group--full {
+    margin-bottom: 12px;
+  }
+
   .home__section1-title {
     font-size: 24px;
   }

@@ -54,6 +54,7 @@ const Home = () => {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [pestIndex, setPestIndex] = useState(0);
   const [isMosaic, setIsMosaic] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 섹션 7 폼 상태
   const [formData, setFormData] = useState({
@@ -386,7 +387,7 @@ const Home = () => {
               <br />
               안전하게 지켜드립니다
             </h1>
-            <button className="home__section1-btn">무료 상담 문의</button>
+            <button className="home__section1-btn" onClick={() => setIsModalOpen(true)}>무료 상담 문의</button>
           </div>
         </div>
       </section>
@@ -713,6 +714,105 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {isModalOpen && (
+        <div className="home__modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="home__modal" onClick={(e) => e.stopPropagation()}>
+            <div className="home__modal-body">
+              <div className="home__modal-left">
+                <p className="home__section7-subtitle">WE'RE HERE TO HELP YOU</p>
+                <h2 className="home__section7-title">
+                  <span className="home__section7-highlight">'프르조'에</span>
+                </h2>
+                <h3 className="home__section7-title2">무료로 문의해보세요</h3>
+                <p className="home__section7-desc">
+                  보다 안전하고 효과적인 방역 솔루션이 필요하신가요?
+                  <br />
+                  공간의 유형과 상황에 맞춘 맞춤형 진단과 시공 방안을 안내해드립니다.
+                  <br />
+                  아래 정보를 남겨주시면 전문 상담원이 빠르게 연락드리겠습니다.
+                </p>
+                <div className="home__section7-contact">
+                  <div className="home__section7-contact-item">
+                    <img src={kakaoIcon} alt="카카오톡" />
+                    <div className="home__section7-contact-info">
+                      <span className="home__section7-contact-label">오픈채팅</span>
+                      <span className="home__section7-contact-value">'프르조'</span>
+                    </div>
+                  </div>
+                  <div className="home__section7-contact-item">
+                    <img src={telIcon} alt="전화" />
+                    <div className="home__section7-contact-info">
+                      <span className="home__section7-contact-label">전화번호</span>
+                      <span className="home__section7-contact-value">1670-2335</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="home__modal-right">
+                <form className="home__modal-form" onSubmit={(e) => { handleFormSubmit(e); setIsModalOpen(false); }}>
+                  <div className="home__section7-form-row">
+                    <div className="home__section7-form-group">
+                      <label>이름</label>
+                      <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="홍길동" />
+                    </div>
+                    <div className="home__section7-form-group">
+                      <label>업체명/주소</label>
+                      <input type="text" name="companyName" value={formData.companyName} onChange={handleFormChange} placeholder="프르조" />
+                    </div>
+                  </div>
+                  <div className="home__section7-form-row">
+                    <div className="home__section7-form-group">
+                      <label>전화번호</label>
+                      <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} placeholder="010-1234-5678" />
+                    </div>
+                    <div className="home__section7-form-group">
+                      <label>이메일</label>
+                      <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="przo@naver.com" />
+                    </div>
+                  </div>
+                  <div className="home__section7-form-group home__section7-form-group--full">
+                    <label>비밀번호</label>
+                    <input type="password" name="password" value={formData.password} onChange={handleFormChange} placeholder="게시글 확인 시 필요한 비밀번호를 입력해주세요" />
+                  </div>
+                  <div className="home__section7-form-group home__section7-form-group--full">
+                    <label>제목</label>
+                    <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="30평 가정집 견적 문의 드립니다." />
+                  </div>
+                  <div className="home__section7-form-group home__section7-form-group--full">
+                    <label>문의 내용</label>
+                    <textarea name="content" value={formData.content} onChange={handleFormChange} placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?" rows="5"></textarea>
+                  </div>
+                  <div className="home__section7-form-group home__section7-form-group--full">
+                    <label>첨부파일</label>
+                    <div className="home__section7-file-input">
+                      <input type="file" id="modalFile" onChange={handleFileChange} />
+                      <label htmlFor="modalFile" className="home__section7-file-label">
+                        <img src={fileIcon} alt="첨부파일" />
+                        <span className="home__section7-file-name">
+                          {attachment ? attachment.name : "파일을 선택해주세요"}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="home__modal-buttons">
+                    <button type="button" className="home__modal-btn--back" onClick={() => setIsModalOpen(false)}>
+                      <img src={arrowIcon} alt="뒤로" className="home__modal-btn--back-arrow" />
+                      <span>뒤로가기</span>
+                    </button>
+                    <button type="submit" className="home__modal-btn home__modal-btn--submit" disabled={isSubmitting}>
+                      <span className="home__modal-btn-icon">
+                        <img src={arrowIcon} alt="전송" />
+                      </span>
+                      <span className="home__modal-btn-text">{isSubmitting ? "등록 중..." : "전송하기"}</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

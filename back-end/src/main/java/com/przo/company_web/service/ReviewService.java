@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,8 @@ public class ReviewService {
     @Transactional
     public Review updateReview(Long id, String title, String content, String thumbnailPath, String createdDate) {
         Review review = reviewRepository.findById(id).orElse(null);
-        if (review == null) return null;
+        if (review == null)
+            return null;
         review.setTitle(title);
         review.setContent(content);
         review.setThumbnail(thumbnailPath);
