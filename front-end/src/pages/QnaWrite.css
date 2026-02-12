@@ -181,6 +181,13 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  overflow: hidden;
+}
+
+.qna-write__file-label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .qna-write__file-label:hover {

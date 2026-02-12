@@ -945,6 +945,7 @@
   background-color: #f8f8f8;
   border-radius: 15px;
   width: 100%;
+  overflow: hidden;
 }
 
 .home__section7-file-label img {

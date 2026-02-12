@@ -49,6 +49,14 @@ import arrowIcon from "../assets/section7-icon/section7-icon-arrow.svg";
 
 const API_BASE_URL = "http://localhost:8080/api";
 
+const truncateFileName = (name, maxLength = 35) => {
+  if (!name || name.length <= maxLength) return name;
+  const ext = name.lastIndexOf('.') !== -1 ? name.slice(name.lastIndexOf('.')) : '';
+  const nameOnly = name.slice(0, name.length - ext.length);
+  const truncLength = maxLength - ext.length - 3;
+  return truncLength > 0 ? nameOnly.slice(0, truncLength) + '...' + ext : name.slice(0, maxLength - 3) + '...';
+};
+
 const Home = () => {
   const navigate = useNavigate();
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
@@ -698,7 +706,7 @@ const Home = () => {
                     <label htmlFor="contactFile" className="home__section7-file-label">
                       <img src={fileIcon} alt="첨부파일" />
                       <span className="home__section7-file-name">
-                        {attachment ? attachment.name : "파일을 선택해주세요"}
+                        {attachment ? truncateFileName(attachment.name) : "파일을 선택해주세요"}
                       </span>
                     </label>
                   </div>
@@ -790,7 +798,7 @@ const Home = () => {
                       <label htmlFor="modalFile" className="home__section7-file-label">
                         <img src={fileIcon} alt="첨부파일" />
                         <span className="home__section7-file-name">
-                          {attachment ? attachment.name : "파일을 선택해주세요"}
+                          {attachment ? truncateFileName(attachment.name) : "파일을 선택해주세요"}
                         </span>
                       </label>
                     </div>
