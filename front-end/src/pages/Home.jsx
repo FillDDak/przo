@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import home_banner from "../assets/image/home_banner.png";
@@ -63,6 +63,7 @@ const Home = () => {
   const [pestIndex, setPestIndex] = useState(0);
   const [isMosaic, setIsMosaic] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const touchStartX = useRef(null);
 
   // 섹션 7 폼 상태
   const [formData, setFormData] = useState({
@@ -323,6 +324,20 @@ const Home = () => {
     setIsMosaic(true);
   };
 
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) handlePestNext();
+      else handlePestPrev();
+    }
+    touchStartX.current = null;
+  };
+
   // 섹션 5 카드 위치 계산 (활성-비활성 간격 24px, 비활성-비활성 간격 24px)
   const getCardOffset = (position) => {
     if (position === 0) return 0;
@@ -531,7 +546,7 @@ const Home = () => {
             </div>
 
             <div className="home__section5-slider">
-              <div className="home__section5-cards-wrapper">
+              <div className="home__section5-cards-wrapper" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
                 <button
                   className="home__section5-arrow home__section5-arrow--prev"
                   onClick={handlePestPrev}

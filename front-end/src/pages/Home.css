@@ -1942,21 +1942,7 @@
   }
 
   .home__section5-arrow {
-    width: 36px;
-    height: 36px;
-  }
-
-  .home__section5-arrow svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .home__section5-arrow--prev {
-    left: 10px;
-  }
-
-  .home__section5-arrow--next {
-    right: 10px;
+    display: none;
   }
 
   .home__section--6 {
