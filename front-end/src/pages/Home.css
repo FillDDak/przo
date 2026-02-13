@@ -102,6 +102,7 @@
 
 .home__section2-highlight {
   color: #51c488;
+  font-size: 44px;
 }
 
 .home__section2-desc {
@@ -1400,6 +1401,10 @@
     font-size: 32px;
   }
 
+  .home__section2-highlight {
+    font-size: 36px;
+  }
+
   .home__section2-gallery {
     height: 380px;
   }
@@ -1587,6 +1592,14 @@
     margin-bottom: 12px;
   }
 
+  .home__section--1 .home__content,
+  .home__section--3 .home__content,
+  .home__section--4 .home__content,
+  .home__section--5 .home__content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
   .home__section1-title {
     font-size: 24px;
   }
@@ -1620,6 +1633,10 @@
 
   .home__section2-title {
     font-size: 26px;
+  }
+
+  .home__section2-highlight {
+    font-size: 28px;
   }
 
   .home__section2-desc {
@@ -1703,12 +1720,12 @@
   }
 
   .home__section3-text {
-    text-align: center;
+    text-align: left;
   }
 
   .home__section3-title {
     font-size: 26px;
-    text-align: center;
+    text-align: left;
   }
 
   .home__section3-highlight {
@@ -1717,7 +1734,7 @@
 
   .home__section3-desc {
     font-size: 14px;
-    text-align: center;
+    text-align: left;
     max-width: 100%;
   }
 
@@ -1726,23 +1743,23 @@
   }
 
   .home__section3-icons {
-    grid-template-columns: repeat(3, 90px);
-    grid-template-rows: repeat(3, 90px);
-    gap: 20px;
+    grid-template-columns: repeat(3, 105px);
+    grid-template-rows: repeat(3, 105px);
+    gap: 16px;
   }
 
   .home__section3-icon-btn {
-    padding: 10px;
+    padding: 12px;
   }
 
   .home__section3-icon-btn img {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 6px;
+    width: 46px;
+    height: 46px;
+    margin-bottom: 8px;
   }
 
   .home__section3-icon-btn span {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .home__section--4 {
@@ -1751,18 +1768,18 @@
 
   .home__section4-wrapper {
     padding: 60px 0;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .home__section4-text {
-    text-align: center;
+    text-align: left;
     margin-left: 0;
     margin-bottom: 40px;
   }
 
   .home__section4-title {
     font-size: 26px;
-    text-align: center;
+    text-align: left;
   }
 
   .home__section4-highlight {
@@ -1771,18 +1788,19 @@
 
   .home__section4-desc {
     font-size: 14px;
-    text-align: center;
+    text-align: left;
   }
 
   .home__section4-gallery {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 200px 200px;
+    grid-template-rows: auto auto;
     gap: 10px;
     height: auto;
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+    justify-content: center;
   }
 
   .home__section4-gallery-item {
@@ -1802,10 +1820,11 @@
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 50%);
   }
 
-  .home__section4-gallery-content {
+  .home__section4-gallery-content,
+  .home__section4-gallery-item--top .home__section4-gallery-content {
     bottom: 0;
     left: 0;
-    right: auto;
+    right: 0;
     top: auto;
     padding: 16px;
     text-align: left;
@@ -1828,7 +1847,8 @@
 
   .home__section5-header {
     margin-left: 0;
-    text-align: center;
+    margin-bottom: 0px;
+    text-align: left;
     width: 100%;
   }
 
@@ -1894,21 +1914,21 @@
   }
 
   .home__section5-toggle {
-    font-size: 11px;
-    gap: 4px;
+    font-size: 13px;
+    gap: 6px;
     flex-shrink: 0;
   }
 
   .home__section5-toggle-slider {
-    width: 38px;
-    height: 20px;
+    width: 48px;
+    height: 24px;
     border-width: 1.5px;
-    border-radius: 10px;
+    border-radius: 12px;
   }
 
   .home__section5-toggle-slider::before {
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
     top: 1.5px;
     left: 2px;
   }
@@ -1918,7 +1938,7 @@
   }
 
   .home__section5-toggle input:checked + .home__section5-toggle-slider::before {
-    transform: translateX(18px);
+    transform: translateX(23px);
   }
 
   .home__section5-arrow {
@@ -2056,6 +2076,10 @@
     font-size: 22px;
   }
 
+  .home__section2-highlight {
+    font-size: 24px;
+  }
+
   .home__section2-gallery-item,
   .home__section2-gallery-item.active {
     height: 180px;
@@ -2091,18 +2115,22 @@
   }
 
   .home__section3-icons {
-    grid-template-columns: repeat(3, 80px);
-    grid-template-rows: repeat(3, 80px);
-    gap: 12px;
+    grid-template-columns: repeat(3, 110px);
+    grid-template-rows: repeat(3, 110px);
+    gap: 10px;
   }
 
   .home__section3-icon-btn img {
-    width: 32px;
-    height: 32px;
+    width: 50px;
+    height: 50px;
   }
 
   .home__section3-icon-btn span {
-    font-size: 10px;
+    font-size: 14px;
+  }
+
+  .home__section4-gallery {
+    grid-template-columns: 160px 160px;
   }
 
   .home__section4-gallery-item {
@@ -2138,34 +2166,30 @@
   }
 
   .home__section5-toggle {
-    font-size: 10px;
-    gap: 3px;
-  }
-
-  .home__section5-toggle span:first-child {
-    display: none;
+    font-size: 12px;
+    gap: 5px;
   }
 
   .home__section5-toggle-slider {
-    width: 34px;
-    height: 18px;
-    border-width: 1px;
-    border-radius: 9px;
+    width: 44px;
+    height: 22px;
+    border-width: 1.5px;
+    border-radius: 11px;
   }
 
   .home__section5-toggle-slider::before {
-    width: 12px;
-    height: 12px;
-    top: 2px;
+    width: 16px;
+    height: 16px;
+    top: 1.5px;
     left: 2px;
   }
 
   .home__section5-toggle input:checked + .home__section5-toggle-slider {
-    border-width: 1px;
+    border-width: 1.5px;
   }
 
   .home__section5-toggle input:checked + .home__section5-toggle-slider::before {
-    transform: translateX(16px);
+    transform: translateX(21px);
   }
 
   .home__section6-title {
