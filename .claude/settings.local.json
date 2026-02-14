@@ -4,7 +4,11 @@
       "Bash(sort:*)",
       "Bash(git add:*)",
       "Bash(dir /s \"c:\\\\Projects\\\\przo\\\\back-end\\\\src\\\\main\\\\java\")",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(Select-String -Path \"c:\\\\Projects\\\\przo\\\\front-end\\\\src\\\\pages\\\\Home.css\" -Pattern \"@media\")",
+      "Bash(Select-Object LineNumber, Line)",
+      "Bash(python3:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

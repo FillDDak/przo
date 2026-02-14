@@ -65,6 +65,7 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
   const cardsWrapperRef = useRef(null);
@@ -352,6 +353,12 @@ const Home = () => {
     return () => el.removeEventListener("touchmove", onTouchMove);
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
@@ -365,15 +372,23 @@ const Home = () => {
     touchStartY.current = null;
   };
 
-  // 섹션 5 카드 위치 계산 (활성-비활성 간격 24px, 비활성-비활성 간격 24px)
+  // 섹션 5 카드 위치 계산 (반응형 카드 크기에 맞게 간격 조정)
   const getCardOffset = (position) => {
     if (position === 0) return 0;
     const sign = position > 0 ? 1 : -1;
     const absPos = Math.abs(position);
-    // 활성 카드(450/2=225) + 간격(24) + 비활성 카드(300/2=150) = 399
-    const firstOffset = 225 + 24 + 150;
-    // 비활성 카드 간격: 150 + 24 + 150 = 324
-    const subsequentOffset = 150 + 24 + 150;
+    let activeHalf, inactiveHalf, gap;
+    if (windowWidth <= 480) {
+      activeHalf = 150; inactiveHalf = 75; gap = 60;
+    } else if (windowWidth <= 768) {
+      activeHalf = 170; inactiveHalf = 100; gap = 50;
+    } else if (windowWidth <= 1024) {
+      activeHalf = 190; inactiveHalf = 125; gap = 20;
+    } else {
+      activeHalf = 225; inactiveHalf = 150; gap = 24;
+    }
+    const firstOffset = activeHalf + gap + inactiveHalf;
+    const subsequentOffset = inactiveHalf * 2 + gap;
     if (absPos === 1) return sign * firstOffset;
     return sign * (firstOffset + (absPos - 1) * subsequentOffset);
   };

@@ -1540,11 +1540,28 @@
     transform: translateX(25px);
   }
 
+  .home__section5-card-name {
+    font-size: 18px;
+  }
+
   .home__section5-card.active .home__section5-card-name {
+    font-size: 22px;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .home__section5-card-eng {
+    font-size: 13px;
+  }
+
+  .home__section5-card.active .home__section5-card-eng {
+    font-size: 14px;
+  }
+
+  .home__section5-card-desc {
+    font-size: 14px;
   }
 
   .home__section--6 {
@@ -1896,8 +1913,8 @@
   }
 
   .home__section5-card {
-    width: 200px;
-    height: 200px;
+    width: 270px;
+    height: 270px;
   }
 
   .home__section5-card.active {
@@ -2171,8 +2188,8 @@
   }
 
   .home__section5-card {
-    width: 150px;
-    height: 150px;
+    width: 250px;
+    height: 250px;
   }
 
   .home__section5-card.active {
