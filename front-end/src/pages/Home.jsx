@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import home_banner from "../assets/image/home_banner.png";
@@ -63,7 +63,11 @@ const Home = () => {
   const [pestIndex, setPestIndex] = useState(0);
   const [isMosaic, setIsMosaic] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
+  const cardsWrapperRef = useRef(null);
 
   // 섹션 7 폼 상태
   const [formData, setFormData] = useState({
@@ -326,16 +330,39 @@ const Home = () => {
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    setIsDragging(false);
   };
+
+  useEffect(() => {
+    const el = cardsWrapperRef.current;
+    if (!el) return;
+    const onTouchMove = (e) => {
+      if (touchStartX.current === null) return;
+      const diffX = e.touches[0].clientX - touchStartX.current;
+      const diffY = e.touches[0].clientY - touchStartY.current;
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        e.preventDefault();
+        setIsDragging(true);
+        const MAX_DRAG = 180;
+        setDragOffset(Math.max(-MAX_DRAG, Math.min(MAX_DRAG, diffX * 0.75)));
+      }
+    };
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => el.removeEventListener("touchmove", onTouchMove);
+  }, []);
 
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
+    if (Math.abs(diff) > 60) {
       if (diff > 0) handlePestNext();
       else handlePestPrev();
     }
+    setIsDragging(false);
+    setDragOffset(0);
     touchStartX.current = null;
+    touchStartY.current = null;
   };
 
   // 섹션 5 카드 위치 계산 (활성-비활성 간격 24px, 비활성-비활성 간격 24px)
@@ -546,7 +573,7 @@ const Home = () => {
             </div>
 
             <div className="home__section5-slider">
-              <div className="home__section5-cards-wrapper" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+              <div ref={cardsWrapperRef} className="home__section5-cards-wrapper" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
                 <button
                   className="home__section5-arrow home__section5-arrow--prev"
                   onClick={handlePestPrev}
@@ -566,7 +593,8 @@ const Home = () => {
                         key={pest.id}
                         className={`home__section5-card ${isActive ? "active" : ""}`}
                         style={{
-                          transform: `translate(calc(-50% + ${getCardOffset(position)}px), -50%) scale(${isActive ? 1 : 0.95})`,
+                          transform: `translate(calc(-50% + ${getCardOffset(position) + dragOffset}px), -50%) scale(${isActive ? 1 : 0.95})`,
+                          transition: `transform ${isDragging ? '0.05s' : '0.4s'} ease, width 0.4s ease, height 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease`,
                           zIndex: isActive ? 10 : 5 - Math.abs(position),
                           opacity: Math.abs(position) > 3 ? 0 : 1,
                         }}
