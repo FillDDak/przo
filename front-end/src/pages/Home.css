@@ -1429,6 +1429,10 @@
     right: calc(50% - 280px);
   }
 
+  .home__section6-pest {
+    height: 380px;
+  }
+
   .home__section7-right {
     width: 480px;
   }
