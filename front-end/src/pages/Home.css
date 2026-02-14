@@ -1082,7 +1082,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 130px;
+  padding: 30px;
   animation: modalFadeIn 0.3s ease;
 }
 
@@ -1341,6 +1341,22 @@
 
 /* 반응형 디자인 */
 @media (max-width: 1400px) {
+  .home__modal-overlay {
+    padding: 80px;
+  }
+
+  .home__modal-left .home__section7-title {
+    font-size: 44px;
+  }
+
+  .home__modal-left .home__section7-title2 {
+    font-size: 40px;
+  }
+
+  .home__modal-left .home__section7-desc {
+    font-size: 16px;
+  }
+
   .home__section4-text {
     margin-left: 60px;
   }
@@ -1359,6 +1375,58 @@
 }
 
 @media (max-width: 1200px) {
+  .home__modal-overlay {
+    padding: 50px;
+  }
+
+  .home__modal-body {
+    padding: 40px;
+    gap: 30px;
+  }
+
+  .home__modal-left .home__section7-title {
+    font-size: 38px;
+  }
+
+  .home__modal-left .home__section7-title2 {
+    font-size: 34px;
+  }
+
+  .home__modal-left .home__section7-desc {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  .home__modal-btn--back {
+    width: 150px;
+    height: 60px;
+    font-size: 16px;
+    padding: 8px 24px 8px 20px;
+  }
+
+  .home__modal-btn--submit {
+    width: 150px;
+    height: 60px;
+    font-size: 16px;
+  }
+
+  .home__modal-btn-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .home__modal-btn-text {
+    right: 24px;
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-icon {
+    left: calc(100% - 52px);
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-text {
+    right: calc(100% - 82px);
+  }
+
   .home__section4-text {
     margin-left: 40px;
   }
@@ -1699,9 +1767,74 @@
   .home__section7-form {
     padding: 30px;
   }
+
+  .home__modal-overlay {
+    padding: 30px;
+  }
+
+  .home__modal-body {
+    padding: 30px;
+    gap: 20px;
+  }
+
+  .home__modal-left .home__section7-title {
+    font-size: 32px;
+  }
+
+  .home__modal-left .home__section7-title2 {
+    font-size: 28px;
+  }
+
+  .home__modal-left .home__section7-desc {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .home__modal-left .home__section7-contact-item img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .home__modal-left .home__section7-contact-value {
+    font-size: 18px;
+  }
+
+  .home__modal-btn--back {
+    width: 140px;
+    height: 54px;
+    font-size: 15px;
+    padding: 8px 20px 8px 16px;
+  }
+
+  .home__modal-btn--submit {
+    width: 140px;
+    height: 54px;
+    font-size: 15px;
+  }
+
+  .home__modal-btn-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .home__modal-btn-text {
+    right: 20px;
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-icon {
+    left: calc(100% - 46px);
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-text {
+    right: calc(100% - 74px);
+  }
 }
 
 @media (max-width: 768px) {
+  .home__modal-overlay {
+    padding: 20px;
+  }
+
   .home__modal-body {
     flex-direction: column;
     padding: 30px;
@@ -1728,6 +1861,36 @@
 
   .home__modal-form .home__section7-form-group--full {
     margin-bottom: 12px;
+  }
+
+  .home__modal-btn--back {
+    width: 130px;
+    height: 50px;
+    font-size: 14px;
+    padding: 8px 16px 8px 14px;
+  }
+
+  .home__modal-btn--submit {
+    width: 130px;
+    height: 50px;
+    font-size: 14px;
+  }
+
+  .home__modal-btn-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .home__modal-btn-text {
+    right: 18px;
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-icon {
+    left: calc(100% - 44px);
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-text {
+    right: calc(100% - 70px);
   }
 
   .home__section--1 .home__content,
@@ -2174,6 +2337,56 @@
     max-width: 100%;
     width: 100%;
     margin-right: 0;
+  }
+
+  .home__modal-overlay {
+    padding: 10px;
+  }
+
+  .home__modal-body {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .home__modal-left .home__section7-title {
+    font-size: 24px;
+  }
+
+  .home__modal-left .home__section7-title2 {
+    font-size: 20px;
+  }
+
+  .home__modal-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .home__modal-btn--back,
+  .home__modal-btn--submit {
+    height: 50px;
+    font-size: 14px;
+    justify-content: center;
+  }
+
+  .home__modal-btn--back {
+    padding: 8px 20px;
+  }
+
+  .home__modal-btn-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .home__modal-btn-text {
+    right: 18px;
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-icon {
+    left: calc(100% - 44px);
+  }
+
+  .home__modal-btn--submit:hover .home__modal-btn-text {
+    right: calc(100% - 70px);
   }
 
   .home__section7-form {
