@@ -675,7 +675,7 @@ const Home = () => {
           <div className="home__section6-wrapper">
             <div className="home__section6-text">
               <h2 className="home__section6-title">
-                프르조와 함께 소중한 공간을 안전하게 이어가세요.
+                프르조와 함께 소중한 공간을<br className="home__section6-title-br" /> 안전하게 이어가세요.
               </h2>
               <p className="home__section6-desc">
                 작은 공간까지 세심하게 지켜드립니다.
