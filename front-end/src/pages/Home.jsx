@@ -70,6 +70,96 @@ const Home = () => {
   const touchStartY = useRef(null);
   const cardsWrapperRef = useRef(null);
 
+  // PC 스크롤 스냅 (섹션 1~4, 섹션5부터 자유 스크롤)
+  useEffect(() => {
+    let wheelCleanup = null;
+
+    const initSnap = () => {
+      if (window.innerWidth <= 1024) return;
+      if (wheelCleanup) return;
+
+      const snapSelectors = [
+        '.home__section--1',
+        '.home__section--2',
+        '.home__section--3',
+        '.home__section--4',
+      ];
+
+      const snapSections = snapSelectors
+        .map(sel => document.querySelector(sel))
+        .filter(Boolean);
+
+      let isAnimating = false;
+
+      const isInSnapZone = () => {
+        const section5 = document.querySelector('.home__section--5');
+        if (!section5) return true;
+        return window.scrollY + 10 < section5.offsetTop;
+      };
+
+      const getCurrentIndex = () => {
+        const scrollTop = window.scrollY;
+        for (let i = snapSections.length - 1; i >= 0; i--) {
+          if (scrollTop >= snapSections[i].offsetTop - 50) return i;
+        }
+        return 0;
+      };
+
+      const scrollToSection = (index) => {
+        isAnimating = true;
+        window.scrollTo({ top: snapSections[index].offsetTop, behavior: 'smooth' });
+        setTimeout(() => { isAnimating = false; }, 600);
+      };
+
+      const handleWheel = (e) => {
+        if (!isInSnapZone()) return;
+        e.preventDefault();
+        if (isAnimating) return;
+
+        const index = getCurrentIndex();
+
+        if (e.deltaY > 0) {
+          if (index < snapSections.length - 1) {
+            scrollToSection(index + 1);
+          } else {
+            const section5 = document.querySelector('.home__section--5');
+            if (section5) {
+              isAnimating = true;
+              window.scrollTo({ top: section5.offsetTop, behavior: 'smooth' });
+              setTimeout(() => { isAnimating = false; }, 600);
+            }
+          }
+        } else if (e.deltaY < 0) {
+          const distFromTop = Math.abs(window.scrollY - snapSections[index].offsetTop);
+          if (distFromTop > 80) {
+            scrollToSection(index);
+          } else {
+            scrollToSection(Math.max(0, index - 1));
+          }
+        }
+      };
+
+      window.addEventListener('wheel', handleWheel, { passive: false });
+      wheelCleanup = () => window.removeEventListener('wheel', handleWheel);
+    };
+
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        if (wheelCleanup) { wheelCleanup(); wheelCleanup = null; }
+      } else {
+        initSnap();
+      }
+    };
+
+    initSnap();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      if (wheelCleanup) wheelCleanup();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   // 섹션 7 폼 상태
   const [formData, setFormData] = useState({
     name: "",
@@ -453,6 +543,12 @@ const Home = () => {
               안전하게 지켜드립니다
             </h1>
             <button className="home__section1-btn" onClick={() => setIsModalOpen(true)}>무료 상담 문의</button>
+          </div>
+          <div className="home__section1-scroll-hint">
+            <svg className="home__section1-scroll-hint__icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 4V24M14 24L6 16M14 24L22 16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="home__section1-scroll-hint__text">SCROLL</span>
           </div>
         </div>
       </section>

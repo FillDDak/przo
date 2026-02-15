@@ -12,32 +12,17 @@ const Header = ({ variant = "default" }) => {
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      setIsScrolled(currentScrollY > 50);
-
-      // 스크롤 방향 감지
-      if (currentScrollY < lastScrollY) {
-        // 스크롤 올릴 때 - 헤더 보이기
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // 스크롤 내릴 때 (100px 이상) - 헤더 숨기기
-        setIsVisible(false);
-      }
-
-      setLastScrollY(currentScrollY);
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY]);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -48,7 +33,7 @@ const Header = ({ variant = "default" }) => {
   };
 
   return (
-    <header className={`header ${isScrolled ? "header--scrolled" : ""} ${isAdmin ? "header--admin" : ""} ${isSubPage ? "header--subpage" : ""} ${!isVisible ? "header--hidden" : ""}`}>
+    <header className={`header ${isScrolled ? "header--scrolled header--hidden" : ""} ${isAdmin ? "header--admin" : ""} ${isSubPage ? "header--subpage" : ""}`}>
       <div className="header__container">
         <Link to="/" className="header__logo" onClick={() => {
           window.scrollTo(0, 0);

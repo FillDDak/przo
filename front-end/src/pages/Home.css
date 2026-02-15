@@ -14,7 +14,7 @@
 }
 
 .home__section--1 {
-  height: 835px;
+  height: 100vh;
   position: relative;
 }
 
@@ -76,6 +76,40 @@
 
 .home__section1-btn:hover {
   opacity: 0.85;
+}
+
+.home__section1-scroll-hint {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .home__section1-scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+}
+
+.home__section1-scroll-hint__icon {
+  animation: scrollHintFloat 1.8s ease-in-out infinite;
+}
+
+/* SCROLL 텍스트 */
+.home__section1-scroll-hint__text {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 3px;
+}
+
+@keyframes scrollHintFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
 }
 
 .home__section--2 {
@@ -340,7 +374,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 100px 0;
+  padding: 150px 0 100px;
 }
 
 .home__section4-text {
@@ -732,6 +766,7 @@
   background-size: cover;
   background-position: center;
   position: relative;
+  margin-bottom: 100px;
 }
 
 .home__section6-wrapper {
@@ -2727,8 +2762,43 @@
   }
 }
 
-  @media (max-width: 320px) {
+@media (max-width: 320px) {
   .home__section--6 {
     display: none;
+  }
+}
+
+/* ===== PC 전용: 섹션 높이 및 스크롤 스냅 ===== */
+@media (min-width: 1025px) {
+  .home__section--1 {
+    height: 100vh;
+  }
+
+  .home__section--2 {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .home__section--3 {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .home__section--4 {
+    height: 100vh;
+    min-height: unset;
+    overflow: hidden;
+  }
+
+  .home__section--5 {
+    height: 100vh;
+    min-height: unset;
+    overflow: hidden;
+  }
+
+  .home__section--7 {
+    height: 100vh;
+    min-height: unset;
+    overflow: hidden;
   }
 }
