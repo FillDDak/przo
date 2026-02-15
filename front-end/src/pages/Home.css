@@ -1081,7 +1081,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2000;
   padding: 30px;
   animation: modalFadeIn 0.3s ease;
 }
@@ -1119,34 +1119,180 @@
   min-width: 0;
 }
 
-.home__modal-left .home__section7-subtitle {
+/* ===== 모달 전용 클래스 ===== */
+.home__modal-contact--mobile {
+  display: none;
+}
+
+.home__modal-subtitle {
   font-size: 16px;
+  font-weight: 400;
+  color: #767676;
+  margin: 0 0 16px 0;
+  letter-spacing: 1px;
 }
 
-.home__modal-left .home__section7-title {
+.home__modal-title {
   font-size: 50px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.home__modal-left .home__section7-title2 {
+.home__modal-highlight {
+  color: #51c488;
+}
+
+.home__modal-title2 {
   font-size: 48px;
+  font-weight: 500;
+  color: #9CD9BA;
+  margin: 8px 0 32px 0;
 }
 
-.home__modal-left .home__section7-desc {
+.home__modal-desc {
   font-size: 18px;
-  margin-bottom: 30px;
+  font-weight: 400;
+  color: #767676;
+  line-height: 1.8;
+  margin: 0 0 30px 0;
 }
 
-.home__modal-left .home__section7-contact-item img {
+.home__modal-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.home__modal-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.home__modal-contact-item img {
   width: 60px;
   height: 60px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
-.home__modal-left .home__section7-contact-label {
+.home__modal-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home__modal-contact-label {
   font-size: 16px;
+  color: #767676;
 }
 
-.home__modal-left .home__section7-contact-value {
+.home__modal-contact-value {
   font-size: 22px;
+  font-weight: 500;
+  color: #767676;
+}
+
+.home__modal-form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.home__modal-form-group {
+  flex: 1;
+}
+
+.home__modal-form-group--full {
+  margin-bottom: 16px;
+}
+
+.home__modal-form-group label {
+  display: block;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #767676;
+  margin-bottom: 6px;
+}
+
+.home__modal-form-group input,
+.home__modal-form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.home__modal-form-group input::placeholder,
+.home__modal-form-group textarea::placeholder {
+  color: #bcbcbc;
+}
+
+.home__modal-form-group input:focus,
+.home__modal-form-group textarea:focus {
+  outline: none;
+}
+
+.home__modal-form-group textarea {
+  resize: none;
+  min-height: 80px;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+}
+
+.home__modal-file-input {
+  position: relative;
+}
+
+.home__modal-file-input input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.home__modal-file-label {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  color: #767676;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.home__modal-file-label img {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  flex-shrink: 0;
+  align-self: center;
+  vertical-align: middle;
+  filter: brightness(0) saturate(100%) invert(81%) sepia(0%) saturate(0%) hue-rotate(166deg) brightness(91%) contrast(87%);
+}
+
+.home__modal-file-name {
+  font-size: 14px;
+  color: #bcbcbc;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 10px;
 }
 
 .home__modal-right {
@@ -1157,55 +1303,6 @@
 .home__modal-form {
   display: flex;
   flex-direction: column;
-}
-
-.home__modal-form .home__section7-form-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.home__modal-form .home__section7-form-group {
-  flex: 1;
-}
-
-.home__modal-form .home__section7-form-group--full {
-  margin-bottom: 16px;
-}
-
-.home__modal-form .home__section7-form-group label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #767676;
-  margin-bottom: 6px;
-}
-
-.home__modal-form .home__section7-form-group input,
-.home__modal-form .home__section7-form-group textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border: none;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1f1f1f;
-  background-color: #f8f8f8;
-  border-radius: 12px;
-}
-
-.home__modal-form .home__section7-form-group input::placeholder,
-.home__modal-form .home__section7-form-group textarea::placeholder {
-  color: #bcbcbc;
-}
-
-.home__modal-form .home__section7-form-group input:focus,
-.home__modal-form .home__section7-form-group textarea:focus {
-  outline: none;
-}
-
-.home__modal-form .home__section7-form-group textarea {
-  resize: none;
-  min-height: 80px;
 }
 
 .home__modal-buttons {
@@ -1345,15 +1442,15 @@
     padding: 80px;
   }
 
-  .home__modal-left .home__section7-title {
+  .home__modal-title {
     font-size: 44px;
   }
 
-  .home__modal-left .home__section7-title2 {
+  .home__modal-title2 {
     font-size: 40px;
   }
 
-  .home__modal-left .home__section7-desc {
+  .home__modal-desc {
     font-size: 16px;
   }
 
@@ -1384,15 +1481,15 @@
     gap: 30px;
   }
 
-  .home__modal-left .home__section7-title {
+  .home__modal-title {
     font-size: 38px;
   }
 
-  .home__modal-left .home__section7-title2 {
+  .home__modal-title2 {
     font-size: 34px;
   }
 
-  .home__modal-left .home__section7-desc {
+  .home__modal-desc {
     font-size: 15px;
     margin-bottom: 24px;
   }
@@ -1777,25 +1874,25 @@
     gap: 20px;
   }
 
-  .home__modal-left .home__section7-title {
+  .home__modal-title {
     font-size: 32px;
   }
 
-  .home__modal-left .home__section7-title2 {
+  .home__modal-title2 {
     font-size: 28px;
   }
 
-  .home__modal-left .home__section7-desc {
+  .home__modal-desc {
     font-size: 14px;
     margin-bottom: 20px;
   }
 
-  .home__modal-left .home__section7-contact-item img {
+  .home__modal-contact-item img {
     width: 48px;
     height: 48px;
   }
 
-  .home__modal-left .home__section7-contact-value {
+  .home__modal-contact-value {
     font-size: 18px;
   }
 
@@ -1837,29 +1934,40 @@
 
   .home__modal-body {
     flex-direction: column;
+    align-items: stretch;
     padding: 30px;
     gap: 24px;
   }
 
-  .home__modal-left .home__section7-title {
+  .home__modal-title {
     font-size: 28px;
   }
 
-  .home__modal-left .home__section7-title2 {
+  .home__modal-title2 {
     font-size: 24px;
   }
 
-  .home__modal-form .home__section7-form-row {
+  .home__modal-contact {
+    flex-direction: row;
+    gap: max(40px, 8vw);
+    justify-content: center;
+  }
+
+  .home__modal-contact-item {
+    flex: none;
+  }
+
+  .home__modal-form-row {
     flex-direction: column;
     gap: 0;
     margin-bottom: 0;
   }
 
-  .home__modal-form .home__section7-form-group {
+  .home__modal-form-group {
     margin-bottom: 12px;
   }
 
-  .home__modal-form .home__section7-form-group--full {
+  .home__modal-form-group--full {
     margin-bottom: 12px;
   }
 
@@ -2348,17 +2456,21 @@
     gap: 16px;
   }
 
-  .home__modal-left .home__section7-title {
+  .home__modal-title {
     font-size: 24px;
   }
 
-  .home__modal-left .home__section7-title2 {
+  .home__modal-title2 {
     font-size: 20px;
   }
 
-  .home__modal-buttons {
-    flex-direction: column;
-    gap: 10px;
+  .home__modal-contact--desktop {
+    display: none;
+  }
+
+  .home__modal-contact--mobile {
+    display: flex;
+    margin-top: 16px;
   }
 
   .home__modal-btn--back,
@@ -2409,6 +2521,14 @@
 }
 
 @media (max-width: 480px) {
+  .home__modal-contact {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
   .home__section1-title {
     font-size: 22px;
     margin-bottom: 40px;
@@ -2603,6 +2723,11 @@
 
 @media (max-width: 370px) {
   .home__section6-pest {
+    height: 90px;
+  }
+
+  @media (max-width: 320px) {
+  .home__section--6 {
     display: none;
   }
 }
