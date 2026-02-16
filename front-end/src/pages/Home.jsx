@@ -66,6 +66,8 @@ const Home = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [section5Visible, setSection5Visible] = useState(window.innerWidth <= 1024);
+  const [section5Animated, setSection5Animated] = useState(window.innerWidth <= 1024);
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
   const cardsWrapperRef = useRef(null);
@@ -449,6 +451,64 @@ const Home = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // PC 전용 스크롤 페이드인 애니메이션 (1025px 이상)
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    // 개별 요소 관찰 (그룹 내부 요소는 제외)
+    // data-visible 속성 사용: React re-render 시에도 유지됨
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.setAttribute('data-visible', '');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll('.fade-up').forEach((el) => {
+      if (!el.closest('.fade-up-group')) observer.observe(el);
+    });
+
+    // 그룹 관찰: 부모 진입 시 자식 fade-up 일괄 visible 처리
+    const groupObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.fade-up').forEach((el) => el.setAttribute('data-visible', ''));
+            groupObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll('.fade-up-group').forEach((el) => groupObserver.observe(el));
+
+    // 섹션 5 카드별 페이드인: 슬라이더 진입 시 카드 순차 등장
+    const section5Observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setSection5Visible(true);
+            section5Observer.unobserve(entry.target);
+            // 초기 스태거 딜레이 제거 (카드 전환 시 딜레이 방지)
+            setTimeout(() => setSection5Animated(true), 1200);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    const section5Slider = document.querySelector('.home__section5-slider');
+    if (section5Slider) section5Observer.observe(section5Slider);
+
+    return () => { observer.disconnect(); groupObserver.disconnect(); section5Observer.disconnect(); };
+  }, []);
+
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
@@ -556,13 +616,13 @@ const Home = () => {
       <section className="home__section home__section--2">
         <div className="home__content">
           <div className="home__section2-wrapper">
-            <h2 className="home__section2-title">
+            <h2 className="home__section2-title fade-up">
               <span className="home__section2-highlight">체계적</span>으로
               <span className="home__section2-highlight"> 진행</span>되는
               <br />
               단계별 방역 과정
             </h2>
-            <p className="home__section2-desc">
+            <p className="home__section2-desc fade-up fade-up-delay-1">
               2~3개월간 진행되는 이 관리 기간은 단순한 해충 제거를 넘어, 서식과
               발생 원인을 근본적으로 억제하고 단계별 방역 과정을 통해 남은
               해충까지 점진적으로 퇴치하여 공간을 안전하게 유지하는 종합적인
@@ -573,7 +633,8 @@ const Home = () => {
               {galleries1.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`home__section2-gallery-item ${activeGalleryIndex === index ? "active" : ""}`}
+                  className={`home__section2-gallery-item fade-up ${activeGalleryIndex === index ? "active" : ""}`}
+                  style={{ '--fade-delay': `${0.2 + index * 0.12}s` }}
                   onMouseEnter={() => setActiveGalleryIndex(index)}
                 >
                   {item.src ? (
@@ -607,8 +668,8 @@ const Home = () => {
 
       <section className="home__section home__section--3">
         <div className="home__content">
-          <div className="home__section3-wrapper">
-            <div className="home__section3-text">
+          <div className="home__section3-wrapper fade-up-group">
+            <div className="home__section3-text fade-up">
               <h2 className="home__section3-title">
                 <span className="home__section3-highlight">생활</span>과{" "}
                 <span className="home__section3-highlight">일터</span>를 지키는
@@ -626,8 +687,8 @@ const Home = () => {
             </div>
 
             <div className="home__section3-icons">
-              {iconButtons.map((item) => (
-                <button key={item.id} className="home__section3-icon-btn">
+              {iconButtons.map((item, index) => (
+                <button key={item.id} className="home__section3-icon-btn fade-up" style={{ '--fade-delay': `${0.1 + index * 0.06}s` }}>
                   <img src={item.icon} alt={item.label} />
                   <span>{item.label}</span>
                 </button>
@@ -640,7 +701,7 @@ const Home = () => {
       <section className="home__section home__section--4">
         <div className="home__content">
           <div className="home__section4-wrapper">
-            <div className="home__section4-text">
+            <div className="home__section4-text fade-up">
               <h2 className="home__section4-title">
                 <span className="home__section4-highlight">신뢰</span>와{" "}
                 <span className="home__section4-highlight">전문성</span>을 담은
@@ -657,8 +718,8 @@ const Home = () => {
               {galleries2.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`home__section4-gallery-item ${index % 2 === 0 ? "home__section4-gallery-item--bottom" : "home__section4-gallery-item--top"}`}
-                  style={{ backgroundImage: `url(${item.src})` }}
+                  className={`home__section4-gallery-item fade-up ${index % 2 === 0 ? "home__section4-gallery-item--bottom" : "home__section4-gallery-item--top"}`}
+                  style={{ backgroundImage: `url(${item.src})`, '--fade-delay': `${0.1 + index * 0.18}s` }}
                 >
                   <div className="home__section4-gallery-content">
                     <h3 className="home__section4-gallery-title">{item.title}</h3>
@@ -674,7 +735,7 @@ const Home = () => {
       <section className="home__section home__section--5">
         <div className="home__content">
           <div className="home__section5-wrapper">
-            <div className="home__section5-header">
+            <div className="home__section5-header fade-up">
               <h2 className="home__section5-title">해충 라이브러리</h2>
               <p className="home__section5-desc">
                 집과 공간을 위협하는 해충 정보를 쉽게
@@ -704,10 +765,13 @@ const Home = () => {
                         key={pest.id}
                         className={`home__section5-card ${isActive ? "active" : ""}`}
                         style={{
-                          transform: `translate(calc(-50% + ${getCardOffset(position) + dragOffset}px), -50%) scale(${isActive ? 1 : 0.95})`,
+                          transform: section5Visible
+                            ? `translate(calc(-50% + ${getCardOffset(position) + dragOffset}px), -50%) scale(${isActive ? 1 : 0.95})`
+                            : `translate(calc(-50% + ${getCardOffset(position)}px), calc(-50% + 40px)) scale(${isActive ? 1 : 0.95})`,
                           transition: `transform ${isDragging ? '0.05s' : '0.4s'} ease, width 0.4s ease, height 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease`,
+                          transitionDelay: !section5Animated && section5Visible ? `${0.1 + Math.abs(position) * 0.12}s` : '0s',
                           zIndex: isActive ? 10 : 5 - Math.abs(position),
-                          opacity: Math.abs(position) > 3 ? 0 : 1,
+                          opacity: section5Visible ? (Math.abs(position) > 3 ? 0 : 1) : 0,
                         }}
                         onClick={() => {
                           if (!isActive) {
@@ -763,13 +827,14 @@ const Home = () => {
         </div>
       </section>
 
-      <section
-        className="home__section home__section--6"
-        style={{ backgroundImage: `url(${section6Banner})` }}
-      >
+      <section className="home__section home__section--6 fade-up-group">
+        <div
+          className="home__section6-bg fade-up"
+          style={{ backgroundImage: `url(${section6Banner})` }}
+        />
         <div className="home__content">
           <div className="home__section6-wrapper">
-            <div className="home__section6-text">
+            <div className="home__section6-text fade-up">
               <h2 className="home__section6-title">
                 프르조와 함께 소중한 공간을<br className="home__section6-title-br" /> 안전하게 이어가세요.
               </h2>
@@ -780,7 +845,8 @@ const Home = () => {
             <img
               src={section6Pest}
               alt="해충 방제"
-              className="home__section6-pest"
+              className="home__section6-pest fade-up"
+              style={{ '--fade-delay': '0.3s' }}
             />
           </div>
         </div>
@@ -788,8 +854,8 @@ const Home = () => {
 
       <section className="home__section home__section--7">
         <div className="home__content">
-          <div className="home__section7-wrapper">
-            <div className="home__section7-left">
+          <div className="home__section7-wrapper fade-up-group">
+            <div className="home__section7-left fade-up">
               <p className="home__section7-subtitle">WE'RE HERE TO HELP YOU</p>
               <h2 className="home__section7-title">
                 <span className="home__section7-highlight">'프르조'에</span>
@@ -819,7 +885,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div className="home__section7-right">
+            <div className="home__section7-right fade-up" style={{ '--fade-delay': '0.25s' }}>
               <form className="home__section7-form" onSubmit={handleFormSubmit}>
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">

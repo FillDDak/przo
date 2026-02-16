@@ -763,10 +763,16 @@
 .home__section--6 {
   height: 200px;
   background-color: #3d4a6b;
-  background-size: cover;
-  background-position: center;
   position: relative;
   margin-bottom: 100px;
+}
+
+.home__section6-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
 }
 
 .home__section6-wrapper {
@@ -774,6 +780,7 @@
   align-items: center;
   height: 100%;
   position: relative;
+  z-index: 1;
 }
 
 .home__section6-text {
@@ -1563,54 +1570,39 @@
     margin-left: 40px;
   }
 
-  .home__section--4 {
-    min-height: auto;
-  }
-
-  .home__section4-gallery {
-    display: grid;
-    grid-template-columns: 300px 300px;
-    grid-template-rows: auto auto;
-    gap: 20px;
-    height: auto;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    justify-content: center;
-  }
-
-  .home__section4-gallery-item {
-    flex: none;
-    width: 300px;
-    height: 350px;
-    border-radius: 20px;
-  }
-
-  .home__section4-gallery-content,
-  .home__section4-gallery-item--top .home__section4-gallery-content {
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    padding: 20px;
-    text-align: left;
-  }
-
   .home__section4-wrapper {
     padding: 100px 0 100px 0;
   }
 
-  .home__section4-gallery-item--bottom {
-    transform: translateY(40px);
+  .home__section4-gallery {
+    gap: 10px;
+    width: calc(100% + 80px);
+    margin-left: -40px;
+    margin-right: -40px;
+    height: 410px;
   }
 
-  .home__section4-gallery-item--top {
-    transform: none;
+  .home__section4-gallery-item {
+    width: 210px;
+    height: 260px;
+    border-radius: 26px;
+  }
+
+  .home__section4-gallery-item--bottom {
+    transform: translateY(60px);
+  }
+
+  .home__section4-gallery-content {
+    padding: 24px;
   }
 
   .home__section4-gallery-title {
     font-size: 17px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+  }
+
+  .home__section4-gallery-desc {
+    font-size: 13px;
   }
 
   .home__section5-header {
@@ -1725,7 +1717,7 @@
   }
 
   .home__section--4 {
-    min-height: 750px;
+    min-height: auto;
   }
 
   .home__section4-wrapper {
@@ -1750,18 +1742,45 @@
   }
 
   .home__section4-gallery {
-    gap: 24px;
-    width: calc(100% + 40px);
-    margin-left: -20px;
-    margin-right: -20px;
+    display: grid;
+    grid-template-columns: 300px 300px;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    height: auto;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    justify-content: center;
   }
 
   .home__section4-gallery-item {
+    flex: none;
+    width: 300px;
     height: 350px;
+    border-radius: 20px;
+  }
+
+  .home__section4-gallery-content,
+  .home__section4-gallery-item--top .home__section4-gallery-content {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    padding: 20px;
+    text-align: left;
   }
 
   .home__section4-gallery-item--bottom {
-    transform: translateY(60px);
+    transform: translateY(40px);
+  }
+
+  .home__section4-gallery-item--top {
+    transform: none;
+  }
+
+  .home__section4-gallery-title {
+    font-size: 17px;
+    margin-bottom: 4px;
   }
 
   .home__section--5 {
@@ -2765,6 +2784,74 @@
 @media (max-width: 320px) {
   .home__section--6 {
     display: none;
+  }
+}
+
+/* ===== PC 전용: 스크롤 페이드인 애니메이션 ===== */
+@media (min-width: 1025px) {
+  .fade-up {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition-delay: var(--fade-delay, 0s);
+  }
+
+  .fade-up[data-visible] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fade-up-delay-1 {
+    transition-delay: 0.15s;
+  }
+
+  .fade-up-delay-2 {
+    transition-delay: 0.3s;
+  }
+
+  /* 섹션 2 갤러리 아이템: hover flex 트랜지션 보존 */
+  .home__section2-gallery-item.fade-up {
+    transition: opacity 0.7s ease, transform 0.7s ease, flex 0.4s ease;
+  }
+
+  /* 섹션 4 bottom 아이템: 기존 translateY(80px) 합성 */
+  .home__section4-gallery-item--bottom.fade-up {
+    transform: translateY(130px);
+  }
+
+  .home__section4-gallery-item--bottom.fade-up[data-visible] {
+    transform: translateY(80px);
+  }
+
+  /* 섹션 6 배경 이미지: opacity만 애니메이션 (translateY 제외) */
+  .home__section6-bg.fade-up {
+    transform: none;
+  }
+
+  .home__section6-bg.fade-up[data-visible] {
+    transform: none;
+  }
+
+  /* 섹션 6 해충 이미지: 기존 translateY(-50%) 합성 */
+  .home__section6-pest.fade-up {
+    opacity: 0;
+    transform: translateY(calc(-50% + 50px));
+  }
+
+  .home__section6-pest.fade-up[data-visible] {
+    opacity: 1;
+    transform: translateY(-50%);
+  }
+}
+
+/* 섹션 4 bottom 아이템: 1025~1200px에서 translateY(60px) 합성 */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .home__section4-gallery-item--bottom.fade-up {
+    transform: translateY(110px);
+  }
+
+  .home__section4-gallery-item--bottom.fade-up[data-visible] {
+    transform: translateY(60px);
   }
 }
 
