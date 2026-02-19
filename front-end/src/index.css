@@ -94,6 +94,7 @@ body {
   color: #343a40; /* A dark, but not pure black, text color */
   line-height: 1.6;
   overflow-x: hidden;
+  word-break: keep-all;
 }
 
 a {

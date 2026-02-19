@@ -207,6 +207,54 @@
 }
 
 /* 반응형 */
+@media (max-width: 1400px) {
+  .floating-buttons {
+    right: 26px;
+  }
+
+  .floating-btn {
+    width: 84px;
+    height: 84px;
+  }
+
+  .floating-btn__icon {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .floating-buttons {
+    right: 22px;
+  }
+
+  .floating-btn {
+    width: 76px;
+    height: 76px;
+  }
+
+  .floating-btn__icon {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .floating-buttons {
+    right: 18px;
+  }
+
+  .floating-btn {
+    width: 68px;
+    height: 68px;
+  }
+
+  .floating-btn__icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 @media (max-width: 768px) {
   .floating-buttons {
     right: 16px;

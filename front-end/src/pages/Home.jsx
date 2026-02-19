@@ -955,8 +955,7 @@ const Home = () => {
                 <h3 className="home__modal-title2">무료로 문의해보세요</h3>
                 <p className="home__modal-desc">
                   보다 안전하고 효과적인 방역 솔루션이 필요하신가요?
-                  <br />
-                  공간의 유형과 상황에 맞춘 맞춤형 진단과 시공 방안을 안내해드립니다.
+                  <span className="home__modal-desc-detail"><br />공간의 유형과 상황에 맞춘 맞춤형 진단과 시공 방안을 안내해드립니다.</span>
                   <br />
                   아래 정보를 남겨주시면 전문 상담원이 빠르게 연락드리겠습니다.
                 </p>
@@ -1034,22 +1033,6 @@ const Home = () => {
                       </span>
                       <span className="home__modal-btn-text">{isSubmitting ? "등록 중..." : "전송하기"}</span>
                     </button>
-                  </div>
-                  <div className="home__modal-contact home__modal-contact--mobile">
-                    <div className="home__modal-contact-item">
-                      <img src={kakaoIcon} alt="카카오톡" />
-                      <div className="home__modal-contact-info">
-                        <span className="home__modal-contact-label">오픈채팅</span>
-                        <span className="home__modal-contact-value">'프르조'</span>
-                      </div>
-                    </div>
-                    <div className="home__modal-contact-item">
-                      <img src={telIcon} alt="전화" />
-                      <div className="home__modal-contact-info">
-                        <span className="home__modal-contact-label">전화번호</span>
-                        <span className="home__modal-contact-value">1670-2335</span>
-                      </div>
-                    </div>
                   </div>
                 </form>
               </div>
