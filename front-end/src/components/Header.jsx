@@ -11,13 +11,14 @@ const Header = ({ variant = "default" }) => {
   const subPagePrefixes = ["/about", "/service", "/qna", "/reviews"];
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(() => window.scrollY > 50);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
