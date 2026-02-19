@@ -8,7 +8,8 @@ export default defineConfig({
     port: 3000,
     host: true,
     allowedHosts: [
-      'nonviolative-superfluous-cris.ngrok-free.dev'
+      'nonviolative-superfluous-cris.ngrok-free.dev',
+      'przo.share.zrok.io'
     ],
     proxy: {
       '/api': {
