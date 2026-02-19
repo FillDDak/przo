@@ -714,7 +714,7 @@ const Home = () => {
                 만들어 드립니다.
               </p>
             </div>
-            <div className="home__section4-gallery">
+            <div className="home__section4-gallery fade-up-group">
               {galleries2.map((item, index) => (
                 <div
                   key={item.id}
