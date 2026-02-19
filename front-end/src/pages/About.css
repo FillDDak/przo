@@ -118,7 +118,7 @@
   color: #444;
   line-height: 1.8;
   margin: 0 0 20px 0;
-  text-align: justify;
+  text-align: left;
 }
 
 .about__customers-col p:last-child {
@@ -197,6 +197,16 @@
 }
 
 /* 반응형 */
+@media (max-width: 1200px) {
+  .about__customers-grid {
+    gap: 60px;
+  }
+
+  .about__customers-col p {
+    font-size: 18px;
+  }
+}
+
 @media (max-width: 1024px) {
   .about {
     padding-top: 70px;
@@ -210,6 +220,10 @@
     height: 240px;
   }
 
+  .about__breadcrumb {
+    left: 24px;
+  }
+
   .about__banner-title {
     font-size: 28px;
   }
@@ -220,6 +234,18 @@
 
   .about__customers-grid {
     gap: 40px;
+  }
+
+  .about__customers-col p {
+    font-size: 17px;
+  }
+
+  .about__location-address {
+    font-size: 16px;
+  }
+
+  .about__map {
+    height: 500px;
   }
 }
 
@@ -236,16 +262,25 @@
     height: 200px;
   }
 
+  .about__breadcrumb {
+    left: 20px;
+  }
+
   .about__banner-title {
     font-size: 22px;
   }
 
   .about__banner-subtitle {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .about__customers {
     padding: 60px 0;
+  }
+
+  .about__customers-title {
+    font-size: 24px;
+    margin-bottom: 32px;
   }
 
   .about__customers-grid {
@@ -253,12 +288,94 @@
     gap: 0;
   }
 
+  .about__customers-col:first-child p:last-child {
+    margin-bottom: 20px;
+  }
+
+  .about__customers-col p {
+    font-size: 16px;
+  }
+
+  .about__signature-name {
+    font-size: 18px;
+  }
+
   .about__location-header {
     flex-direction: column;
+    align-items: flex-start;
     gap: 16px;
+  }
+
+  .about__location-title {
+    font-size: 26px;
+  }
+
+  .about__location-address {
+    font-size: 15px;
+  }
+
+  .about__location-link {
+    font-size: 16px;
+  }
+
+  .about__map {
+    height: 400px;
   }
 
   .about__location {
     padding: 40px 0 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about__banner {
+    height: 160px;
+  }
+
+  .about__banner-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .about__banner-subtitle {
+    font-size: 16px;
+  }
+
+  .about__customers {
+    padding: 40px 0;
+  }
+
+  .about__customers-title {
+    font-size: 20px;
+    margin-bottom: 24px;
+  }
+
+  .about__customers-col p {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .about__signature-name {
+    font-size: 16px;
+  }
+
+  .about__location-title {
+    font-size: 22px;
+  }
+
+  .about__location-address {
+    font-size: 13px;
+  }
+
+  .about__location-link {
+    font-size: 14px;
+  }
+
+  .about__map {
+    height: 280px;
+  }
+
+  .about__location {
+    padding: 30px 0 50px;
   }
 }
