@@ -623,8 +623,8 @@ const Home = () => {
               단계별 방역 과정
             </h2>
             <p className="home__section2-desc fade-up fade-up-delay-1">
-              2~3개월간 진행되는 이 관리 기간은 단순한 해충 제거를 넘어, 서식과
-              발생 원인을 근본적으로 억제하고 단계별 방역 과정을 통해 남은
+              <span className="home__section2-desc-detail">2~3개월간 진행되는 이 관리 기간은 단순한 해충 제거를 넘어, 서식과
+              발생 원인을 근본적으로 억제하고 </span>단계별 방역 과정을 통해 남은
               해충까지 점진적으로 퇴치하여 공간을 안전하게 유지하는 종합적인
               과정입니다.
             </p>
@@ -677,9 +677,9 @@ const Home = () => {
                 맞춤형 방역 솔루션
               </h2>
               <p className="home__section3-desc">
-                사람이 생활하고 일하는 모든 공간은 보이지 않는 해충과 세균의
+                <span className="home__section3-desc-detail">사람이 생활하고 일하는 모든 공간은 보이지 않는 해충과 세균의
                 위협에 노출되어 있습니다.
-                <br />
+                <br /></span>
                 쾌적하고 안전한 환경을 위해서는 단순한 청소를 넘어선 전문적인
                 방역 관리가 필요합니다.
               </p>
@@ -863,9 +863,9 @@ const Home = () => {
               <h3 className="home__section7-title2">무료로 문의해보세요</h3>
               <p className="home__section7-desc">
                 보다 안전하고 효과적인 방역 솔루션이 필요하신가요?
-                <br />
-                공간의 유형과 상황에 맞춘 맞춤형 진단과 시공 방안을 안내해드립니다.
-                <br />
+                <br className="home__section7-desc-br" />
+                <span className="home__section7-desc-detail">공간의 유형과 상황에 맞춘 맞춤형 진단과 시공 방안을 안내해드립니다.
+                <br /></span>
                 아래 정보를 남겨주시면 전문 상담원이 빠르게 연락드리겠습니다.
               </p>
               <div className="home__section7-contact">

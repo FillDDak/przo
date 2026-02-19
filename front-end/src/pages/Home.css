@@ -140,7 +140,7 @@
 }
 
 .home__section2-desc {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 400;
   text-align: center;
   line-height: 1.7;
@@ -1888,7 +1888,7 @@
 
   .home__section--7 {
     min-height: auto;
-    padding: 80px 0;
+    padding: 0 0 80px 0;
   }
 
   .home__section7-wrapper {
@@ -2058,7 +2058,8 @@
   .home__section--1 .home__content,
   .home__section--3 .home__content,
   .home__section--4 .home__content,
-  .home__section--5 .home__content {
+  .home__section--5 .home__content,
+  .home__section--7 .home__content {
     padding-left: 24px;
     padding-right: 24px;
   }
@@ -2105,6 +2106,10 @@
   .home__section2-desc {
     font-size: 14px;
     margin-bottom: 32px;
+  }
+
+  .home__section2-desc-detail {
+    display: none;
   }
 
   .home__section2-gallery {
@@ -2200,6 +2205,10 @@
     font-size: 14px;
     text-align: left;
     max-width: 100%;
+  }
+
+  .home__section3-desc-detail {
+    display: none;
   }
 
   .home__section3-desc br {
@@ -2445,7 +2454,7 @@
 
   .home__section--7 {
     min-height: auto;
-    padding: 60px 0;
+    padding: 0 0 60px 0;
   }
 
   .home__section7-wrapper {
@@ -2455,7 +2464,7 @@
 
   .home__section7-left {
     max-width: 100%;
-    text-align: center;
+    text-align: left;
   }
 
   .home__section7-subtitle {
@@ -2474,12 +2483,19 @@
     font-size: 14px;
   }
 
-  .home__section7-desc br {
+  .home__section7-desc br:not(.home__section7-desc-br) {
+    display: none;
+  }
+
+  .home__section7-desc-detail {
     display: none;
   }
 
   .home__section7-contact {
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
+    gap: 40px;
   }
 
   .home__section7-contact-item img {
@@ -2575,6 +2591,11 @@
 }
 
 @media (max-width: 480px) {
+  .home__section--7 .home__content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .home__modal-contact {
     flex-direction: column;
     gap: 16px;
@@ -2640,6 +2661,14 @@
   }
 
   .home__section3-highlight {
+    font-size: 24px;
+  }
+
+  .home__section4-title {
+    font-size: 22px;
+  }
+
+  .home__section4-highlight {
     font-size: 24px;
   }
 
@@ -2747,12 +2776,33 @@
     right: 30px;
   }
 
+  .home__section7-subtitle {
+    font-size: 14px;
+  }
+
   .home__section7-title {
     font-size: 26px;
   }
 
   .home__section7-title2 {
     font-size: 22px;
+  }
+
+  .home__section7-desc {
+    font-size: 12px;
+  }
+
+  .home__section7-contact-item img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .home__section7-contact-label {
+    font-size: 12px;
+  }
+
+  .home__section7-contact-value {
+    font-size: 16px;
   }
 
   .home__section7-form {
