@@ -297,70 +297,8 @@
     margin-bottom: 40px;
   }
 
-  .service__diagram {
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    padding: 20px 0;
-  }
-
-  .service__diagram::before {
-    display: none;
-  }
-
-  .service__center {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-    order: 0;
-  }
-
-  .service__center::before {
-    width: 280px;
-    height: 280px;
-  }
-
-  .service__feature {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-  }
-
-  .service__feature--top-left {
-    order: 1;
-  }
-
-  .service__feature--top-left .service__feature-title {
-    order: 0;
-    margin-bottom: 0;
-    margin-top: 12px;
-  }
-
-  .service__feature--top-right {
-    order: 2;
-  }
-
-  .service__feature--top-right .service__feature-title {
-    order: 0;
-    margin-bottom: 0;
-    margin-top: 12px;
-  }
-
-  .service__feature--bottom-left {
-    order: 3;
-  }
-
-  .service__feature--bottom-right {
-    order: 4;
-  }
-
-  .service__feature-img-wrapper {
-    width: 200px;
-    height: 200px;
+  .service__feature-title {
+    font-size: 15px;
   }
 
   .service__description p {
@@ -369,5 +307,59 @@
 
   .service__main {
     padding: 20px 0 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .service__diagram {
+    height: 430px;
+  }
+
+  .service__diagram::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .service__center {
+    width: 100px;
+    height: 100px;
+  }
+
+  .service__center::before {
+    width: 155px;
+    height: 155px;
+  }
+
+  .service__feature-img-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .service__feature-title {
+    font-size: 12px;
+  }
+
+  .service__feature--top-left,
+  .service__feature--top-right {
+    top: 22px;
+  }
+
+  .service__feature--bottom-left,
+  .service__feature--bottom-right {
+    bottom: 22px;
+  }
+
+  .service__feature--top-left,
+  .service__feature--bottom-left {
+    transform: translateX(calc(-50% - 106px));
+  }
+
+  .service__feature--top-right,
+  .service__feature--bottom-right {
+    transform: translateX(calc(-50% + 106px));
+  }
+
+  .service__description p {
+    font-size: 14px;
   }
 }
