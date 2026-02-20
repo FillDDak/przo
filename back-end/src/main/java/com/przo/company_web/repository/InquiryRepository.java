@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 
     Page<Inquiry> findAllByOrderByIdDesc(Pageable pageable);
+
+    Page<Inquiry> findByTitleContainingIgnoreCaseOrderByIdDesc(String title, Pageable pageable);
 }

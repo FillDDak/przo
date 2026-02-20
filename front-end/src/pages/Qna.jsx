@@ -12,15 +12,17 @@ const Qna = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const pageSize = 10;
 
   useEffect(() => {
     const fetchInquiries = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `${API_BASE_URL}/inquiries?page=${currentPage}&size=10`
-        );
+        const params = new URLSearchParams({ page: currentPage, size: 10 });
+        if (searchQuery) params.append("title", searchQuery);
+        const response = await fetch(`${API_BASE_URL}/inquiries?${params}`);
         const data = await response.json();
         setInquiries(data.content);
         setTotalPages(data.totalPages);
@@ -33,7 +35,7 @@ const Qna = () => {
     };
 
     fetchInquiries();
-  }, [currentPage]);
+  }, [currentPage, searchQuery]);
 
   const handlePageChange = (page) => {
     if (page >= 0 && page < totalPages) {
@@ -41,7 +43,19 @@ const Qna = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setCurrentPage(0);
+    setSearchQuery(searchInput.trim());
+  };
+
   // 페이지네이션 번호 생성 (최대 5개)
+  const maskName = (name) => {
+    if (!name || name.length === 0) return "";
+    if (name.length === 1) return name;
+    return name[0] + "○".repeat(name.length - 1);
+  };
+
   const getPageNumbers = () => {
     const pages = [];
     const maxVisible = 5;
@@ -86,19 +100,20 @@ const Qna = () => {
                 <tr>
                   <th className="qna__th qna__th--number">번호</th>
                   <th className="qna__th qna__th--title">제목</th>
+                  <th className="qna__th qna__th--author">작성자</th>
                   <th className="qna__th qna__th--date">등록일</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="3" className="qna__td qna__td--loading">
+                    <td colSpan="4" className="qna__td qna__td--loading">
                       로딩 중...
                     </td>
                   </tr>
                 ) : inquiries.length === 0 ? (
                   <tr>
-                    <td colSpan="3" className="qna__td qna__td--empty">
+                    <td colSpan="4" className="qna__td qna__td--empty">
                       등록된 문의가 없습니다.
                     </td>
                   </tr>
@@ -120,6 +135,7 @@ const Qna = () => {
                           )}
                         </Link>
                       </td>
+                      <td className="qna__td qna__td--author">{maskName(item.name)}</td>
                       <td className="qna__td qna__td--date">{item.createdAt}</td>
                     </tr>
                   ))
@@ -128,8 +144,33 @@ const Qna = () => {
             </table>
           </div>
 
-          {/* 문의하기 버튼 */}
+          {/* 검색 바 + 문의하기 버튼 */}
           <div className="qna__button-wrapper">
+            <form className="qna__search-form" onSubmit={handleSearch}>
+              <div className="qna__search-input-wrapper">
+                <input
+                  type="text"
+                  className="qna__search-input"
+                  placeholder="제목으로 검색"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+                {searchInput && (
+                  <button
+                    type="button"
+                    className="qna__search-clear"
+                    onClick={() => {
+                      setSearchInput("");
+                      setSearchQuery("");
+                      setCurrentPage(0);
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+              <button type="submit" className="qna__search-btn">검색</button>
+            </form>
             <Link to="/qna/write" className="qna__write-btn">
               문의하기
             </Link>

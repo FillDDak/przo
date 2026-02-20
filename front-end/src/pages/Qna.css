@@ -71,6 +71,76 @@
   margin: 0 0 60px 0;
 }
 
+/* 검색 바 */
+.qna__search-form {
+  display: flex;
+  gap: 8px;
+}
+
+.qna__search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.qna__search-input {
+  width: 320px;
+  padding: 10px 36px 10px 16px;
+  font-size: 14px;
+  color: #1f1f1f;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.qna__search-input:focus {
+  border-color: #51c488;
+}
+
+.qna__search-input::placeholder {
+  color: #aaa;
+}
+
+.qna__search-clear {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
+  line-height: 1;
+  color: #aaa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.qna__search-clear:hover {
+  color: #444;
+}
+
+.qna__search-btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #1f1f1f;
+  border: 1px solid #1f1f1f;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qna__search-btn:hover {
+  background-color: #51c488;
+  border-color: #51c488;
+}
+
 /* 테이블 */
 .qna__table-wrapper {
   width: 100%;
@@ -89,6 +159,7 @@
   font-weight: 600;
   color: #1f1f1f;
   text-align: center;
+  vertical-align: middle;
   border-bottom: 1px solid #e0e0e0;
   background-color: #fafafa;
 }
@@ -99,6 +170,10 @@
 
 .qna__th--title {
   text-align: center;
+}
+
+.qna__th--author {
+  width: 90px;
 }
 
 .qna__th--date {
@@ -118,6 +193,7 @@
   font-size: 14px;
   color: #444;
   text-align: center;
+  vertical-align: middle;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -127,7 +203,7 @@
 }
 
 .qna__link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
   text-decoration: none;
@@ -188,7 +264,8 @@
 /* 문의하기 버튼 */
 .qna__button-wrapper {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 24px;
 }
 
@@ -292,12 +369,20 @@
     margin-bottom: 40px;
   }
 
+  .qna__search-input {
+    width: 200px;
+  }
+
   .qna__main {
     padding: 20px 0 80px;
   }
 
   .qna__th--number {
     width: 60px;
+  }
+
+  .qna__th--author {
+    width: 70px;
   }
 
   .qna__th--date {
@@ -340,8 +425,28 @@
     table-layout: fixed;
   }
 
+  .qna__button-wrapper {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .qna__search-input {
+    width: 160px;
+  }
+
   .qna__th--number {
     width: 50px;
+  }
+
+  .qna__th--author {
+    width: 52px;
+  }
+
+  .qna__td--author {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 52px;
   }
 
   .qna__th--date {

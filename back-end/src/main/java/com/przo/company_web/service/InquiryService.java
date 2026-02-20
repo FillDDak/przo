@@ -21,8 +21,12 @@ public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
 
-    public Page<InquiryListResponse> getInquiryList(int page, int size) {
+    public Page<InquiryListResponse> getInquiryList(int page, int size, String title) {
         Pageable pageable = PageRequest.of(page, size);
+        if (title != null && !title.isBlank()) {
+            return inquiryRepository.findByTitleContainingIgnoreCaseOrderByIdDesc(title, pageable)
+                    .map(InquiryListResponse::new);
+        }
         return inquiryRepository.findAllByOrderByIdDesc(pageable)
                 .map(InquiryListResponse::new);
     }

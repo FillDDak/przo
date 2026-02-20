@@ -35,9 +35,10 @@ public class InquiryController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> getInquiryList(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String title) {
 
-        Page<InquiryListResponse> inquiryPage = inquiryService.getInquiryList(page, size);
+        Page<InquiryListResponse> inquiryPage = inquiryService.getInquiryList(page, size, title);
 
         Map<String, Object> response = new HashMap<>();
         response.put("content", inquiryPage.getContent());
