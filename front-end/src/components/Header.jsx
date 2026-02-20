@@ -13,25 +13,8 @@ const Header = ({ variant = "default" }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = "100%";
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      if (scrollY) window.scrollTo(0, parseInt(scrollY) * -1);
-    }
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      if (scrollY) window.scrollTo(0, parseInt(scrollY) * -1);
-    };
+    document.documentElement.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => { document.documentElement.style.overflow = ""; };
   }, [isMenuOpen]);
 
   const toggleMenu = () => {
