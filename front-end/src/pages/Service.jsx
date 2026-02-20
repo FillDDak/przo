@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import "./Service.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
-import zapperCenter from "../assets/other-page-icon-image/service-zapper-center.png";
-import zapper1 from "../assets/other-page-icon-image/service-zapper-1.png";
-import zapper2 from "../assets/other-page-icon-image/service-zapper-2.png";
-import zapper3 from "../assets/other-page-icon-image/service-zapper-3.png";
-import zapper4 from "../assets/other-page-icon-image/service-zapper-4.png";
+import zapperCenter from "../assets/other-page-icon-image/service-zapper-center.webp";
+import zapper1 from "../assets/other-page-icon-image/service-zapper-1.webp";
+import zapper2 from "../assets/other-page-icon-image/service-zapper-2.webp";
+import zapper3 from "../assets/other-page-icon-image/service-zapper-3.webp";
+import zapper4 from "../assets/other-page-icon-image/service-zapper-4.webp";
 
 const Service = () => {
   return (

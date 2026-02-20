@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-import home_banner from "../assets/image/home_banner.png";
+import home_banner from "../assets/image/home_banner.webp";
 
 // 섹션 2 갤러리 이미지
-import gallery1_1 from "../assets/section2-gallery/gallery1-item1.png";
-import gallery1_2 from "../assets/section2-gallery/gallery1-item2.png";
-import gallery1_3 from "../assets/section2-gallery/gallery1-item3.png";
-import gallery1_4 from "../assets/section2-gallery/gallery1-item4.png";
+import gallery1_1 from "../assets/section2-gallery/gallery1-item1.webp";
+import gallery1_2 from "../assets/section2-gallery/gallery1-item2.webp";
+import gallery1_3 from "../assets/section2-gallery/gallery1-item3.webp";
+import gallery1_4 from "../assets/section2-gallery/gallery1-item4.webp";
 
 // 섹션 3 아이콘
 import homeIcon from "../assets/section3-icon/icon-01-home.svg";
@@ -21,25 +21,25 @@ import medicalIcon from "../assets/section3-icon/icon-08-medical.svg";
 import cultureIcon from "../assets/section3-icon/icon-09-culture.svg";
 
 // 섹션 4 갤러리 이미지
-import gallery2_1 from "../assets/section4-gallery/gallery2-item1.png";
-import gallery2_2 from "../assets/section4-gallery/gallery2-item2.png";
-import gallery2_3 from "../assets/section4-gallery/gallery2-item3.png";
-import gallery2_4 from "../assets/section4-gallery/gallery2-item4.png";
+import gallery2_1 from "../assets/section4-gallery/gallery2-item1.webp";
+import gallery2_2 from "../assets/section4-gallery/gallery2-item2.webp";
+import gallery2_3 from "../assets/section4-gallery/gallery2-item3.webp";
+import gallery2_4 from "../assets/section4-gallery/gallery2-item4.webp";
 
 // 섹션 5 해충 이미지
 import pestAnt from "../assets/section5-bugs/pharaoh-ant.webp";
-import pestRat from "../assets/section5-bugs/rat.jpg";
-import pestFly from "../assets/section5-bugs/housefly.jpg";
-import pestRoach from "../assets/section5-bugs/german-cockroach.jpg";
-import pestMoth from "../assets/section5-bugs/moth.jpg";
+import pestRat from "../assets/section5-bugs/rat.webp";
+import pestFly from "../assets/section5-bugs/housefly.webp";
+import pestRoach from "../assets/section5-bugs/german-cockroach.webp";
+import pestMoth from "../assets/section5-bugs/moth.webp";
 import pestCentipede from "../assets/section5-bugs/centipede.webp";
-import pestMosquito from "../assets/section5-bugs/mosquito.jpg";
+import pestMosquito from "../assets/section5-bugs/mosquito.webp";
 import pestCricket from "../assets/section5-bugs/camel-cricket.webp";
-import pestMidge from "../assets/section5-bugs/midge.jpg";
+import pestMidge from "../assets/section5-bugs/midge.webp";
 
 // 섹션 6 배너 이미지
-import section6Banner from "../assets/section6-banner/section6-banner.png";
-import section6Pest from "../assets/section6-banner/section6-pest.png";
+import section6Banner from "../assets/section6-banner/section6-banner.webp";
+import section6Pest from "../assets/section6-banner/section6-pest.webp";
 
 // 섹션 7 아이콘
 import kakaoIcon from "../assets/section7-icon/section7-icon-kakao.svg";

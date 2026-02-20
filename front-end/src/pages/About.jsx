@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import "./About.css";
-import greetingsBanner from "../assets/image/greetings_banner.png";
+import greetingsBanner from "../assets/image/greetings_banner.webp";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
-import logoGreen from "../assets/logo/przo-logo-green.png";
+import logoGreen from "../assets/logo/przo-logo-green.webp";
 
 const About = () => {
   return (

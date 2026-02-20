@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./AdminLogin.css";
-import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.png";
+import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.webp";
 
 const AdminLogin = () => {
     const [id, setId] = useState("");

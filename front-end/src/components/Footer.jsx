@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
-import logoGreen from "../assets/logo/przo-logo-green.png";
-import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.png";
+import logoGreen from "../assets/logo/przo-logo-green.webp";
+import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.webp";
 import kakaotalkIcon from "../assets/footer-icon/kakao-icon.svg";
 import instaIcon from "../assets/footer-icon/insta-icon.svg";
 import youtubeIcon from "../assets/footer-icon/youtube-icon.svg";

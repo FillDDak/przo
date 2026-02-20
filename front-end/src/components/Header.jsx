@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./Header.css";
-import logoWhite from "../assets/logo/przo-logo-white.png";
-import logoGreen from "../assets/logo/przo-logo-green.png";
-import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.png";
+import logoWhite from "../assets/logo/przo-logo-white.webp";
+import logoGreen from "../assets/logo/przo-logo-green.webp";
+import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.webp";
 
 const Header = ({ variant = "default" }) => {
   const location = useLocation();
