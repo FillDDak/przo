@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./Header.css";
 import logoWhite from "../assets/logo/przo-logo-white.webp";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
@@ -11,19 +11,6 @@ const Header = ({ variant = "default" }) => {
   const subPagePrefixes = ["/about", "/service", "/qna", "/reviews"];
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(() => window.scrollY > 50);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -34,7 +21,7 @@ const Header = ({ variant = "default" }) => {
   };
 
   return (
-    <header className={`header ${isScrolled ? "header--scrolled header--hidden" : ""} ${isAdmin ? "header--admin" : ""} ${isSubPage ? "header--subpage" : ""}`}>
+    <header className={`header ${isAdmin ? "header--admin" : ""} ${isSubPage ? "header--subpage" : ""} ${isMenuOpen && !isSubPage && !isAdmin ? "header--menu-open" : ""}`}>
       <div className="header__container">
         <Link to="/" className="header__logo" onClick={() => {
           window.scrollTo(0, 0);

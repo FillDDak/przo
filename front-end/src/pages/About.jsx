@@ -54,7 +54,7 @@ const About = () => {
             </div>
           </div>
           <div className="about__signature">
-            <img src={logoGreen} alt="PRZO" className="about__signature-logo" />
+            <img src={logoGreen} alt="PRZO" className="about__signature-logo" loading="lazy" />
             <span className="about__signature-name">대표 김선미 올림</span>
           </div>
         </div>

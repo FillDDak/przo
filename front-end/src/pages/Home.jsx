@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-import home_banner from "../assets/image/home_banner.webp";
+const home_banner = "/home_banner.webp";
 
 // 섹션 2 갤러리 이미지
 import gallery1_1 from "../assets/section2-gallery/gallery1-item1.webp";
@@ -847,6 +847,7 @@ const Home = () => {
               alt="해충 방제"
               className="home__section6-pest fade-up"
               style={{ '--fade-delay': '0.3s' }}
+              loading="lazy"
             />
           </div>
         </div>
