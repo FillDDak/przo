@@ -8,7 +8,8 @@
       "Bash(Select-String -Path \"c:\\\\Projects\\\\przo\\\\front-end\\\\src\\\\pages\\\\Home.css\" -Pattern \"@media\")",
       "Bash(Select-Object LineNumber, Line)",
       "Bash(python3:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
