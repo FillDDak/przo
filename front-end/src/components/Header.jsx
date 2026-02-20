@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Header.css";
 import logoWhite from "../assets/logo/przo-logo-white.webp";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
@@ -11,6 +11,28 @@ const Header = ({ variant = "default" }) => {
   const subPagePrefixes = ["/about", "/service", "/qna", "/reviews"];
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      if (scrollY) window.scrollTo(0, parseInt(scrollY) * -1);
+    }
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      if (scrollY) window.scrollTo(0, parseInt(scrollY) * -1);
+    };
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
