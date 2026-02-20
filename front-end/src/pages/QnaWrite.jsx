@@ -6,13 +6,6 @@ import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
 
 const API_BASE_URL = "/api";
 
-const truncateFileName = (name, maxLength = 45) => {
-  if (!name || name.length <= maxLength) return name;
-  const ext = name.lastIndexOf('.') !== -1 ? name.slice(name.lastIndexOf('.')) : '';
-  const nameOnly = name.slice(0, name.length - ext.length);
-  const truncLength = maxLength - ext.length - 3;
-  return truncLength > 0 ? nameOnly.slice(0, truncLength) + '...' + ext : name.slice(0, maxLength - 3) + '...';
-};
 
 const QnaWrite = () => {
   const navigate = useNavigate();
@@ -266,7 +259,7 @@ const QnaWrite = () => {
                 />
                 <label htmlFor="attachment" className="qna-write__file-label">
                   <img src={fileIcon} alt="첨부파일" className="qna-write__file-icon" />
-                  <span>{attachment ? truncateFileName(attachment.name) : "파일을 선택해주세요"}</span>
+                  <span className={attachment ? "qna-write__file-name--selected" : ""}>{attachment ? attachment.name : "파일을 선택해주세요"}</span>
                 </label>
               </div>
             </div>

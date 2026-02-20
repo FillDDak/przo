@@ -63,13 +63,13 @@
 }
 
 .home__section1-btn {
-  background: linear-gradient(90deg, #51c488 0%, #78ffb5 100%);
+  background: linear-gradient(70deg, #51c488 50%, #78ffb5 100%);
   color: #fff;
   font-size: 18px;
   font-weight: 700;
   padding: 16px 32px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
   transition: opacity 0.3s ease;
@@ -3055,7 +3055,7 @@
 }
 
 /* ===== PC 전용: 섹션 높이 및 스크롤 스냅 ===== */
-@media (min-width: 1025px) {
+@media (min-width: 1025px) and (min-height: 800px) {
   .home__section--1 {
     height: 100vh;
   }
@@ -3083,8 +3083,25 @@
   }
 
   .home__section--7 {
-    height: 100vh;
-    min-height: unset;
-    overflow: hidden;
+    min-height: 100vh;
+  }
+}
+
+/* ===== PC: 세로 해상도가 낮을 때 섹션7 간격 축소 ===== */
+@media (min-width: 1025px) and (max-height: 900px) {
+  .home__section--7 {
+    padding: 60px 0;
+  }
+
+  .home__section7-form {
+    padding: 28px;
+  }
+
+  .home__section7-form-row {
+    margin-bottom: 12px;
+  }
+
+  .home__section7-form-group--full {
+    margin-bottom: 12px;
   }
 }

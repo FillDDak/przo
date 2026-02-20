@@ -78,6 +78,7 @@ const Home = () => {
 
     const initSnap = () => {
       if (window.innerWidth <= 1024) return;
+      if (window.innerHeight < 800) return;
       if (wheelCleanup) return;
 
       const snapSelectors = [
@@ -146,7 +147,7 @@ const Home = () => {
     };
 
     const handleResize = () => {
-      if (window.innerWidth <= 1024) {
+      if (window.innerWidth <= 1024 || window.innerHeight < 800) {
         if (wheelCleanup) { wheelCleanup(); wheelCleanup = null; }
       } else {
         initSnap();
