@@ -291,20 +291,60 @@
   }
 
   .qna-write__row .qna-write__field {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 
   .qna-write__field--full {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
+  }
+
+  .qna-write__label {
+    margin-bottom: 4px;
   }
 
   .qna-write__button-wrapper {
-    margin-top: 32px;
-    padding-top: 32px;
+    margin-top: 24px;
+    padding-top: 24px;
   }
 
   .qna-write__submit-btn {
     padding: 10px 24px;
     font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qna-write__title {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
+
+  .qna-write__form {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .qna-write__label {
+    font-size: 14px;
+  }
+
+  .qna-write__input {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .qna-write__textarea {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .qna-write__file-label {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .qna-write__submit-btn {
+    padding: 10px 20px;
+    font-size: 13px;
   }
 }

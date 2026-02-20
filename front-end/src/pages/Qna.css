@@ -329,3 +329,62 @@
     font-size: 13px;
   }
 }
+
+@media (max-width: 480px) {
+  .qna__title {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+
+  .qna__table {
+    table-layout: fixed;
+  }
+
+  .qna__th--number {
+    width: 50px;
+  }
+
+  .qna__th--date {
+    width: 76px;
+  }
+
+  .qna__th,
+  .qna__td {
+    padding: 10px 6px;
+    font-size: 12px;
+  }
+
+  .qna__td--title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .qna__link {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .qna__title-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .qna__write-btn {
+    padding: 9px 20px;
+    font-size: 13px;
+  }
+
+  .qna__pagination {
+    gap: 4px;
+    margin-top: 24px;
+  }
+
+  .qna__page-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}

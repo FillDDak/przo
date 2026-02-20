@@ -281,19 +281,32 @@ const QnaDetail = () => {
             {/* 첨부파일 */}
             <div className="qna-detail__field qna-detail__field--full">
               <label className="qna-detail__label">첨부파일</label>
-              <div className="qna-detail__file">
-                {inquiry.attachment ? (
-                  <a href={inquiry.attachment} className="qna-detail__file-link" download>
-                    <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
-                    {inquiry.attachmentName || inquiry.attachment.split('/').pop()}
-                  </a>
+              {inquiry.attachment ? (() => {
+                const fileName = inquiry.attachmentName || inquiry.attachment.split('/').pop();
+                const ext = fileName.split('.').pop().toLowerCase();
+                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
+                return isImage ? (
+                  <div className="qna-detail__file-image-wrapper">
+                    <img src={inquiry.attachment} alt={fileName} className="qna-detail__attachment-img" />
+                    <a href={inquiry.attachment} className="qna-detail__file-download" download>
+                      <img src={fileIcon} alt="다운로드" className="qna-detail__file-icon" />
+                      {fileName}
+                    </a>
+                  </div>
                 ) : (
-                  <>
-                    <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
-                    <span className="qna-detail__file-empty">첨부파일 없음</span>
-                  </>
-                )}
-              </div>
+                  <div className="qna-detail__file">
+                    <a href={inquiry.attachment} className="qna-detail__file-link" download>
+                      <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
+                      {fileName}
+                    </a>
+                  </div>
+                );
+              })() : (
+                <div className="qna-detail__file">
+                  <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
+                  <span className="qna-detail__file-empty">첨부파일 없음</span>
+                </div>
+              )}
             </div>
 
             {/* 유저 버튼 - 첨부파일 아래 */}
