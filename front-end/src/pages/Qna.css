@@ -85,12 +85,14 @@
 
 .qna__search-input {
   width: 320px;
-  padding: 10px 36px 10px 16px;
+  height: 41px;
+  padding: 0 36px 0 16px;
   font-size: 14px;
   color: #1f1f1f;
   border: 1px solid #d0d0d0;
   border-radius: 4px;
   outline: none;
+  box-sizing: border-box;
   transition: border-color 0.2s;
 }
 
@@ -125,7 +127,8 @@
 }
 
 .qna__search-btn {
-  padding: 10px 24px;
+  height: 41px;
+  padding: 0 24px;
   font-size: 14px;
   font-weight: 500;
   color: #ffffff;
@@ -133,6 +136,7 @@
   border: 1px solid #1f1f1f;
   border-radius: 4px;
   cursor: pointer;
+  box-sizing: border-box;
   transition: all 0.2s;
 }
 
