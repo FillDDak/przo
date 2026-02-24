@@ -356,10 +356,10 @@ const Home = () => {
     },
     {
       id: 2,
-      name: "독일 바퀴",
-      engName: "Blattella germanica",
+      name: "바퀴벌레",
+      engName: "Cockroach",
       src: pestRoach,
-      desc: "독일바퀴는 실내에서 가장 흔히 발견되는 바퀴벌레입니다. 주방과 음식물 주변을 중심으로 서식하며 각종 세균을 옮깁니다.번식력이 매우 강해 전문적인 방제가 필요합니다.",
+      desc: "바퀴벌레는 따뜻하고 습한 환경을 좋아하는 대표적인 위생 해충입니다. 주로 주방, 욕실, 하수구, 배관 주변 등에 서식하며 야간에 활동하고 음식물 냄새를 따라 실내로 유입됩니다. 각종 세균을 옮기고 불쾌감과 위생 문제를 유발합니다.",
     },
     {
       id: 3,
@@ -908,13 +908,15 @@ const Home = () => {
                     <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="przo@naver.com" />
                   </div>
                 </div>
-                <div className="home__section7-form-group home__section7-form-group--full">
-                  <label>비밀번호</label>
-                  <input type="password" name="password" value={formData.password} onChange={handleFormChange} placeholder="게시글 확인 시 필요한 비밀번호를 입력해주세요" />
-                </div>
-                <div className="home__section7-form-group home__section7-form-group--full">
-                  <label>제목</label>
-                  <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="30평 가정집 견적 문의 드립니다." />
+                <div className="home__section7-form-row">
+                  <div className="home__section7-form-group">
+                    <label>제목</label>
+                    <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="30평 가정집 견적 문의 드립니다." />
+                  </div>
+                  <div className="home__section7-form-group">
+                    <label>비밀번호</label>
+                    <input type="password" name="password" value={formData.password} onChange={handleFormChange} placeholder="비밀번호" />
+                  </div>
                 </div>
                 <div className="home__section7-form-group home__section7-form-group--full">
                   <label>문의 내용</label>
