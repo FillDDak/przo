@@ -193,16 +193,16 @@ const QnaEdit = () => {
             <img src={homeIcon} alt="홈" className="qna-write__breadcrumb-icon" />
           </Link>
           <span className="qna-write__breadcrumb-separator">&gt;</span>
-          <span className="qna-write__breadcrumb-text">상담 문의</span>
+          <span className="qna-write__breadcrumb-text">문의</span>
           <span className="qna-write__breadcrumb-separator">&gt;</span>
-          <span className="qna-write__breadcrumb-current">무료 문의</span>
+          <span className="qna-write__breadcrumb-current">상담 문의</span>
         </div>
       </section>
 
       {/* 메인 컨텐츠 */}
       <section className="qna-write__main">
         <div className="qna-write__content">
-          <h1 className="qna-write__title">문의 수정</h1>
+          <h1 className="qna-write__title">상담 수정</h1>
 
           <form className="qna-write__form" onSubmit={handleSubmit}>
             {/* 이름 & 업체명/주소 */}

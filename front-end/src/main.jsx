@@ -20,6 +20,7 @@ import Reviews from "./pages/Reviews";
 import ReviewWrite from "./pages/ReviewWrite";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
+import Faq from "./pages/Faq";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "reviews/write",
         element: <ReviewWrite />,
+      },
+      {
+        path: "faq",
+        element: <Faq />,
       },
     ],
   },

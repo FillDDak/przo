@@ -130,8 +130,6 @@ const Reviews = () => {
             <img src={homeIcon} alt="홈" className="reviews__breadcrumb-icon" />
           </Link>
           <span className="reviews__breadcrumb-separator">&gt;</span>
-          <span className="reviews__breadcrumb-text">서비스 후기</span>
-          <span className="reviews__breadcrumb-separator">&gt;</span>
           <span className="reviews__breadcrumb-current">시공 사진</span>
         </div>
       </section>

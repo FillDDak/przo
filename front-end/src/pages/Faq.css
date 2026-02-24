@@ -1,0 +1,164 @@
+.faq {
+  width: 100%;
+  padding-top: 90px;
+  background-color: #ffffff;
+}
+
+.faq__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 배너 섹션 */
+.faq__banner {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+}
+
+/* 브레드크럼 */
+.faq__breadcrumb {
+  position: absolute;
+  top: 16px;
+  left: 120px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.faq__breadcrumb-link {
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.faq__breadcrumb-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.faq__breadcrumb-separator {
+  color: #767676;
+  font-size: 12px;
+}
+
+.faq__breadcrumb-text {
+  color: #767676;
+  font-size: 14px;
+}
+
+.faq__breadcrumb-current {
+  color: #51c488;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 메인 컨텐츠 섹션 */
+.faq__main {
+  padding: 0 0 120px;
+}
+
+.faq__title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 60px 0;
+}
+
+/* FAQ 목록 */
+.faq__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid #1f1f1f;
+}
+
+.faq__item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 16px;
+}
+
+.faq__question-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f1f1f;
+  line-height: 1.5;
+}
+
+.faq__item--open .faq__question-text {
+  color: #51c488;
+}
+
+.faq__icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: #767676;
+  transition: transform 0.25s ease;
+}
+
+.faq__item--open .faq__icon {
+  transform: rotate(180deg);
+  color: #51c488;
+}
+
+.faq__answer {
+  display: none;
+  padding: 0 16px 20px;
+}
+
+.faq__item--open .faq__answer {
+  display: block;
+}
+
+.faq__answer p {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .faq__content {
+    padding: 0 20px;
+  }
+
+  .faq__breadcrumb {
+    left: 20px;
+  }
+
+  .faq__title {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .faq__question-text {
+    font-size: 15px;
+  }
+
+  .faq__answer p {
+    font-size: 14px;
+  }
+}

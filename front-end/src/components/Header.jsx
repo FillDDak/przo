@@ -1,5 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import "./Header.css";
 import logoWhite from "../assets/logo/przo-logo-white.webp";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
@@ -8,9 +8,13 @@ import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.webp";
 const Header = ({ variant = "default" }) => {
   const location = useLocation();
   const isAdmin = variant === "admin";
-  const subPagePrefixes = ["/about", "/service", "/qna", "/reviews"];
+  const subPagePrefixes = ["/about", "/service", "/qna", "/reviews", "/faq"];
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isQnaOpen, setIsQnaOpen] = useState(false);
+  const [isDesktopDropdownOpen, setIsDesktopDropdownOpen] = useState(false);
+  const dropdownTimerRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.style.overflow = isMenuOpen ? "hidden" : "";
@@ -23,6 +27,18 @@ const Header = ({ variant = "default" }) => {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+    setIsQnaOpen(false);
+  };
+
+  const handleDropdownEnter = () => {
+    clearTimeout(dropdownTimerRef.current);
+    setIsDesktopDropdownOpen(true);
+  };
+
+  const handleDropdownLeave = () => {
+    dropdownTimerRef.current = setTimeout(() => {
+      setIsDesktopDropdownOpen(false);
+    }, 300);
   };
 
   return (
@@ -49,11 +65,34 @@ const Header = ({ variant = "default" }) => {
           <Link to="/service" className="header__nav-link" onClick={closeMenu}>
             서비스 소개
           </Link>
-          <Link to="/qna" className="header__nav-link" onClick={closeMenu}>
-            상담 문의
-          </Link>
+          <div
+            className={`header__nav-item header__nav-item--dropdown ${isQnaOpen ? "header__nav-item--open" : ""} ${isDesktopDropdownOpen ? "header__nav-item--desktop-open" : ""}`}
+            onMouseEnter={handleDropdownEnter}
+            onMouseLeave={handleDropdownLeave}
+          >
+            <button
+              className="header__nav-link header__nav-link--dropdown-trigger"
+              onClick={() => {
+                if (window.innerWidth <= 768) setIsQnaOpen(prev => !prev);
+                else navigate("/qna");
+              }}
+            >
+              상담 서비스
+              <svg className="header__dropdown-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <div className="header__dropdown">
+              <Link to="/qna" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); closeMenu(); }}>
+                상담 문의
+              </Link>
+              <Link to="/faq" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); closeMenu(); }}>
+                많이 묻는 질문
+              </Link>
+            </div>
+          </div>
           <Link to="/reviews" className="header__nav-link" onClick={closeMenu}>
-            서비스 후기
+            시공 사진
           </Link>
         </nav>
       </div>

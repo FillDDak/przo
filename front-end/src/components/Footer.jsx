@@ -41,8 +41,10 @@ const Footer = ({ variant = "default" }) => {
               <a href="#">사이트 이용 약관</a>
               <a href="#">쿠키 정책</a>
               <a href="#">개인정보처리방침</a>
-              <a href="#">많이 묻는 질문</a>
-              <a href="#">매장 안내</a>
+              <span className="footer__nav-break"></span>
+              <Link to="/qna" onClick={() => window.scrollTo(0, 0)}>상담 문의</Link>
+              <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>많이 묻는 질문</Link>
+              <Link to="/about" onClick={() => window.scrollTo(0, 0)}>매장 안내</Link>
             </nav>
             <div className="footer__copyright">© 2025. 프르조 All Rights Reserved</div>
           </div>
@@ -50,7 +52,6 @@ const Footer = ({ variant = "default" }) => {
           <div className="footer__right">
             <div className="footer__tel-wrapper">
               <span className="footer__tel">프르조 상담문의 1670-2335</span>
-              <span className="footer__tel-sub">TEL: 032-433-3348</span>
             </div>
             <div className="footer__info">
               <div className="footer__info-row">

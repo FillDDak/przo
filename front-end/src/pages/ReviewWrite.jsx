@@ -238,7 +238,7 @@ const ReviewWrite = () => {
             <img src={homeIcon} alt="홈" className="review-write__breadcrumb-icon" />
           </Link>
           <span className="review-write__breadcrumb-separator">&gt;</span>
-          <span className="review-write__breadcrumb-text">서비스 후기</span>
+          <span className="review-write__breadcrumb-text">시공 사진</span>
           <span className="review-write__breadcrumb-separator">&gt;</span>
           <span className="review-write__breadcrumb-current">
             {isEdit ? "시공 사진 수정" : "시공 사진 등록"}
