@@ -949,7 +949,7 @@
   font-size: 16px;
   font-weight: 500;
   color: #767676;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .home__section7-form-group input,
@@ -962,7 +962,7 @@
   font-weight: 500;
   color: #1f1f1f;
   background-color: #f8f8f8;
-  border-radius: 15px;
+  border-radius: 10px;
   transition: border-color 0.3s ease;
   word-break: keep-all;
 }
