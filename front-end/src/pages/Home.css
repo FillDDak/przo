@@ -1128,7 +1128,7 @@
   padding: 0 clamp(20px, 15vw, 200px);
 }
 
-/* 모달 스타일 */
+/* 모달 스타일 (비활성화)
 .home__modal-overlay {
   position: fixed;
   top: 0;
@@ -1494,11 +1494,11 @@
 
 .home__modal-btn--submit:hover .home__modal-btn-text {
   right: calc(100% - 95px);
-}
+} */
 
 /* 반응형 디자인 */
 @media (max-width: 1400px) {
-  .home__modal-overlay {
+/*   .home__modal-overlay {
     padding: 80px;
   }
 
@@ -1512,7 +1512,7 @@
 
   .home__modal-desc {
     font-size: 16px;
-  }
+  } */
 
   .home__section4-text {
     margin-left: 60px;
@@ -1568,7 +1568,7 @@
 }
 
 @media (max-width: 1200px) {
-  .home__modal-overlay {
+/*   .home__modal-overlay {
     padding: 50px;
   }
 
@@ -1618,7 +1618,7 @@
 
   .home__modal-btn--submit:hover .home__modal-btn-text {
     right: calc(100% - 82px);
-  }
+  } */
 
   .home__section4-text {
     margin-left: 40px;
@@ -2022,7 +2022,7 @@
     padding: 30px;
   }
 
-  .home__modal-overlay {
+/*   .home__modal-overlay {
     padding: 30px;
   }
 
@@ -2081,11 +2081,11 @@
 
   .home__modal-btn--submit:hover .home__modal-btn-text {
     right: calc(100% - 74px);
-  }
+  } */
 }
 
 @media (max-width: 768px) {
-  .home__modal-overlay {
+/*   .home__modal-overlay {
     padding: 20px;
   }
 
@@ -2177,7 +2177,7 @@
 
   .home__modal-btn--submit:hover .home__modal-btn-text {
     right: calc(100% - 70px);
-  }
+  } */
 
   .home__section--1 .home__content,
   .home__section--3 .home__content,
@@ -2641,7 +2641,7 @@
     margin-right: 0;
   }
 
-  .home__modal-overlay {
+/*   .home__modal-overlay {
     padding: 10px;
   }
 
@@ -2685,7 +2685,7 @@
 
   .home__modal-btn--submit:hover .home__modal-btn-text {
     right: calc(100% - 70px);
-  }
+  } */
 
   .home__section7-form {
     padding: 24px;
@@ -2712,7 +2712,7 @@
     padding-right: 16px;
   }
 
-  .home__modal-subtitle {
+/*   .home__modal-subtitle {
     font-size: 14px;
   }
 
@@ -2751,7 +2751,7 @@
 
   .home__modal-contact-value {
     font-size: 16px;
-  }
+  } */
 
   .home__section1-title {
     font-size: 22px;

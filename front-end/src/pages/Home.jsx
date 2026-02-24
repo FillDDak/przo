@@ -62,7 +62,7 @@ const Home = () => {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [pestIndex, setPestIndex] = useState(0);
   const [isMosaic, setIsMosaic] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -602,7 +602,7 @@ const Home = () => {
               <br />
               안전하게 지켜드립니다
             </h1>
-            <button className="home__section1-btn fade-up fade-up-delay-2" onClick={() => setIsModalOpen(true)}>무료 상담 문의</button>
+            <button className="home__section1-btn fade-up fade-up-delay-2" onClick={() => document.querySelector('.home__section--7').scrollIntoView({ behavior: 'smooth' })}>무료 상담 문의</button>
           </div>
           <div className="home__section1-scroll-hint">
             <svg className="home__section1-scroll-hint__icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -944,6 +944,7 @@ const Home = () => {
         </div>
       </section>
 
+      {/* 모달 비활성화 - 무료 상담 버튼은 섹션 7로 스크롤
       {isModalOpen && (
         <div className="home__modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="home__modal" onClick={(e) => e.stopPropagation()}>
@@ -1040,7 +1041,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
