@@ -452,9 +452,8 @@ const Home = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // PC 전용 스크롤 페이드인 애니메이션 (1025px 이상)
+  // 스크롤 페이드인 애니메이션 (CSS에서 1025px 이상일 때만 시각 효과 적용)
   useEffect(() => {
-    if (window.innerWidth <= 1024) return;
 
     // 개별 요소 관찰 (그룹 내부 요소는 제외)
     // data-visible 속성 사용: React re-render 시에도 유지됨
