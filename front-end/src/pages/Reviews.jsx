@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Reviews.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
+import writeIcon from "../assets/other-page-icon-image/review-write-icon.svg";
+import deleteIcon from "../assets/other-page-icon-image/review-delete-icon.svg";
 
 const API_BASE_URL = "/api";
 
@@ -156,20 +158,14 @@ const Reviews = () => {
                         onClick={(e) => handleEdit(e, item)}
                         title="수정"
                       >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
+                        <img src={writeIcon} alt="수정" />
                       </button>
                       <button
                         className="reviews__card-action-btn"
                         onClick={(e) => handleDelete(e, item.id)}
                         title="삭제"
                       >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="3 6 5 6 21 6" />
-                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        </svg>
+                        <img src={deleteIcon} alt="삭제" />
                       </button>
                     </div>
                   )}

@@ -38,13 +38,16 @@ const Footer = ({ variant = "default" }) => {
 
           <div className="footer__center">
             <nav className="footer__nav">
-              <a href="#">사이트 이용 약관</a>
-              <a href="#">쿠키 정책</a>
-              <a href="#">개인정보처리방침</a>
-              <span className="footer__nav-break"></span>
-              <Link to="/qna" onClick={() => window.scrollTo(0, 0)}>상담 문의</Link>
-              <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>많이 묻는 질문</Link>
-              <Link to="/about" onClick={() => window.scrollTo(0, 0)}>매장 안내</Link>
+              <div className="footer__nav-row">
+                <a href="#">사이트 이용 약관</a>
+                <a href="#">쿠키 정책</a>
+                <a href="#">개인정보처리방침</a>
+              </div>
+              <div className="footer__nav-row">
+                <Link to="/qna" onClick={() => window.scrollTo(0, 0)}>상담 문의</Link>
+                <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>많이 묻는 질문</Link>
+                <Link to="/about" onClick={() => window.scrollTo(0, 0)}>매장 안내</Link>
+              </div>
             </nav>
             <div className="footer__copyright">© 2025. 프르조 All Rights Reserved</div>
           </div>

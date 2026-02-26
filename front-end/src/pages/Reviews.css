@@ -401,21 +401,18 @@
   width: 28px;
   height: 28px;
   background: none;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: none;
   cursor: pointer;
-  color: #999;
-  transition: all 0.2s;
 }
 
-.reviews__card-action-btn:hover {
-  color: #1f1f1f;
-  border-color: #1f1f1f;
+.reviews__card-action-btn img {
+  width: 20px;
+  height: 20px;
+  transition: filter 0.2s;
 }
 
-.reviews__card-action-btn svg {
-  width: 14px;
-  height: 14px;
+.reviews__card-action-btn:hover img {
+  filter: brightness(0) saturate(100%) invert(66%) sepia(30%) saturate(700%) hue-rotate(103deg) brightness(100%);
 }
 
 /* 하단 영역 (페이지네이션 + 작성하기 버튼) */

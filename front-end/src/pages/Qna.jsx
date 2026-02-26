@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./Qna.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import messageIcon from "../assets/other-page-icon-image/message-icon.svg";
+import searchIcon from "../assets/other-page-icon-image/qna-search-icon.svg";
 
 const API_BASE_URL = "/api";
 
@@ -151,7 +152,7 @@ const Qna = () => {
                 <input
                   type="text"
                   className="qna__search-input"
-                  placeholder="제목으로 검색"
+                  placeholder="제목을 검색하세요."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                 />
@@ -168,8 +169,10 @@ const Qna = () => {
                     ×
                   </button>
                 )}
+                <button type="submit" className="qna__search-btn">
+                  <img src={searchIcon} alt="검색" />
+                </button>
               </div>
-              <button type="submit" className="qna__search-btn">검색</button>
             </form>
             <Link to="/qna/write" className="qna__write-btn">
               문의하기
