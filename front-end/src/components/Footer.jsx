@@ -54,17 +54,22 @@ const Footer = ({ variant = "default" }) => {
 
           <div className="footer__right">
             <div className="footer__tel-wrapper">
-              <span className="footer__tel">프르조 상담문의 1670-2335</span>
+              <span className="footer__tel">
+                <span className="footer__tel-label">프르조 상담문의</span>{" "}
+                <span className="footer__tel-number">1670-2335</span>
+              </span>
             </div>
             <div className="footer__info">
               <div className="footer__info-row">
                 <span>대표: 김선미</span>
-                <span>인천 계양구 마장로544번길 10 디오아제상가 2층 B1-207호</span>
+                <span className="footer__addr-full">인천 계양구 마장로544번길 10 디오아제상가 2층 B1-207호</span>
+                <span className="footer__addr-short">인천 계양구 마장로544번길 10</span>
                 <span>사업자 등록번호: 653-98-00887</span>
               </div>
               <div className="footer__info-row">
                 <span>운영시간: 평일 09:00 ~ 18:00</span>
-                <span>E_mail: pestredzone@naver.com</span>
+                <span className="footer__email-full">E_mail: pestredzone@naver.com</span>
+                <span className="footer__email-short">pestredzone@naver.com</span>
                 <span>FAX: 032 511 3348</span>
               </div>
             </div>
