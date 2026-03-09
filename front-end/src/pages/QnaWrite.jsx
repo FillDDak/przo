@@ -14,7 +14,6 @@ const QnaWrite = () => {
     companyName: "",
     phone: "",
     email: "",
-    password: "",
     title: "",
     content: "",
   });
@@ -83,12 +82,13 @@ const QnaWrite = () => {
       alert("전화번호를 입력해주세요.");
       return;
     }
-    if (!formData.email.trim()) {
-      alert("이메일을 입력해주세요.");
+    const phoneDigits = formData.phone.replace(/\D/g, "");
+    if (phoneDigits.length < 4) {
+      alert("올바른 전화번호를 입력해주세요.");
       return;
     }
-    if (!formData.password.trim()) {
-      alert("비밀번호를 입력해주세요.");
+    if (!formData.email.trim()) {
+      alert("이메일을 입력해주세요.");
       return;
     }
     if (!formData.title.trim()) {
@@ -103,12 +103,15 @@ const QnaWrite = () => {
     try {
       setIsSubmitting(true);
 
+      // 전화번호 뒷자리 4자리를 비밀번호로 자동 설정
+      const autoPassword = formData.phone.replace(/\D/g, "").slice(-4);
+
       const submitData = new FormData();
       submitData.append("name", formData.name);
       submitData.append("companyName", formData.companyName);
       submitData.append("phone", formData.phone);
       submitData.append("email", formData.email);
-      submitData.append("password", formData.password);
+      submitData.append("password", autoPassword);
       submitData.append("title", formData.title);
       submitData.append("content", formData.content);
       if (attachment) {
@@ -194,6 +197,7 @@ const QnaWrite = () => {
                   className="qna-write__input"
                   placeholder="010-1234-5678"
                 />
+                <p className="qna-write__hint">전화번호 뒷자리 4자리가 게시글 비밀번호로 자동 설정됩니다.</p>
               </div>
               <div className="qna-write__field">
                 <label className="qna-write__label">이메일</label>
@@ -206,19 +210,6 @@ const QnaWrite = () => {
                   placeholder="przo@naver.com"
                 />
               </div>
-            </div>
-
-            {/* 비밀번호 */}
-            <div className="qna-write__field qna-write__field--full">
-              <label className="qna-write__label">비밀번호</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="qna-write__input"
-                placeholder="게시글 확인 시 필요한 비밀번호를 입력해주세요"
-              />
             </div>
 
             {/* 제목 */}

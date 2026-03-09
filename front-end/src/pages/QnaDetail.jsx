@@ -183,7 +183,7 @@ const QnaDetail = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="비밀번호 입력"
+                    placeholder="비밀번호 입력 (전화번호 뒤 4자리)"
                     className="qna-detail__password-input"
                   />
                   {error && <p className="qna-detail__password-error">{error}</p>}
