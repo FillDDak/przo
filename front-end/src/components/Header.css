@@ -276,11 +276,11 @@
   }
 
   .header__nav {
-    position: absolute;
+    position: fixed;
     top: 60px;
     right: -100%;
     width: 280px;
-    height: 100vh;
+    height: calc(100vh - 60px);
     background-color: #fff;
     flex-direction: column;
     gap: 0;
@@ -288,6 +288,7 @@
     transition: right 0.3s ease;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1001;
+    overflow-y: auto;
   }
 
   .header__nav--open {
@@ -383,11 +384,11 @@
 
   .header__overlay {
     display: block;
-    position: absolute;
+    position: fixed;
     top: 60px;
     left: 0;
-    width: 100%;
-    height: 100vh;
+    right: 0;
+    bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
   }
@@ -456,5 +457,49 @@
 /* Admin variant */
 .header--admin {
   background-color: transparent;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Admin 데스크탑 전용 스타일 */
+@media (min-width: 769px) {
+  .header--admin .header__nav-link {
+    color: #fff;
+  }
+
+  .header--admin .header__nav-link--dropdown-trigger {
+    color: #fff;
+  }
+
+  .header--admin .header__dropdown {
+    background: rgba(30, 30, 30, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 4px;
+    gap: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .header--admin .header__dropdown-link {
+    border-radius: 6px;
+    color: #fff;
+  }
+
+  .header--admin .header__dropdown-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    text-decoration: none;
+  }
+}
+
+/* Admin 모바일 헤더 (햄버거 메뉴 오픈 시) */
+@media (max-width: 768px) {
+  .header--admin {
+    border-bottom: none;
+  }
+
+  .header--admin .header__menu-icon span {
+    background-color: #fff;
+  }
 }

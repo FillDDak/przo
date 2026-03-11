@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate, useBlocker } from "react-router-dom";
 import "./QnaWrite.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
+import closeIcon from "../assets/other-page-icon-image/close-icon.svg";
 
 const API_BASE_URL = "/api";
 
@@ -19,6 +20,32 @@ const QnaWrite = () => {
   });
   const [attachment, setAttachment] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittedRef = useRef(false);
+
+  const isDirty =
+    formData.name.trim() !== "" ||
+    formData.companyName.trim() !== "" ||
+    formData.phone.trim() !== "" ||
+    formData.email.trim() !== "" ||
+    formData.title.trim() !== "" ||
+    formData.content.trim() !== "" ||
+    attachment !== null;
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isDirty && !submittedRef.current && currentLocation.pathname !== nextLocation.pathname
+  );
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
 
   // 전화번호 포맷팅 함수 (10자리, 11자리 지원)
   const formatPhoneNumber = (value) => {
@@ -124,8 +151,11 @@ const QnaWrite = () => {
       });
 
       if (response.ok) {
-        alert("문의가 성공적으로 등록되었습니다.");
-        navigate("/qna");
+        const data = await response.json();
+        submittedRef.current = true;
+        setFormData({ name: "", companyName: "", phone: "", email: "", title: "", content: "" });
+        setAttachment(null);
+        navigate(`/qna/${data.inquiryId}`, { state: { autoVerified: true, autoPassword } });
       } else {
         alert("문의 등록에 실패했습니다. 다시 시도해주세요.");
       }
@@ -138,6 +168,37 @@ const QnaWrite = () => {
   };
 
   return (
+    <>
+    {blocker.state === "blocked" && (
+      <div className="qna-write__modal-overlay" onClick={() => blocker.reset()}>
+        <div className="qna-write__modal" onClick={(e) => e.stopPropagation()}>
+          <button className="qna-write__modal-close" onClick={() => blocker.reset()}>
+            <img src={closeIcon} alt="닫기" width="16" height="16" />
+          </button>
+          <div className="qna-write__modal-header">
+            <div className="qna-write__modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#51c488" strokeWidth="2"/>
+                <line x1="12" y1="8" x2="12" y2="12" stroke="#51c488" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="12" cy="16" r="1" fill="#51c488"/>
+              </svg>
+            </div>
+            <div className="qna-write__modal-text">
+              <h2 className="qna-write__modal-title">변경되지 않은 내용이 있습니다.</h2>
+              <p className="qna-write__modal-subtitle">변경사항을 잃어버릴 수 있습니다.</p>
+            </div>
+          </div>
+          <div className="qna-write__modal-buttons">
+            <button className="qna-write__modal-btn qna-write__modal-btn--cancel" onClick={() => blocker.proceed()}>
+              나가기
+            </button>
+            <button className="qna-write__modal-btn qna-write__modal-btn--save" onClick={() => blocker.reset()}>
+              계속 작성하기
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     <div className="qna-write">
       {/* 배너 섹션 */}
       <section className="qna-write__banner">
@@ -269,6 +330,7 @@ const QnaWrite = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

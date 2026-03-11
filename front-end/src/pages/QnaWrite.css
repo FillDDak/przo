@@ -321,6 +321,210 @@
   }
 }
 
+/* 이탈 방지 모달 */
+.qna-write__modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.qna-write__modal {
+  position: relative;
+  background: #fff;
+  border-radius: 25px;
+  padding: 32px;
+  width: 100%;
+  max-width: 531px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.qna-write__modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qna-write__modal-close:hover {
+  color: #333;
+}
+
+.qna-write__modal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.qna-write__modal-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  background-color: #f8f8f8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qna-write__modal-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.qna-write__modal-text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.qna-write__modal-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin: 0;
+}
+
+.qna-write__modal-subtitle {
+  font-size: 18px;
+  color: #999;
+  margin: 0;
+}
+
+.qna-write__modal-buttons {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  padding: 0 24px 0 100px;
+  box-sizing: border-box;
+}
+
+.qna-write__modal-btn {
+  flex: 1;
+  height: 49px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.qna-write__modal-btn--cancel {
+  background: #fff;
+  border: 2px solid #ddd;
+  color: #333;
+}
+
+.qna-write__modal-btn--cancel:hover {
+  background: #f5f5f5;
+}
+
+.qna-write__modal-btn--save {
+  background: linear-gradient(120deg, #51c488 0%, #78ffb5 100%);
+  border: none;
+  color: #fff;
+}
+
+.qna-write__modal-btn--save:hover {
+  background: linear-gradient(120deg, #4a976f 0%, #51c488 100%);
+}
+
+@media (max-width: 768px) {
+  .qna-write__modal {
+    padding: 24px;
+    gap: 32px;
+    border-radius: 20px;
+  }
+
+  .qna-write__modal-header {
+    gap: 16px;
+  }
+
+  .qna-write__modal-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .qna-write__modal-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .qna-write__modal-title {
+    font-size: 20px;
+  }
+
+  .qna-write__modal-subtitle {
+    font-size: 14px;
+  }
+
+  .qna-write__modal-buttons {
+    padding: 0 16px 0 56px;
+    gap: 12px;
+  }
+
+  .qna-write__modal-btn {
+    height: 44px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qna-write__modal {
+    padding: 20px;
+    gap: 24px;
+    border-radius: 16px;
+  }
+
+  .qna-write__modal-header {
+    gap: 12px;
+  }
+
+  .qna-write__modal-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .qna-write__modal-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .qna-write__modal-title {
+    font-size: 17px;
+  }
+
+  .qna-write__modal-subtitle {
+    font-size: 13px;
+  }
+
+  .qna-write__modal-buttons {
+    padding: 0 0 0 46px;
+    gap: 10px;
+  }
+
+  .qna-write__modal-btn {
+    height: 42px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+}
+
 @media (max-width: 480px) {
   .qna-write__title {
     font-size: 20px;

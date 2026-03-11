@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./QnaDetail.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
@@ -10,6 +10,7 @@ const API_BASE_URL = "/api";
 const QnaDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAdmin, token } = useAuth();
   const [inquiry, setInquiry] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -65,15 +66,32 @@ const QnaDetail = () => {
     }
   }, [id]);
 
-  // 관리자인 경우 비밀번호 없이 바로 조회
+  // 관리자이거나 작성 직후 이동한 경우 비밀번호 없이 바로 조회
   useEffect(() => {
     if (isAdmin) {
       setIsVerified(true);
       fetchInquiry();
+    } else if (location.state?.autoVerified && location.state?.autoPassword) {
+      fetch(`${API_BASE_URL}/inquiries/${id}/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: location.state.autoPassword }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setIsVerified(true);
+            setVerifiedPassword(location.state.autoPassword);
+            fetchInquiry();
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, [id, isAdmin, fetchInquiry]);
+  }, [id, isAdmin, fetchInquiry, location.state?.autoVerified, location.state?.autoPassword]);
 
   // 답변 등록
   const handleReplySubmit = async () => {

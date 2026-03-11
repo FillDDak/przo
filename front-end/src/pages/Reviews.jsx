@@ -5,6 +5,7 @@ import "./Reviews.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import writeIcon from "../assets/other-page-icon-image/review-write-icon.svg";
 import deleteIcon from "../assets/other-page-icon-image/review-delete-icon.svg";
+import closeIcon from "../assets/other-page-icon-image/close-icon.svg";
 
 const API_BASE_URL = "/api";
 
@@ -18,6 +19,7 @@ const Reviews = () => {
   const { isAdmin, token } = useAuth();
   const navigate = useNavigate();
   const pageSize = 6;
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
 
   const fetchReviews = async () => {
     try {
@@ -98,12 +100,14 @@ const Reviews = () => {
     }
   };
 
-  const handleDelete = async (e, id) => {
+  const handleDelete = (e, id) => {
     e.stopPropagation();
-    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+    setDeleteTargetId(id);
+  };
 
+  const handleDeleteConfirm = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/reviews/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/reviews/${deleteTargetId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -115,6 +119,8 @@ const Reviews = () => {
       }
     } catch {
       alert("삭제에 실패했습니다.");
+    } finally {
+      setDeleteTargetId(null);
     }
   };
 
@@ -124,6 +130,37 @@ const Reviews = () => {
   };
 
   return (
+    <>
+    {deleteTargetId && (
+      <div className="reviews__delete-overlay" onClick={() => setDeleteTargetId(null)}>
+        <div className="reviews__delete-modal" onClick={(e) => e.stopPropagation()}>
+          <button className="reviews__delete-modal-close" onClick={() => setDeleteTargetId(null)}>
+            <img src={closeIcon} alt="닫기" width="16" height="16" />
+          </button>
+          <div className="reviews__delete-modal-header">
+            <div className="reviews__delete-modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#51c488" strokeWidth="2"/>
+                <line x1="12" y1="8" x2="12" y2="12" stroke="#51c488" strokeWidth="2" strokeLinecap="round"/>
+                <circle cx="12" cy="16" r="1" fill="#51c488"/>
+              </svg>
+            </div>
+            <div className="reviews__delete-modal-text">
+              <h2 className="reviews__delete-modal-title">정말 삭제하시겠습니까?</h2>
+              <p className="reviews__delete-modal-subtitle">삭제 후 복구할 수 없습니다.</p>
+            </div>
+          </div>
+          <div className="reviews__delete-modal-buttons">
+            <button className="reviews__delete-modal-btn reviews__delete-modal-btn--cancel" onClick={() => setDeleteTargetId(null)}>
+              닫기
+            </button>
+            <button className="reviews__delete-modal-btn reviews__delete-modal-btn--confirm" onClick={handleDeleteConfirm}>
+              확인
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     <div className="reviews">
       {/* 배너 섹션 */}
       <section className="reviews__banner">
@@ -235,7 +272,7 @@ const Reviews = () => {
           <div className="reviews__modal-overlay" onClick={handleOverlayClick}>
             <div className="reviews__modal">
               <button className="reviews__modal-close" onClick={closeModal}>
-                &times;
+                <img src={closeIcon} alt="닫기" width="16" height="16" />
               </button>
 
               {/* 이미지 캐러셀 */}
@@ -308,6 +345,7 @@ const Reviews = () => {
         );
       })()}
     </div>
+    </>
   );
 };
 
