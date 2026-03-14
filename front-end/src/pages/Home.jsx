@@ -189,9 +189,13 @@ const Home = () => {
     if (numbers.startsWith('02')) {
       if (numbers.length <= 2) {
         return numbers;
-      } else if (numbers.length <= 6) {
+      } else if (numbers.length <= 5) {
         return `${numbers.slice(0, 2)}-${numbers.slice(2)}`;
+      } else if (numbers.length <= 9) {
+        // 9자리: 02-XXX-XXXX
+        return `${numbers.slice(0, 2)}-${numbers.slice(2, 5)}-${numbers.slice(5)}`;
       } else {
+        // 10자리: 02-XXXX-XXXX
         return `${numbers.slice(0, 2)}-${numbers.slice(2, 6)}-${numbers.slice(6, 10)}`;
       }
     }
@@ -891,27 +895,29 @@ const Home = () => {
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">
                     <label>이름</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="홍길동" />
+                    <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="홍길동" maxLength={20} />
+                    <span className="home__char-count">{formData.name.length}/20</span>
                   </div>
                   <div className="home__section7-form-group">
                     <label>업체명/주소</label>
-                    <input type="text" name="companyName" value={formData.companyName} onChange={handleFormChange} placeholder="프르조" />
+                    <input type="text" name="companyName" value={formData.companyName} onChange={handleFormChange} placeholder="프르조" maxLength={100} />
                   </div>
                 </div>
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">
                     <label>전화번호</label>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} placeholder="010-1234-5678" />
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} placeholder="010-1234-5678" maxLength={13} />
                   </div>
                   <div className="home__section7-form-group">
                     <label>이메일</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="przo@naver.com" />
+                    <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="przo@naver.com" maxLength={100} />
                   </div>
                 </div>
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">
                     <label>제목</label>
-                    <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="30평 가정집 견적 문의 드립니다." />
+                    <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="30평 가정집 견적 문의 드립니다." maxLength={100} />
+                    <span className="home__char-count">{formData.title.length}/100</span>
                   </div>
                   <div className="home__section7-form-group">
                     <label>비밀번호</label>
@@ -920,7 +926,8 @@ const Home = () => {
                 </div>
                 <div className="home__section7-form-group home__section7-form-group--full">
                   <label>문의 내용</label>
-                  <textarea name="content" value={formData.content} onChange={handleFormChange} placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?" rows="5"></textarea>
+                  <textarea name="content" value={formData.content} onChange={handleFormChange} placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?" rows="5" maxLength={2000}></textarea>
+                  <span className="home__char-count">{formData.content.length}/2000</span>
                 </div>
                 <div className="home__section7-form-group home__section7-form-group--full">
                   <label>첨부파일</label>

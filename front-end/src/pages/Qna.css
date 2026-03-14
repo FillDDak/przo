@@ -157,6 +157,7 @@
   width: 100%;
   border-collapse: collapse;
   border-top: 2px solid #1f1f1f;
+  table-layout: fixed;
 }
 
 .qna__th {
@@ -206,6 +207,13 @@
 .qna__td--title {
   text-align: left;
   padding-left: 20px;
+  overflow: hidden;
+}
+
+.qna__td--author {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .qna__link {
@@ -215,6 +223,8 @@
   text-decoration: none;
   color: #444;
   transition: color 0.2s;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .qna__link:hover {
@@ -230,6 +240,10 @@
 
 .qna__title-text {
   color: inherit;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .qna__message-icon {

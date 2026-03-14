@@ -39,9 +39,9 @@ const Footer = ({ variant = "default" }) => {
           <div className="footer__center">
             <nav className="footer__nav">
               <div className="footer__nav-row">
-                <a href="#">사이트 이용 약관</a>
-                <a href="#">쿠키 정책</a>
-                <a href="#">개인정보처리방침</a>
+                <Link to="/terms" onClick={() => window.scrollTo(0, 0)}>사이트 이용 약관</Link>
+                <Link to="/cookie-policy" onClick={() => window.scrollTo(0, 0)}>쿠키 정책</Link>
+                <Link to="/privacy-policy" onClick={() => window.scrollTo(0, 0)}>개인정보처리방침</Link>
               </div>
               <div className="footer__nav-row">
                 <Link to="/qna" onClick={() => window.scrollTo(0, 0)}>상담 문의</Link>

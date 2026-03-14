@@ -8,7 +8,7 @@ import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.webp";
 const Header = ({ variant = "default" }) => {
   const location = useLocation();
   const isAdmin = variant === "admin";
-  const subPagePrefixes = ["/about", "/service", "/qna", "/reviews", "/faq"];
+  const subPagePrefixes = ["/about", "/service", "/qna", "/reviews", "/faq", "/terms", "/cookie-policy", "/privacy-policy"];
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);

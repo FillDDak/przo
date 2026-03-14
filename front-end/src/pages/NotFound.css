@@ -1,0 +1,73 @@
+.not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.not-found__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.not-found__code {
+  font-size: 120px;
+  font-weight: 800;
+  color: #51c488;
+  line-height: 1;
+  margin: 0 0 24px 0;
+  letter-spacing: -4px;
+}
+
+.not-found__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin: 0 0 16px 0;
+}
+
+.not-found__desc {
+  font-size: 16px;
+  color: #767676;
+  margin: 0 0 40px 0;
+  line-height: 1.6;
+}
+
+.not-found__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 40px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #51c488;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.not-found__btn:hover {
+  background-color: #3da86e;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .not-found__code {
+    font-size: 80px;
+    letter-spacing: -2px;
+  }
+
+  .not-found__title {
+    font-size: 22px;
+  }
+
+  .not-found__desc {
+    font-size: 14px;
+  }
+}

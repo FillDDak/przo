@@ -990,6 +990,18 @@
   border-radius: 15px;
 }
 
+.home__char-count {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: #bcbcbc;
+  margin-top: 4px;
+}
+
+.home__char-count--warn {
+  color: #e53e3e;
+}
+
 .home__section7-file-input {
   position: relative;
 }

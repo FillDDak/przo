@@ -170,6 +170,10 @@ const ReviewWrite = () => {
       alert("제목을 입력해주세요.");
       return;
     }
+    if (title.length > 50) {
+      alert("제목은 50자 이내로 입력해주세요.");
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -263,8 +267,12 @@ const ReviewWrite = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="review-write__input"
-                  placeholder="시공 사진 제목을 입력해주세요"
+                  placeholder="제목을 입력해주세요."
+                  maxLength={50}
                 />
+                <span className="review-write__char-count">
+                  {title.length}/50
+                </span>
               </div>
               <div className="review-write__field review-write__field--date">
                 <label className="review-write__label">날짜</label>
@@ -312,7 +320,7 @@ const ReviewWrite = () => {
                   value={content}
                   onChange={setContent}
                   modules={quillModules}
-                  placeholder="내용을 입력해주세요"
+                  placeholder="내용을 입력해주세요."
                 />
               </div>
             </div>
@@ -383,7 +391,7 @@ const ReviewWrite = () => {
                     <circle cx="8.5" cy="8.5" r="1.5" />
                     <polyline points="21 15 16 10 5 21" />
                   </svg>
-                  <span>사진을 추가해주세요</span>
+                  <span>사진을 추가해주세요.</span>
                 </div>
               )}
             </div>

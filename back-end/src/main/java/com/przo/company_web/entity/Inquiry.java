@@ -21,7 +21,7 @@ public class Inquiry {
     @Column(name = "INQUIRY_ID")
     private Long id;
 
-    @Column(name = "NAME", nullable = false, length = 50)
+    @Column(name = "NAME", nullable = false, length = 20)
     private String name;
 
     @Column(name = "COMPANY_NAME", length = 100)
@@ -36,7 +36,7 @@ public class Inquiry {
     @Column(name = "PASSWORD", nullable = false, length = 100)
     private String password;
 
-    @Column(name = "TITLE", nullable = false, length = 200)
+    @Column(name = "TITLE", nullable = false, length = 100)
     private String title;
 
     @Lob

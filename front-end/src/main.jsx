@@ -21,6 +21,9 @@ import ReviewWrite from "./pages/ReviewWrite";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import Faq from "./pages/Faq";
+import Terms from "./pages/Terms";
+import CookiePolicy from "./pages/CookiePolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +70,18 @@ const router = createBrowserRouter([
       {
         path: "faq",
         element: <Faq />,
+      },
+      {
+        path: "terms",
+        element: <Terms />,
+      },
+      {
+        path: "cookie-policy",
+        element: <CookiePolicy />,
+      },
+      {
+        path: "privacy-policy",
+        element: <PrivacyPolicy />,
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate, useBlocker } from "react-router-dom";
 import "./QnaWrite.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
@@ -31,10 +31,13 @@ const QnaWrite = () => {
     formData.content.trim() !== "" ||
     attachment !== null;
 
-  const blocker = useBlocker(
+  const shouldBlock = useCallback(
     ({ currentLocation, nextLocation }) =>
-      isDirty && !submittedRef.current && currentLocation.pathname !== nextLocation.pathname
+      isDirty && !submittedRef.current && currentLocation.pathname !== nextLocation.pathname,
+    [isDirty]
   );
+
+  const blocker = useBlocker(shouldBlock);
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -55,9 +58,13 @@ const QnaWrite = () => {
     if (numbers.startsWith('02')) {
       if (numbers.length <= 2) {
         return numbers;
-      } else if (numbers.length <= 6) {
+      } else if (numbers.length <= 5) {
         return `${numbers.slice(0, 2)}-${numbers.slice(2)}`;
+      } else if (numbers.length <= 9) {
+        // 9자리: 02-XXX-XXXX
+        return `${numbers.slice(0, 2)}-${numbers.slice(2, 5)}-${numbers.slice(5)}`;
       } else {
+        // 10자리: 02-XXXX-XXXX
         return `${numbers.slice(0, 2)}-${numbers.slice(2, 6)}-${numbers.slice(6, 10)}`;
       }
     }
@@ -231,7 +238,11 @@ const QnaWrite = () => {
                   onChange={handleChange}
                   className="qna-write__input"
                   placeholder="홍길동"
+                  maxLength={20}
                 />
+                <span className="qna-write__char-count">
+                  {formData.name.length}/20
+                </span>
               </div>
               <div className="qna-write__field">
                 <label className="qna-write__label">업체명/주소</label>
@@ -242,6 +253,7 @@ const QnaWrite = () => {
                   onChange={handleChange}
                   className="qna-write__input"
                   placeholder="프르조"
+                  maxLength={100}
                 />
               </div>
             </div>
@@ -257,6 +269,7 @@ const QnaWrite = () => {
                   onChange={handleChange}
                   className="qna-write__input"
                   placeholder="010-1234-5678"
+                  maxLength={13}
                 />
                 <p className="qna-write__hint">전화번호 뒷자리 4자리가 게시글 비밀번호로 자동 설정됩니다.</p>
               </div>
@@ -269,6 +282,7 @@ const QnaWrite = () => {
                   onChange={handleChange}
                   className="qna-write__input"
                   placeholder="przo@naver.com"
+                  maxLength={100}
                 />
               </div>
             </div>
@@ -283,7 +297,11 @@ const QnaWrite = () => {
                 onChange={handleChange}
                 className="qna-write__input"
                 placeholder="30평 가정집 견적 문의 드립니다."
+                maxLength={100}
               />
+              <span className="qna-write__char-count">
+                {formData.title.length}/100
+              </span>
             </div>
 
             {/* 문의 내용 */}
@@ -296,7 +314,11 @@ const QnaWrite = () => {
                 className="qna-write__textarea"
                 placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?"
                 rows={6}
+                maxLength={2000}
               />
+              <span className="qna-write__char-count">
+                {formData.content.length}/2000
+              </span>
             </div>
 
             {/* 첨부파일 */}
