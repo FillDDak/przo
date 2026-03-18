@@ -27,6 +27,23 @@
   gap: 10px;
 }
 
+.estimate-sheet__reset-btn {
+  padding: 10px 24px;
+  background-color: #e06060;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 8px;
+}
+
+.estimate-sheet__reset-btn:hover {
+  background-color: #c44444;
+}
+
 .estimate-sheet__save-btn {
   padding: 10px 24px;
   background-color: #4472C4;

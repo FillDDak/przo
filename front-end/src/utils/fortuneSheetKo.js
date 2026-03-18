@@ -126,7 +126,7 @@ const KO_MAP = {
   "Below": "아래",
   "Move left": "왼쪽으로 이동",
   "Move up": "위로 이동",
-  "Add": "추가",
+  "Add": "행 추가",
   "Row": "행",
   "Column": "열",
   "Width": "너비",
@@ -180,7 +180,7 @@ const KO_MAP = {
 
   // ── 정보 / 상태표시줄 ────────────────────────────────────────────────────
   "Loading...": "로딩 중...",
-  "more rows at bottom": "아래에 행 추가",
+  "more rows at bottom": "입력 값 만큼 아래에 행 추가",
   "Back to the top": "맨 위로",
   "Zoom in": "확대",
   "Zoom out": "축소",
@@ -498,6 +498,11 @@ function translateNode(container) {
   if (container.matches?.(UI_SELECTORS)) targets.add(container);
   container.querySelectorAll(UI_SELECTORS).forEach((el) => targets.add(el));
   targets.forEach(translateTextNodes);
+
+  // 4. 행 추가 영역 번역 (.fortune-add-row-button 부모에 "(more rows at bottom)" 형제 span 포함)
+  container.querySelectorAll(".fortune-add-row-button").forEach((el) => {
+    if (el.parentNode) translateTextNodes(el.parentNode);
+  });
 }
 
 export function observeKoreanTitles(container) {

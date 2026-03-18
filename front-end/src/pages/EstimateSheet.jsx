@@ -148,18 +148,24 @@ export default function EstimateSheet() {
     const api = workbookApiRef.current;
     const current = sheetsRef.current;
     if (!api || !current) return;
-    current.forEach((sheet) => {
+    const addBtn = document.querySelector(".fortune-add-row-button");
+    const inputEl = addBtn?.parentNode?.querySelector("input[type='text']");
+    const inputVal = parseInt(inputEl?.value || inputEl?.placeholder, 10);
+    const count = (!isNaN(inputVal) && inputVal > 0) ? inputVal : 50;
+    sheetsRef.current = current.map((sheet) => {
       const rows = sheet._rows || sheet.row || 84;
-      const deleteCount = Math.min(50, Math.max(0, rows - 10));
-      if (deleteCount <= 0) return;
+      const deleteCount = Math.min(count, Math.max(0, rows - 10));
+      if (deleteCount <= 0) return sheet;
       api.applyOp([{
         op: "deleteRowCol",
         value: { type: "row", start: rows - deleteCount, end: rows - 1, id: sheet.id },
       }]);
+      const newRows = rows - deleteCount;
+      return { ...sheet, _rows: newRows, row: newRows };
     });
   };
 
-  // "Add 50 rows" 버튼(.fortune-add-row-button) 옆에 "행 50개 줄이기" 버튼 주입
+  // "Add 50 rows" 버튼(.fortune-add-row-button) 옆에 "행 N개 줄이기" 버튼 주입
   useEffect(() => {
     const INJECTED_ID = "fortune-decrease-row-btn";
     const inject = () => {
@@ -168,7 +174,7 @@ export default function EstimateSheet() {
       if (!addBtn) return;
       const btn = document.createElement("button");
       btn.id = INJECTED_ID;
-      btn.textContent = "행 50개 줄이기";
+      btn.textContent = "행 줄이기";
       btn.className = addBtn.className;
       btn.style.marginLeft = "6px";
       btn.addEventListener("click", (e) => { e.stopPropagation(); decreaseHandlerRef.current?.(); });
@@ -198,14 +204,9 @@ export default function EstimateSheet() {
 
   useEffect(() => {
     if (loading || !isAdmin) return;
-    console.log("[EstimateSheet] 데이터 로드 시작");
     fetch("/api/estimate-sheet")
-      .then((r) => {
-        console.log("[EstimateSheet] 로드 응답 status:", r.status);
-        return r.json();
-      })
+      .then((r) => r.json())
       .then((res) => {
-        console.log("[EstimateSheet] 로드 응답:", { success: res.success, dataLength: res.data?.length, message: res.message });
         if (res.success && res.data) {
           const parsed = JSON.parse(res.data);
           const hasContent = parsed.some(
@@ -257,14 +258,14 @@ export default function EstimateSheet() {
             });
           });
         }
-        const savedCelldata = Array.from(celldataMap.values());
-        // data.length가 실제 행 수 (insertRowCol/deleteRowCol은 row 필드를 갱신하지 않음)
-        const savedRow = data?.length || _rows || row;
+        // _rows: applyOp 후 수동 갱신된 값 우선 사용 (applyOp은 onChange를 트리거하지 않으므로 data?.length 신뢰 불가)
+        const savedRow = _rows || data?.length || row;
+        // savedRow 범위 밖의 celldata 항목 제거 (삭제된 행에 데이터가 있어도 강제로 제거)
+        const savedCelldata = Array.from(celldataMap.values()).filter((c) => c.r < savedRow);
 
         return { name, id, order, status, hide, row: savedRow, column, celldata: savedCelldata, config };
       });
       const bodyStr = JSON.stringify({ data: JSON.stringify(payload) });
-      console.log("[EstimateSheet] 저장 요청 크기:", bodyStr.length, "bytes");
       const res = await fetch("/api/estimate-sheet", {
         method: "POST",
         headers: {
@@ -273,9 +274,7 @@ export default function EstimateSheet() {
         },
         body: bodyStr,
       });
-      console.log("[EstimateSheet] 저장 응답 status:", res.status);
       const result = await res.json();
-      console.log("[EstimateSheet] 저장 응답:", { success: result.success, dataLength: result.data?.length, message: result.message });
       if (result.success) {
         alert("저장되었습니다.");
       } else {
@@ -322,6 +321,17 @@ export default function EstimateSheet() {
       <div className="estimate-sheet__header">
         <h1 className="estimate-sheet__title">가격 견적 시트</h1>
         <div>
+          <button
+            className="estimate-sheet__reset-btn"
+            onClick={() => {
+              if (!window.confirm("시트를 초기값으로 되돌리겠습니까?")) return;
+              const initial = initialSheets();
+              setSheets(initial);
+              sheetsRef.current = initial;
+            }}
+          >
+            초기화
+          </button>
           <button className="estimate-sheet__save-btn" onClick={handleSave} disabled={saving}>
             {saving ? "저장 중..." : "저장"}
           </button>
