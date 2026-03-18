@@ -174,7 +174,7 @@ const Qna = () => {
                 </button>
               </div>
             </form>
-            <Link to="/qna/write" className="qna__write-btn">
+            <Link to="/qna/write" className="qna__write-btn" onClick={() => window.scrollTo(0, 0)}>
               문의하기
             </Link>
           </div>

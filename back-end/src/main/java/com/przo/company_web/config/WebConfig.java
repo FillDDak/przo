@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOriginPatterns("http://localhost:*", "https://*.ngrok-free.dev", "https://*.zrok.io")
+                .allowedOriginPatterns("http://localhost:*", "https://*.ngrok-free.dev", "https://*.zrok.io", "https://przo.kr", "https://www.przo.kr")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

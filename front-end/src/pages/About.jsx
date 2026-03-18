@@ -6,10 +6,11 @@ import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
 
 const About = () => {
-  const { hash } = useLocation();
+  const { state } = useLocation();
 
   useEffect(() => {
-    if (hash === "#location") {
+    window.scrollTo(0, 0);
+    if (state?.scrollTo === "location") {
       const el = document.getElementById("location");
       if (el) {
         setTimeout(() => {
@@ -17,7 +18,7 @@ const About = () => {
         }, 100);
       }
     }
-  }, [hash]);
+  }, [state]);
 
   return (
     <div className="about">

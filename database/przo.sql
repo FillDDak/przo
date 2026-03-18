@@ -62,6 +62,7 @@ CREATE TABLE REVIEWS (
     TITLE           VARCHAR2(200)   NOT NULL,
     CONTENT         CLOB,
     THUMBNAIL       VARCHAR2(500),
+    LOCATION        VARCHAR2(200),
     CREATED_AT      TIMESTAMP       DEFAULT SYSTIMESTAMP
 );
 
@@ -116,29 +117,29 @@ VALUES (SEQ_INQUIRY_ID.NEXTVAL, '최사장', '카페베네', '010-9876-5432', 'c
         '월 1회 정기 방역 계약 완료. 매월 첫째 주 월요일 오전 방문 예정.', SYSTIMESTAMP);
 
 -- 시공 사진 예시 데이터
-INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '강남구 카페 해충 방제 완료',
-        '강남구 소재 카페에서 UV LED 해충 퇴치기 설치 및 방역 서비스를 완료했습니다. 고객님께서 매우 만족하셨습니다.', '/uploads/reviews/후레쉬.jpg');
+        '강남구 소재 카페에서 UV LED 해충 퇴치기 설치 및 방역 서비스를 완료했습니다. 고객님께서 매우 만족하셨습니다.', '/uploads/reviews/후레쉬.jpg', '서울 강남구');
 
-INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '서초구 음식점 정기 방역',
-        '서초구 음식점 정기 방역 서비스를 진행했습니다. 주방과 홀 전체에 대한 종합 방역을 실시했습니다.', '/uploads/reviews/바퀴작업.jpg');
+        '서초구 음식점 정기 방역 서비스를 진행했습니다. 주방과 홀 전체에 대한 종합 방역을 실시했습니다.', '/uploads/reviews/바퀴작업.jpg', '서울 서초구');
 
-INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '인천시 xx가게 방역',
-        '인천시 xx가게 방역을 실시하였습니다. 인천시 xx가게 방역을 실시하였습니다.', '/uploads/reviews/약국소독1.jpg');
+        '인천시 xx가게 방역을 실시하였습니다. 인천시 xx가게 방역을 실시하였습니다.', '/uploads/reviews/약국소독1.jpg', '인천시');
 
-INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '부산시 yy식당 방역',
-        '부산시 yy식당 해충 방제 서비스를 완료했습니다.', '/uploads/reviews/일신소독-1.jpg');
+        '부산시 yy식당 해충 방제 서비스를 완료했습니다.', '/uploads/reviews/일신소독-1.jpg', '부산시');
 
-INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '대구시 zz카페 방역',
-        '대구시 zz카페 정기 방역을 진행했습니다.', '/uploads/reviews/내시경-1.jpg');
+        '대구시 zz카페 정기 방역을 진행했습니다.', '/uploads/reviews/내시경-1.jpg', '대구시');
 
-INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL)
+INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '수원시 ww마트 방역',
-        '수원시 ww마트 해충 퇴치 서비스를 완료했습니다.', NULL);
+        '수원시 ww마트 해충 퇴치 서비스를 완료했습니다.', NULL, '경기 수원시');
 
 -- 5. 견적 시트 테이블
 CREATE TABLE ESTIMATE_SHEETS (
@@ -171,3 +172,5 @@ SELECT * FROM REVIEWS;
 
 -- 견적 시트 테이블 전체 조회
 SELECT SHEET_ID, SHEET_KEY, UPDATED_AT, LENGTH(DATA_JSON) AS DATA_SIZE FROM ESTIMATE_SHEETS;
+
+SELECT * FROM ESTIMATE_SHEETS;

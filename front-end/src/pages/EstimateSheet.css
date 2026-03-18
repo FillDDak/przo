@@ -37,7 +37,6 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-right: 8px;
 }
 
 .estimate-sheet__reset-btn:hover {

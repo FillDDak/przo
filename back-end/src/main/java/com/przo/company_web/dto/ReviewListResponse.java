@@ -13,6 +13,7 @@ public class ReviewListResponse {
     private String content;
     private String thumbnail;
     private String createdAt;
+    private String location;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
@@ -24,5 +25,6 @@ public class ReviewListResponse {
         this.createdAt = review.getCreatedAt() != null
                 ? review.getCreatedAt().format(formatter)
                 : "";
+        this.location = review.getLocation();
     }
 }

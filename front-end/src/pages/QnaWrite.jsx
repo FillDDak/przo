@@ -39,6 +39,8 @@ const QnaWrite = () => {
 
   const blocker = useBlocker(shouldBlock);
 
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isDirty) {
@@ -72,6 +74,8 @@ const QnaWrite = () => {
     }));
   };
 
+  const MAX_FILES = 5;
+
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
@@ -80,11 +84,16 @@ const QnaWrite = () => {
       e.target.value = "";
       return;
     }
-    setFileError("");
     setAttachments((prev) => {
       const existing = prev.map((f) => f.name);
       const newFiles = files.filter((f) => !existing.includes(f.name));
-      return [...prev, ...newFiles];
+      const merged = [...prev, ...newFiles];
+      if (merged.length > MAX_FILES) {
+        setFileError(`파일은 최대 ${MAX_FILES}개까지 첨부할 수 있습니다.`);
+        return prev;
+      }
+      setFileError("");
+      return merged;
     });
     e.target.value = "";
   };
@@ -239,7 +248,7 @@ const QnaWrite = () => {
                   className="qna-write__file-input" />
                 <label htmlFor="attachment" className="qna-write__file-label">
                   <img src={fileIcon} alt="첨부파일" className="qna-write__file-icon" />
-                  <span>파일 선택 (여러 개 가능, 파일당 최대 10MB)</span>
+                  <span>파일 선택 (최대 5개, 파일당 최대 10MB)</span>
                 </label>
               </div>
               {attachments.length > 0 && (

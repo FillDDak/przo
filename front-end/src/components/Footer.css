@@ -334,6 +334,7 @@
     grid-column: 2;
     grid-row: 1 / 3;
     align-items: flex-start;
+    align-self: end;
     gap: 10px;
   }
 

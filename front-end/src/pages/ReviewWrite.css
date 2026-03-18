@@ -286,9 +286,13 @@
   opacity: 0.4;
 }
 
-.review-write__image-item--drag-over {
-  border-color: #51c488;
-  transform: scale(1.05);
+.review-write__drop-indicator {
+  width: 3px;
+  height: 110px;
+  background-color: #51c488;
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .review-write__image-thumb {

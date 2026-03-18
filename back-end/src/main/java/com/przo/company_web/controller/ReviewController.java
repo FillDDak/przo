@@ -81,6 +81,7 @@ public class ReviewController {
             @RequestParam(required = false) String content,
             @RequestParam(required = false) String thumbnailUrl,
             @RequestParam(required = false) String createdDate,
+            @RequestParam(required = false) String location,
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
         Map<String, Object> response = new HashMap<>();
@@ -93,7 +94,7 @@ public class ReviewController {
         }
 
         try {
-            Review review = reviewService.createReview(title, content, thumbnailUrl, createdDate);
+            Review review = reviewService.createReview(title, content, thumbnailUrl, createdDate, location);
 
             response.put("success", true);
             response.put("message", "시공 사진이 등록되었습니다.");
@@ -115,6 +116,7 @@ public class ReviewController {
             @RequestParam(required = false) String content,
             @RequestParam(required = false) String thumbnailUrl,
             @RequestParam(required = false) String createdDate,
+            @RequestParam(required = false) String location,
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
         Map<String, Object> response = new HashMap<>();
@@ -127,7 +129,7 @@ public class ReviewController {
         }
 
         try {
-            Review review = reviewService.updateReview(id, title, content, thumbnailUrl, createdDate);
+            Review review = reviewService.updateReview(id, title, content, thumbnailUrl, createdDate, location);
             if (review != null) {
                 response.put("success", true);
                 response.put("message", "시공 사진이 수정되었습니다.");

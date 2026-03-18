@@ -19,6 +19,8 @@ const Reviews = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const isDragging = useRef(false);
   const dragStartX = useRef(null);
+  const dragStartY = useRef(null);
+  const carouselRef = useRef(null);
   const { isAdmin, token } = useAuth();
   const navigate = useNavigate();
   const pageSize = 6;
@@ -44,6 +46,23 @@ const Reviews = () => {
     fetchReviews();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+
+  // 캐러셀 터치 이동 시 수직 스크롤 방지 (passive: false 필요)
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const onTouchMove = (e) => {
+      if (!isDragging.current || dragStartX.current === null) return;
+      const diffX = Math.abs(e.touches[0].clientX - dragStartX.current);
+      const diffY = Math.abs(e.touches[0].clientY - dragStartY.current);
+      if (diffX > diffY) {
+        e.preventDefault();
+        setDragOffset(e.touches[0].clientX - dragStartX.current);
+      }
+    };
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => el.removeEventListener("touchmove", onTouchMove);
+  }, [selectedReview]);
 
   const handlePageChange = (page) => {
     if (page >= 0 && page < totalPages) {
@@ -257,7 +276,7 @@ const Reviews = () => {
               </div>
             )}
             {isAdmin && (
-              <Link to="/reviews/write" className="reviews__write-btn">
+              <Link to="/reviews/write" className="reviews__write-btn" onClick={() => window.scrollTo(0, 0)}>
                 작성하기
               </Link>
             )}
@@ -274,14 +293,19 @@ const Reviews = () => {
         return (
           <div className="reviews__modal-overlay" onClick={handleOverlayClick}>
             <div className="reviews__modal">
-              <button className="reviews__modal-close" onClick={closeModal}>
-                <img src={closeIcon} alt="닫기" width="16" height="16" />
-              </button>
+              {/* 제목 + 닫기 버튼 */}
+              <div className="reviews__modal-header">
+                <span className="reviews__modal-title">{selectedReview.title}</span>
+                <button className="reviews__modal-close" onClick={closeModal}>
+                  <img src={closeIcon} alt="닫기" width="16" height="16" />
+                </button>
+              </div>
 
               {/* 이미지 캐러셀 */}
               {images.length > 0 && (
                 <div
                   className="reviews__carousel"
+                  ref={carouselRef}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     isDragging.current = true;
@@ -307,10 +331,7 @@ const Reviews = () => {
                   onTouchStart={(e) => {
                     isDragging.current = true;
                     dragStartX.current = e.touches[0].clientX;
-                  }}
-                  onTouchMove={(e) => {
-                    if (!isDragging.current) return;
-                    setDragOffset(e.touches[0].clientX - dragStartX.current);
+                    dragStartY.current = e.touches[0].clientY;
                   }}
                   onTouchEnd={(e) => {
                     if (!isDragging.current) return;
@@ -390,7 +411,7 @@ const Reviews = () => {
               )}
 
               <div className="reviews__modal-info">
-                <span className="reviews__modal-title">{selectedReview.title}</span>
+                <span className="reviews__modal-location">{selectedReview.location || ""}</span>
                 <span className="reviews__modal-date">{selectedReview.createdAt}</span>
               </div>
               {hasText && (

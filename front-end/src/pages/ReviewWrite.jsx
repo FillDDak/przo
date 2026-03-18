@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect, useCallback } from "react";
+import { useState, useRef, useMemo, useEffect, useCallback, Fragment } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ReactQuill from "react-quill-new";
@@ -10,11 +10,17 @@ import getCroppedImg from "../utils/getCroppedImg";
 
 const API_BASE_URL = "/api";
 
+const toRelativeUrl = (url) => {
+  try { return new URL(url).pathname; } catch { return url; }
+};
+
 const extractImagesFromHtml = (html) => {
   if (!html) return [];
   const div = document.createElement("div");
   div.innerHTML = html;
-  return Array.from(div.querySelectorAll("img")).map((img) => img.src);
+  return Array.from(div.querySelectorAll("img")).map((img) =>
+    toRelativeUrl(img.getAttribute("src") || img.src)
+  );
 };
 
 const stripImagesFromHtml = (html) => {
@@ -27,7 +33,7 @@ const stripImagesFromHtml = (html) => {
 
 const ReviewWrite = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const routerLocation = useLocation();
   const { token } = useAuth();
 
   const dateInputRef = useRef(null);
@@ -35,11 +41,18 @@ const ReviewWrite = () => {
   const tokenRef = useRef(token);
   tokenRef.current = token;
 
-  const editData = location.state?.review || null;
+  const editData = routerLocation.state?.review || null;
   const isEdit = !!editData;
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = (() => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  })();
   const [title, setTitle] = useState(editData?.title || "");
+  const [location, setLocation] = useState(editData?.location || "");
   const [createdDate, setCreatedDate] = useState(
     editData?.createdAt ? editData.createdAt.replaceAll(".", "-") : today
   );
@@ -50,7 +63,7 @@ const ReviewWrite = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [thumbnailIdx, setThumbnailIdx] = useState(0);
   const [dragIdx, setDragIdx] = useState(null);
-  const [dragOverIdx, setDragOverIdx] = useState(null);
+  const [dropPosition, setDropPosition] = useState(null);
 
   // Crop modal state
   const [cropQueue, setCropQueue] = useState([]);  // { file, objectUrl }[]
@@ -64,6 +77,8 @@ const ReviewWrite = () => {
   const onCropComplete = useCallback((_croppedArea, croppedPixels) => {
     setCroppedAreaPixels(croppedPixels);
   }, []);
+
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   // Revoke object URLs on unmount
   useEffect(() => {
@@ -140,6 +155,11 @@ const ReviewWrite = () => {
     input.onchange = () => {
       const files = Array.from(input.files);
       if (!files.length) return;
+      const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
+      if (oversized) {
+        alert(`"${oversized.name}" 파일 용량은 10MB를 초과할 수 없습니다.`);
+        return;
+      }
       const queue = files.map((file) => ({
         file,
         objectUrl: URL.createObjectURL(file),
@@ -221,41 +241,49 @@ const ReviewWrite = () => {
     setDragIdx(idx);
   };
 
-  // 드래그 오버
+  // 드래그 오버 — 마우스가 이미지의 왼쪽/오른쪽 절반인지 판단해 삽입 위치 결정
   const handleDragOver = (e, idx) => {
     e.preventDefault();
-    setDragOverIdx(idx);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const isLeftHalf = e.clientX < rect.left + rect.width / 2;
+    setDropPosition(isLeftHalf ? idx : idx + 1);
   };
 
   // 드롭 → 순서 변경
-  const handleDrop = (idx) => {
-    if (dragIdx === null || dragIdx === idx) {
+  const handleDrop = () => {
+    if (dragIdx === null || dropPosition === null) {
       setDragIdx(null);
-      setDragOverIdx(null);
+      setDropPosition(null);
+      return;
+    }
+    const adjustedPos = dropPosition > dragIdx ? dropPosition - 1 : dropPosition;
+    if (adjustedPos === dragIdx) {
+      setDragIdx(null);
+      setDropPosition(null);
       return;
     }
 
     setUploadedImages((prev) => {
       const next = [...prev];
       const [moved] = next.splice(dragIdx, 1);
-      next.splice(idx, 0, moved);
+      next.splice(adjustedPos, 0, moved);
       return next;
     });
 
     setThumbnailIdx((prev) => {
-      if (prev === dragIdx) return idx;
-      if (dragIdx < prev && idx >= prev) return prev - 1;
-      if (dragIdx > prev && idx <= prev) return prev + 1;
+      if (prev === dragIdx) return adjustedPos;
+      if (dragIdx < prev && adjustedPos >= prev) return prev - 1;
+      if (dragIdx > prev && adjustedPos <= prev) return prev + 1;
       return prev;
     });
 
     setDragIdx(null);
-    setDragOverIdx(null);
+    setDropPosition(null);
   };
 
   const handleDragEnd = () => {
     setDragIdx(null);
-    setDragOverIdx(null);
+    setDropPosition(null);
   };
 
   const handleSubmit = async (e) => {
@@ -275,6 +303,7 @@ const ReviewWrite = () => {
 
       const formData = new FormData();
       formData.append("title", title);
+      if (location) formData.append("location", location);
 
       const textOnly = content.replace(/<[^>]*>/g, "").trim();
       const hasText = textOnly.length > 0;
@@ -284,7 +313,7 @@ const ReviewWrite = () => {
         let finalContent = hasText ? content : "";
         if (hasImages) {
           const imagesHtml = uploadedImages
-            .map((url) => `<img src="${url}">`)
+            .map((url) => `<img src="${toRelativeUrl(url)}">`)
             .join("");
           finalContent += imagesHtml;
         }
@@ -292,7 +321,7 @@ const ReviewWrite = () => {
       }
 
       if (uploadedImages.length > 0) {
-        formData.append("thumbnailUrl", uploadedImages[thumbnailIdx] || uploadedImages[0]);
+        formData.append("thumbnailUrl", toRelativeUrl(uploadedImages[thumbnailIdx] || uploadedImages[0]));
       }
 
       if (createdDate) {
@@ -436,6 +465,7 @@ const ReviewWrite = () => {
                       value={createdDate}
                       max="9999-12-31"
                       onChange={(e) => setCreatedDate(e.target.value)}
+                      onClick={() => { try { dateInputRef.current?.showPicker(); } catch (_) {} }}
                       className="review-write__date-hidden"
                     />
                     <div
@@ -460,6 +490,19 @@ const ReviewWrite = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* 시공 장소 */}
+              <div className="review-write__field">
+                <label className="review-write__label">시공 장소</label>
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="review-write__input"
+                  placeholder="시공 장소를 입력해주세요. (예: 인천광역시 계양구 효성동)"
+                  maxLength={100}
+                />
               </div>
 
               {/* 내용 (텍스트 전용) */}
@@ -499,14 +542,18 @@ const ReviewWrite = () => {
 
                 {uploadedImages.length > 0 ? (
                   <div className="review-write__images">
-                    {uploadedImages.map((url, idx) => (
-                      <div
-                        key={url + idx}
-                        className={`review-write__image-item${idx === thumbnailIdx ? " review-write__image-item--selected" : ""}${idx === dragOverIdx && dragIdx !== idx ? " review-write__image-item--drag-over" : ""}${idx === dragIdx ? " review-write__image-item--dragging" : ""}`}
+                    {uploadedImages.map((url, idx) => {
+                      const showIndicator = dragIdx !== null && dropPosition === idx
+                        && dropPosition !== dragIdx && dropPosition !== dragIdx + 1;
+                      return (
+                      <Fragment key={url + idx}>
+                        {showIndicator && <div className="review-write__drop-indicator" />}
+                        <div
+                        className={`review-write__image-item${idx === thumbnailIdx ? " review-write__image-item--selected" : ""}${idx === dragIdx ? " review-write__image-item--dragging" : ""}`}
                         draggable
                         onDragStart={() => handleDragStart(idx)}
                         onDragOver={(e) => handleDragOver(e, idx)}
-                        onDrop={() => handleDrop(idx)}
+                        onDrop={() => handleDrop()}
                         onDragEnd={handleDragEnd}
                         onClick={() => setThumbnailIdx(idx)}
                         title="클릭하여 대표 사진 선택 / 드래그하여 순서 변경"
@@ -545,7 +592,14 @@ const ReviewWrite = () => {
                           <span className="review-write__image-badge">대표</span>
                         )}
                       </div>
-                    ))}
+                      </Fragment>
+                      );
+                    })}
+                    {/* 마지막 위치 인디케이터 */}
+                    {dragIdx !== null && dropPosition === uploadedImages.length
+                      && dropPosition !== dragIdx && dropPosition !== dragIdx + 1 && (
+                      <div className="review-write__drop-indicator" />
+                    )}
                   </div>
                 ) : (
                   <div

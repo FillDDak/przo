@@ -46,7 +46,7 @@ const Footer = ({ variant = "default" }) => {
               <div className="footer__nav-row">
                 <Link to="/qna" onClick={() => window.scrollTo(0, 0)}>상담 문의</Link>
                 <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>많이 묻는 질문</Link>
-                <Link to="/about#location">매장 안내</Link>
+                <Link to="/about" state={{ scrollTo: "location" }}>매장 안내</Link>
               </div>
             </nav>
             <div className="footer__copyright">© 2025. 프르조 All Rights Reserved</div>

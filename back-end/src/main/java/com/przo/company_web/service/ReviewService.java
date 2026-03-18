@@ -21,16 +21,17 @@ public class ReviewService {
 
     public Page<ReviewListResponse> getReviewList(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reviewRepository.findAllByOrderByIdDesc(pageable)
+        return reviewRepository.findAllByOrderByCreatedAtDescIdDesc(pageable)
                 .map(ReviewListResponse::new);
     }
 
     @Transactional
-    public Review createReview(String title, String content, String thumbnailPath, String createdDate) {
+    public Review createReview(String title, String content, String thumbnailPath, String createdDate, String location) {
         Review review = new Review();
         review.setTitle(title);
         review.setContent(content);
         review.setThumbnail(thumbnailPath);
+        review.setLocation(location);
         if (createdDate != null && !createdDate.isEmpty()) {
             review.setCreatedAt(LocalDate.parse(createdDate).atStartOfDay());
         }
@@ -38,13 +39,14 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review updateReview(Long id, String title, String content, String thumbnailPath, String createdDate) {
+    public Review updateReview(Long id, String title, String content, String thumbnailPath, String createdDate, String location) {
         Review review = reviewRepository.findById(id).orElse(null);
         if (review == null)
             return null;
         review.setTitle(title);
         review.setContent(content);
         review.setThumbnail(thumbnailPath);
+        review.setLocation(location);
         if (createdDate != null && !createdDate.isEmpty()) {
             review.setCreatedAt(LocalDate.parse(createdDate).atStartOfDay());
         }

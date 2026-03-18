@@ -30,6 +30,9 @@ public class Review {
     @Column(name = "THUMBNAIL", length = 500)
     private String thumbnail;
 
+    @Column(name = "LOCATION", length = 200)
+    private String location;
+
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
 

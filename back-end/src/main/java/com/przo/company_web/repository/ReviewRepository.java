@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Page<Review> findAllByOrderByIdDesc(Pageable pageable);
+    Page<Review> findAllByOrderByCreatedAtDescIdDesc(Pageable pageable);
 }
