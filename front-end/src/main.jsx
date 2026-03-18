@@ -20,6 +20,7 @@ import Reviews from "./pages/Reviews";
 import ReviewWrite from "./pages/ReviewWrite";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
+import EstimateSheet from "./pages/EstimateSheet";
 import Faq from "./pages/Faq";
 import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <AdminLogin />,
+      },
+      {
+        path: "estimate",
+        element: <EstimateSheet />,
       },
     ],
   },

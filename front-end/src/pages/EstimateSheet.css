@@ -1,0 +1,75 @@
+.estimate-sheet {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 50px;
+  height: calc(100vh - 90px);
+  box-sizing: border-box;
+}
+
+.estimate-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.estimate-sheet__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.estimate-sheet__header > div {
+  display: flex;
+  gap: 10px;
+}
+
+.estimate-sheet__save-btn {
+  padding: 10px 24px;
+  background-color: #4472C4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.estimate-sheet__save-btn:hover {
+  background-color: #3560a8;
+}
+
+.estimate-sheet__save-btn:disabled {
+  background-color: #7a9fd4;
+  cursor: not-allowed;
+}
+
+.estimate-sheet__download-btn {
+  padding: 10px 24px;
+  background-color: #51c488;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.estimate-sheet__download-btn:hover {
+  background-color: #3aad72;
+}
+
+.estimate-sheet__workbook {
+  flex: 1;
+  min-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  position: relative;
+}

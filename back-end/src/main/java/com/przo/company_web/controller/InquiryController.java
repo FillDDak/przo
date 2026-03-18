@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -87,16 +89,13 @@ public class InquiryController {
             @RequestParam String password,
             @RequestParam String title,
             @RequestParam String content,
-            @RequestParam(required = false) MultipartFile attachment) {
+            @RequestParam(required = false) List<MultipartFile> attachments) {
 
         Map<String, Object> response = new HashMap<>();
 
         try {
             // 파일 저장 처리
-            String attachmentPath = null;
-            if (attachment != null && !attachment.isEmpty()) {
-                attachmentPath = saveFile(attachment);
-            }
+            String attachmentPath = saveFiles(attachments);
 
             // DTO 생성
             InquiryCreateRequest request = new InquiryCreateRequest();
@@ -134,7 +133,7 @@ public class InquiryController {
             @RequestParam String password,
             @RequestParam String title,
             @RequestParam String content,
-            @RequestParam(required = false) MultipartFile attachment) {
+            @RequestParam(required = false) List<MultipartFile> attachments) {
 
         Map<String, Object> response = new HashMap<>();
 
@@ -147,10 +146,7 @@ public class InquiryController {
 
         try {
             // 파일 저장 처리
-            String attachmentPath = null;
-            if (attachment != null && !attachment.isEmpty()) {
-                attachmentPath = saveFile(attachment);
-            }
+            String attachmentPath = saveFiles(attachments);
 
             // DTO 생성
             InquiryCreateRequest request = new InquiryCreateRequest();
@@ -246,25 +242,24 @@ public class InquiryController {
         }
     }
 
-    private String saveFile(MultipartFile file) throws IOException {
-        // 업로드 디렉토리 생성
+    private String saveFiles(List<MultipartFile> files) throws IOException {
+        if (files == null || files.isEmpty()) return null;
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-
-        // 파일명 생성 (UUID + 원본 파일명)
-        String originalFilename = file.getOriginalFilename();
-        String extension = "";
-        if (originalFilename != null && originalFilename.contains(".")) {
-            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        List<String> paths = new ArrayList<>();
+        for (MultipartFile file : files) {
+            if (file == null || file.isEmpty()) continue;
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String newFilename = UUID.randomUUID().toString() + extension;
+            Files.copy(file.getInputStream(), uploadPath.resolve(newFilename));
+            paths.add("/" + uploadDir + "/" + newFilename);
         }
-        String newFilename = UUID.randomUUID().toString() + extension;
-
-        // 파일 저장
-        Path filePath = uploadPath.resolve(newFilename);
-        Files.copy(file.getInputStream(), filePath);
-
-        return "/" + uploadDir + "/" + newFilename;
+        return paths.isEmpty() ? null : String.join(",", paths);
     }
 }

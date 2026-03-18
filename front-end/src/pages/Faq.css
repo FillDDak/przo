@@ -71,6 +71,128 @@
   margin: 0 0 60px 0;
 }
 
+/* 관리자 바 */
+.faq__admin-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.faq__reorder-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #ffffff;
+  border: 1px solid #1f1f1f;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.faq__reorder-btn:hover {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+.faq__reorder-done-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #51c488;
+  border: 1px solid #51c488;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.faq__reorder-done-btn:hover {
+  background-color: #3aad72;
+  border-color: #3aad72;
+}
+
+.faq__reorder-hint {
+  font-size: 14px;
+  color: #51c488;
+  margin-bottom: 12px;
+}
+
+.faq__item--reorder {
+  cursor: grab;
+}
+
+.faq__item--reorder:active {
+  cursor: grabbing;
+}
+
+.faq__order-btns {
+  display: none;
+  gap: 4px;
+}
+
+.faq__order-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #444;
+  transition: background-color 0.2s;
+}
+
+.faq__order-btn:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.faq__order-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 모바일: 위아래 버튼 표시, 드래그 핸들 숨김 */
+@media (hover: none) {
+  .faq__order-btns {
+    display: flex;
+  }
+
+  .faq__drag-handle {
+    display: none;
+  }
+}
+
+.faq__add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+  background-color: #ffffff;
+  border: 1px solid #1f1f1f;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.faq__add-btn:hover {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
 /* FAQ 목록 */
 .faq__list {
   list-style: none;
@@ -88,7 +210,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 20px 16px;
+  padding: 30px 16px;
   background: none;
   border: none;
   cursor: pointer;
@@ -96,15 +218,80 @@
   gap: 16px;
 }
 
+.faq__drag-handle {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: #bbb;
+  cursor: grab;
+  padding-right: 10px;
+  line-height: 1;
+  user-select: none;
+}
+
+.faq__drag-handle:active {
+  cursor: grabbing;
+}
+
+.faq__item--drag-over {
+  border-top: 2px solid #51c488;
+}
+
 .faq__question-text {
-  font-size: 16px;
+  display: flex;
+  gap: 0.5em;
+  font-size: 20px;
   font-weight: 500;
   color: #1f1f1f;
   line-height: 1.5;
+  flex: 1;
+}
+
+.faq__question-prefix {
+  flex-shrink: 0;
 }
 
 .faq__item--open .faq__question-text {
   color: #51c488;
+}
+
+.faq__question-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.faq__admin-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.faq__edit-btn,
+.faq__delete-btn {
+  padding: 5px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.faq__edit-btn {
+  background-color: #e8f5ee;
+  color: #51c488;
+}
+
+.faq__edit-btn:hover {
+  background-color: #d0eddc;
+}
+
+.faq__delete-btn {
+  background-color: #fdecea;
+  color: #e53935;
+}
+
+.faq__delete-btn:hover {
+  background-color: #fad4d1;
 }
 
 .faq__icon {
@@ -120,26 +307,227 @@
   color: #51c488;
 }
 
-.faq__answer {
-  display: none;
-  padding: 0 16px 20px;
+.faq__answer-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
 }
 
-.faq__item--open .faq__answer {
-  display: block;
+.faq__item--open .faq__answer-wrapper {
+  grid-template-rows: 1fr;
+}
+
+.faq__answer {
+  overflow: hidden;
 }
 
 .faq__answer p {
-  font-size: 15px;
+  display: flex;
+  gap: 0.5em;
+  font-size: 19px;
   color: #555;
   line-height: 1.7;
-  margin: 0;
+  margin: 0 0 20px 0;
   padding: 16px 20px;
   background-color: #f8f9fa;
   border-radius: 6px;
+  white-space: pre-line;
 }
 
-/* 반응형 */
+.faq__answer-prefix {
+  flex-shrink: 0;
+}
+
+/* 페이지네이션 */
+.faq__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+}
+
+.faq__page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  color: #666;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.faq__page-btn:hover:not(:disabled):not(.faq__page-btn--active) {
+  color: #51c488;
+}
+
+.faq__page-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.faq__page-btn--active,
+.faq__page-btn--active:hover {
+  color: #1f1f1f;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: default;
+}
+
+.faq__page-btn--prev,
+.faq__page-btn--next {
+  font-size: 16px;
+}
+
+/* 모달 */
+.faq-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.faq-modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 32px;
+  width: 100%;
+  max-width: 540px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.faq-modal__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin: 0 0 24px 0;
+}
+
+.faq-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.faq-modal__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
+
+.faq-modal__input {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.faq-modal__input:focus {
+  border-color: #51c488;
+}
+
+.faq-modal__textarea {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  resize: none;
+  min-height: 120px;
+  transition: border-color 0.2s;
+}
+
+.faq-modal__textarea:focus {
+  border-color: #51c488;
+}
+
+.faq-modal__confirm-text {
+  font-size: 16px;
+  color: #444;
+  margin: 0 0 24px 0;
+}
+
+.faq-modal__buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.faq-modal__cancel {
+  padding: 9px 22px;
+  background-color: #f1f1f1;
+  color: #555;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.faq-modal__cancel:hover {
+  background-color: #e4e4e4;
+}
+
+.faq-modal__submit {
+  padding: 7px 22px;
+  background-color: #51c488;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.faq-modal__submit:hover {
+  background-color: #3aad72;
+}
+
+.faq-modal__delete {
+  padding: 7px 22px;
+  background-color: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.faq-modal__delete:hover {
+  background-color: #c62828;
+}
+
+/* 반응형 - 태블릿 */
 @media (max-width: 768px) {
   .faq__content {
     padding: 0 20px;
@@ -149,16 +537,109 @@
     left: 20px;
   }
 
+  .faq__main {
+    padding: 0 0 80px;
+  }
+
   .faq__title {
     font-size: 24px;
     margin-bottom: 40px;
   }
 
+.faq__question {
+    padding: 22px 12px;
+    gap: 12px;
+  }
+
   .faq__question-text {
-    font-size: 15px;
+    font-size: 16px;
+  }
+
+  .faq__edit-btn,
+  .faq__delete-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  .faq__icon {
+    width: 18px;
+    height: 18px;
   }
 
   .faq__answer p {
+    font-size: 15px;
+    padding: 14px 16px;
+    margin: 0 0 16px 0;
+  }
+
+  .faq-modal {
+    padding: 24px 20px;
+  }
+
+  .faq-modal__title {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+}
+
+/* 반응형 - 모바일 */
+@media (max-width: 480px) {
+  .faq__main {
+    padding: 0 0 60px;
+  }
+
+  .faq__title {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
+
+  .faq__question {
+    padding: 18px 8px;
+    gap: 10px;
+  }
+
+  .faq__question-text {
+    font-size: 14px;
+  }
+
+  .faq__admin-actions {
+    gap: 4px;
+  }
+
+  .faq__edit-btn,
+  .faq__delete-btn {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .faq__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .faq__answer p {
+    font-size: 13px;
+    padding: 12px 14px;
+    margin: 0 0 12px 0;
+  }
+
+  .faq-modal {
+    padding: 20px 16px;
+  }
+
+  .faq-modal__title {
+    font-size: 17px;
+  }
+
+  .faq-modal__input,
+  .faq-modal__textarea {
+    font-size: 14px;
+  }
+
+  .faq-modal__cancel,
+  .faq-modal__submit,
+  .faq-modal__delete {
+    padding: 9px 16px;
     font-size: 14px;
   }
 }

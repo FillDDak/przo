@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./AdminLogin.css";
 import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.webp";
@@ -9,7 +9,6 @@ const AdminLogin = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
     const { login, logout, isAdmin, adminName } = useAuth();
 
     const handleSubmit = async (e) => {
@@ -26,7 +25,7 @@ const AdminLogin = () => {
         const result = await login(id, password);
 
         if (result.success) {
-            navigate("/");
+            // 로그인 후 현재 페이지 유지
         } else {
             setError(result.message);
         }
@@ -51,6 +50,9 @@ const AdminLogin = () => {
                     <p className="admin-login__text">
                         <strong>{adminName}</strong>님으로 로그인 중입니다.
                     </p>
+                    <Link to="/admin/estimate" className="admin-login__button">
+                        가격 견적 시트
+                    </Link>
                     <button
                         className="admin-login__button admin-login__button--logout"
                         onClick={handleLogout}

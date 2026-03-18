@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Reviews.css";
@@ -16,6 +16,9 @@ const Reviews = () => {
   const [loading, setLoading] = useState(true);
   const [selectedReview, setSelectedReview] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(null);
   const { isAdmin, token } = useAuth();
   const navigate = useNavigate();
   const pageSize = 6;
@@ -277,17 +280,74 @@ const Reviews = () => {
 
               {/* 이미지 캐러셀 */}
               {images.length > 0 && (
-                <div className="reviews__carousel">
+                <div
+                  className="reviews__carousel"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    isDragging.current = true;
+                    dragStartX.current = e.clientX;
+                    const onMove = (me) => {
+                      setDragOffset(me.clientX - dragStartX.current);
+                    };
+                    const onUp = (me) => {
+                      isDragging.current = false;
+                      const diff = dragStartX.current - me.clientX;
+                      dragStartX.current = null;
+                      setDragOffset(0);
+                      if (Math.abs(diff) > 50) {
+                        if (diff > 0) setCurrentImageIndex((i) => Math.min(i + 1, images.length - 1));
+                        else setCurrentImageIndex((i) => Math.max(i - 1, 0));
+                      }
+                      document.removeEventListener("mousemove", onMove);
+                      document.removeEventListener("mouseup", onUp);
+                    };
+                    document.addEventListener("mousemove", onMove);
+                    document.addEventListener("mouseup", onUp);
+                  }}
+                  onTouchStart={(e) => {
+                    isDragging.current = true;
+                    dragStartX.current = e.touches[0].clientX;
+                  }}
+                  onTouchMove={(e) => {
+                    if (!isDragging.current) return;
+                    setDragOffset(e.touches[0].clientX - dragStartX.current);
+                  }}
+                  onTouchEnd={(e) => {
+                    if (!isDragging.current) return;
+                    isDragging.current = false;
+                    const diff = dragStartX.current - e.changedTouches[0].clientX;
+                    dragStartX.current = null;
+                    setDragOffset(0);
+                    if (Math.abs(diff) > 50) {
+                      if (diff > 0) setCurrentImageIndex((i) => Math.min(i + 1, images.length - 1));
+                      else setCurrentImageIndex((i) => Math.max(i - 1, 0));
+                    }
+                  }}
+                >
+                  {/* 슬라이드 트랙 */}
+                  <div
+                    className="reviews__carousel-track"
+                    style={{
+                      transform: `translateX(calc(${-currentImageIndex * 100}% + ${dragOffset}px))`,
+                      transition: isDragging.current ? "none" : "transform 0.35s ease",
+                    }}
+                  >
+                    {images.map((src, idx) => (
+                      <img
+                        key={idx}
+                        src={src}
+                        alt={`${selectedReview.title} ${idx + 1}`}
+                        className="reviews__carousel-img"
+                        draggable={false}
+                      />
+                    ))}
+                  </div>
+
                   {images.length > 1 && (
                     <span className="reviews__carousel-counter">
                       {currentImageIndex + 1}/{images.length}
                     </span>
                   )}
-                  <img
-                    src={images[currentImageIndex]}
-                    alt={`${selectedReview.title} ${currentImageIndex + 1}`}
-                    className="reviews__carousel-img"
-                  />
                   {currentImageIndex > 0 && (
                     <button
                       className="reviews__carousel-btn reviews__carousel-btn--prev"
@@ -308,7 +368,6 @@ const Reviews = () => {
                       </svg>
                     </button>
                   )}
-                  {/* 인디케이터 점 */}
                   {images.length > 1 && (
                     <div className="reviews__carousel-dots">
                       {images.map((_, idx) => (

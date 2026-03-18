@@ -18,7 +18,10 @@
 .not-found__code {
   font-size: 120px;
   font-weight: 800;
-  color: #51c488;
+  background: linear-gradient(60deg, #51c488 30%, #78ffb5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   line-height: 1;
   margin: 0 0 24px 0;
   letter-spacing: -4px;
@@ -27,7 +30,10 @@
 .not-found__title {
   font-size: 28px;
   font-weight: 700;
-  color: #1f1f1f;
+  background: linear-gradient(60deg, #51c488 30%, #78ffb5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0 0 16px 0;
 }
 
@@ -46,7 +52,7 @@
   font-size: 15px;
   font-weight: 600;
   color: #ffffff;
-  background-color: #51c488;
+  background: linear-gradient(70deg, #51c488 50%, #78ffb5 100%);
   border-radius: 4px;
   text-decoration: none;
   transition: background-color 0.2s;

@@ -183,6 +183,12 @@
 }
 
 /* 이미지 첨부파일 */
+.qna-detail__file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .qna-detail__file-image-wrapper {
   display: flex;
   flex-direction: column;

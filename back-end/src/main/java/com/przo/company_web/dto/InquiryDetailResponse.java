@@ -4,6 +4,7 @@ import com.przo.company_web.entity.Inquiry;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 public class InquiryDetailResponse {
@@ -17,6 +18,7 @@ public class InquiryDetailResponse {
     private String content;
     private String attachment;
     private String attachmentName;
+    private List<String> attachmentList;
     private String status;
     private String adminNote;
     private String createdAt;
@@ -34,6 +36,9 @@ public class InquiryDetailResponse {
         this.content = inquiry.getContent();
         this.attachment = inquiry.getAttachment();
         this.attachmentName = extractFileName(inquiry.getAttachment());
+        this.attachmentList = inquiry.getAttachment() != null && !inquiry.getAttachment().isEmpty()
+            ? List.of(inquiry.getAttachment().split(","))
+            : List.of();
         this.status = inquiry.getStatus();
         this.adminNote = inquiry.getAdminNote();
         this.createdAt = inquiry.getCreatedAt() != null

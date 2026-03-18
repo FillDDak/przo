@@ -1,10 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import "./About.css";
 import greetingsBanner from "../assets/image/greetings_banner.webp";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
 
 const About = () => {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash === "#location") {
+      const el = document.getElementById("location");
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }
+  }, [hash]);
+
   return (
     <div className="about">
       {/* 배너 섹션 */}
@@ -61,7 +75,7 @@ const About = () => {
       </section>
 
       {/* 찾아오시는길 섹션 */}
-      <section className="about__location">
+      <section className="about__location" id="location">
         <div className="about__content">
           <div className="about__location-header">
             <div className="about__location-info">

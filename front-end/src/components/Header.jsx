@@ -31,11 +31,13 @@ const Header = ({ variant = "default" }) => {
   };
 
   const handleDropdownEnter = () => {
+    if (isMenuOpen) return;
     clearTimeout(dropdownTimerRef.current);
     setIsDesktopDropdownOpen(true);
   };
 
   const handleDropdownLeave = () => {
+    if (isMenuOpen) return;
     dropdownTimerRef.current = setTimeout(() => {
       setIsDesktopDropdownOpen(false);
     }, 300);

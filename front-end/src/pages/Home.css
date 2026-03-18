@@ -984,6 +984,7 @@
 }
 
 .home__section7-form-group textarea {
+  display: block;
   resize: none;
   min-height: 70px;
   background-color: #f8f8f8;
@@ -1875,6 +1876,10 @@
     transform: none;
   }
 
+  .home__section4-gallery-item--top::before {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 80%);
+  }
+
   .home__section4-gallery-title {
     font-size: 17px;
     margin-bottom: 4px;
@@ -1900,7 +1905,7 @@
 
   .home__section5-card.active {
     width: 380px;
-    height: 380px;
+    height: 430px;
   }
 
   .home__section5-card.active .home__section5-card-info {
@@ -1982,6 +1987,7 @@
 
   .home__section6-pest {
     height: 260px;
+    right: -40px;
   }
 
   .home__section--7 {
@@ -2979,6 +2985,14 @@
 @media (max-width: 320px) {
   .home__section--6 {
     display: none;
+  }
+}
+
+/* 섹션6 pest 이미지: 1025~1400px 구간에서 오른쪽 보정 */
+@media (min-width: 1025px) {
+  .home__section6-pest {
+    /* 1400px 이상에서는 right:0 유지, 좁아질수록 최대 60px 오른쪽으로 보정 */
+    right: clamp(-90px, calc(15vw - 240px), 0px);
   }
 }
 

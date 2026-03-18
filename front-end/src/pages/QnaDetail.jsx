@@ -299,24 +299,31 @@ const QnaDetail = () => {
             {/* 첨부파일 */}
             <div className="qna-detail__field qna-detail__field--full">
               <label className="qna-detail__label">첨부파일</label>
-              {inquiry.attachment ? (() => {
-                const fileName = inquiry.attachmentName || inquiry.attachment.split('/').pop();
-                const ext = fileName.split('.').pop().toLowerCase();
-                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
-                return isImage ? (
-                  <div className="qna-detail__file-image-wrapper">
-                    <img src={inquiry.attachment} alt={fileName} className="qna-detail__attachment-img" />
-                    <a href={inquiry.attachment} className="qna-detail__file-download" download>
-                      <img src={fileIcon} alt="다운로드" className="qna-detail__file-icon" />
-                      {fileName}
-                    </a>
-                  </div>
-                ) : (
-                  <div className="qna-detail__file">
-                    <a href={inquiry.attachment} className="qna-detail__file-link" download>
-                      <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
-                      {fileName}
-                    </a>
+              {inquiry.attachmentList && inquiry.attachmentList.length > 0 ? (() => {
+                const IMAGE_EXTS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+                const images = inquiry.attachmentList.filter(p => IMAGE_EXTS.includes(p.split('.').pop().toLowerCase()));
+                const files = inquiry.attachmentList.filter(p => !IMAGE_EXTS.includes(p.split('.').pop().toLowerCase()));
+                return (
+                  <div className="qna-detail__file-list">
+                    {images.map((path, i) => (
+                      <div key={i} className="qna-detail__file-image-wrapper">
+                        <img src={path} alt={path.split('/').pop()} className="qna-detail__attachment-img" />
+                      </div>
+                    ))}
+                    {images.map((path, i) => (
+                      <a key={`dl-img-${i}`} href={path} className="qna-detail__file-download" download>
+                        <img src={fileIcon} alt="다운로드" className="qna-detail__file-icon" />
+                        {path.split('/').pop()}
+                      </a>
+                    ))}
+                    {files.map((path, i) => (
+                      <div key={`file-${i}`} className="qna-detail__file">
+                        <a href={path} className="qna-detail__file-link" download>
+                          <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
+                          {path.split('/').pop()}
+                        </a>
+                      </div>
+                    ))}
                   </div>
                 );
               })() : (
