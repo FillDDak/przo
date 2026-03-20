@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import ConfirmModal from "../components/ConfirmModal";
 import "./QnaWrite.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
@@ -22,6 +23,7 @@ const QnaEdit = () => {
   });
   const [attachment, setAttachment] = useState(null);
   const [currentAttachment, setCurrentAttachment] = useState(null);
+  const [modal, setModal] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -43,13 +45,11 @@ const QnaEdit = () => {
           }));
           setCurrentAttachment(data.attachment);
         } else {
-          alert("문의를 불러올 수 없습니다.");
-          navigate("/qna");
+          setModal({ title: "문의를 불러올 수 없습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
         }
       } catch (error) {
         console.error("문의 불러오기 오류:", error);
-        alert("문의를 불러오는 중 오류가 발생했습니다.");
-        navigate("/qna");
+        setModal({ title: "문의를 불러오는 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
       } finally {
         setLoading(false);
       }
@@ -112,30 +112,13 @@ const QnaEdit = () => {
     e.preventDefault();
 
     // 유효성 검사
-    if (!formData.name.trim()) {
-      alert("이름을 입력해주세요.");
-      return;
-    }
-    if (!formData.phone.trim()) {
-      alert("전화번호를 입력해주세요.");
-      return;
-    }
-    if (!formData.email.trim()) {
-      alert("이메일을 입력해주세요.");
-      return;
-    }
-    if (!formData.password.trim()) {
-      alert("비밀번호를 입력해주세요.");
-      return;
-    }
-    if (!formData.title.trim()) {
-      alert("제목을 입력해주세요.");
-      return;
-    }
-    if (!formData.content.trim()) {
-      alert("문의 내용을 입력해주세요.");
-      return;
-    }
+    const alertMsg = (title) => setModal({ title, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    if (!formData.name.trim()) { alertMsg("이름을 입력해주세요."); return; }
+    if (!formData.phone.trim()) { alertMsg("전화번호를 입력해주세요."); return; }
+    if (!formData.email.trim()) { alertMsg("이메일을 입력해주세요."); return; }
+    if (!formData.password.trim()) { alertMsg("비밀번호를 입력해주세요."); return; }
+    if (!formData.title.trim()) { alertMsg("제목을 입력해주세요."); return; }
+    if (!formData.content.trim()) { alertMsg("문의 내용을 입력해주세요."); return; }
 
     try {
       setIsSubmitting(true);
@@ -158,16 +141,15 @@ const QnaEdit = () => {
       });
 
       if (response.ok) {
-        alert("문의가 성공적으로 수정되었습니다.");
-        navigate(`/qna/${id}`);
+        setModal({ title: "문의가 성공적으로 수정되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate(`/qna/${id}`); } }] });
       } else if (response.status === 401) {
-        alert("비밀번호가 일치하지 않습니다.");
+        setModal({ title: "비밀번호가 일치하지 않습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       } else {
-        alert("문의 수정에 실패했습니다. 다시 시도해주세요.");
+        setModal({ title: "문의 수정에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (error) {
       console.error("문의 수정 오류:", error);
-      alert("문의 수정 중 오류가 발생했습니다.");
+      setModal({ title: "문의 수정 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
@@ -184,6 +166,15 @@ const QnaEdit = () => {
   }
 
   return (
+    <>
+    {modal && (
+      <ConfirmModal
+        title={modal.title}
+        subtitle={modal.subtitle}
+        onClose={() => setModal(null)}
+        buttons={modal.buttons}
+      />
+    )}
     <div className="qna-write">
       {/* 배너 섹션 */}
       <section className="qna-write__banner">
@@ -339,6 +330,7 @@ const QnaEdit = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

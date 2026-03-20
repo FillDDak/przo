@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Workbook } from "@fortune-sheet/react";
 import "@fortune-sheet/react/dist/index.css";
-import * as XLSX from "xlsx";
 import { locale as fsLocale } from "@fortune-sheet/core";
 import { observeKoreanTitles } from "../utils/fortuneSheetKo";
+import ConfirmModal from "../components/ConfirmModal";
 import "./EstimateSheet.css";
 
 // fontarray[0]을 Arial로 교체 → 새 셀의 기본 폰트가 Arial이 됨
@@ -18,6 +18,120 @@ if (_enLocale?.fontarray) {
 const TTL = { bl: 1, ht: 0, vt: 0, bg: "#4472C4", fc: "#FFFFFF", fs: 15, ff: 0 };
 const SUB = { ht: 0, vt: 0, bg: "#BDD7EE", fc: "#1F1F1F", fs: 11, ff: 0 };
 const HDR = { bl: 1, ht: 0, vt: 0, bg: "#4472C4", fc: "#FFFFFF", fs: 12, ff: 0 };
+
+// ExcelJS Worksheet → Fortune Sheet 시트 객체로 변환
+function wsToFortuneSheet(ws, name, id, order) {
+  const celldata = [];
+  const merge = {};
+  const rowlen = {};
+  const columnlen = {};
+
+  const FONT_NAME_MAP = { Arial: 0, "Times New Roman": 1, Tahoma: 2, Verdana: 3, Georgia: 4, "Courier New": 5 };
+  const htMap = { center: 0, left: 1, right: 2, justify: 3 };
+  const vtMap = { middle: 0, top: 1, bottom: 2 };
+
+  const argbToHex = (argb) => {
+    if (!argb || argb.length < 6) return null;
+    const hex = argb.length === 8 ? argb.slice(2) : argb;
+    return "#" + hex.toUpperCase();
+  };
+
+  const parseAddr = (addr) => {
+    const m = addr.match(/^([A-Z]+)(\d+)$/);
+    if (!m) return null;
+    const c = m[1].split("").reduce((acc, ch) => acc * 26 + ch.charCodeAt(0) - 64, 0) - 1;
+    return { r: parseInt(m[2]) - 1, c };
+  };
+
+  // 병합 맵 구성
+  const slaveToMasterMap = {};
+  (ws.model?.merges || []).forEach((rangeStr) => {
+    const [s, e] = rangeStr.split(":");
+    const start = parseAddr(s);
+    const end = parseAddr(e);
+    if (!start || !end) return;
+    const { r, c } = start;
+    const rs = end.r - start.r + 1;
+    const cs = end.c - start.c + 1;
+    merge[`${r}_${c}`] = { r, c, rs, cs };
+    for (let ri = r; ri < r + rs; ri++) {
+      for (let ci = c; ci < c + cs; ci++) {
+        if (ri === r && ci === c) continue;
+        slaveToMasterMap[`${ri}_${ci}`] = { r, c };
+      }
+    }
+  });
+
+  // 행 높이 (pt → px)
+  ws.eachRow((row, rn) => {
+    if (row.height) rowlen[rn - 1] = Math.round(row.height / 0.75);
+  });
+
+  // 열 너비 (chars → px)
+  (ws.columns || []).forEach((col, ci) => {
+    if (col?.width) columnlen[ci] = Math.round(col.width * 7);
+  });
+
+  // 셀 값 + 스타일
+  ws.eachRow((row, rn) => {
+    row.eachCell({ includeEmpty: false }, (cell, cn) => {
+      const r = rn - 1, c = cn - 1;
+      const key = `${r}_${c}`;
+      const v = {};
+
+      let raw = cell.value;
+      if (raw !== null && raw !== undefined) {
+        if (typeof raw === "object" && raw?.result !== undefined) raw = raw.result;
+        if (raw instanceof Date) {
+          v.v = raw.toLocaleDateString("ko-KR");
+          v.m = v.v;
+          v.ct = { fa: "General", t: "s" };
+        } else if (typeof raw === "number") {
+          v.v = raw; v.m = String(raw); v.ct = { fa: "General", t: "n" };
+        } else {
+          v.v = String(raw); v.m = String(raw); v.ct = { fa: "General", t: "s" };
+        }
+      }
+
+      const f = cell.font || {};
+      if (f.bold) v.bl = 1;
+      if (f.italic) v.it = 1;
+      if (f.size) v.fs = f.size;
+      if (f.color?.argb) { const h = argbToHex(f.color.argb); if (h) v.fc = h; }
+      if (f.name) v.ff = FONT_NAME_MAP[f.name] ?? 0;
+
+      if (cell.fill?.type === "pattern" && cell.fill.fgColor?.argb) {
+        const h = argbToHex(cell.fill.fgColor.argb);
+        if (h) v.bg = h;
+      }
+
+      const al = cell.alignment || {};
+      if (al.horizontal != null) v.ht = htMap[al.horizontal] ?? 1;
+      if (al.vertical != null) v.vt = vtMap[al.vertical] ?? 0;
+
+      if (merge[key]) v.mc = merge[key];
+      else if (slaveToMasterMap[key]) v.mc = slaveToMasterMap[key];
+
+      if (Object.keys(v).length > 0) celldata.push({ r, c, v });
+    });
+  });
+
+  // Fortune Sheet는 slave 셀 항목도 필요
+  Object.entries(slaveToMasterMap).forEach(([key, master]) => {
+    const [r, c] = key.split("_").map(Number);
+    if (!celldata.find((cd) => cd.r === r && cd.c === c)) {
+      celldata.push({ r, c, v: { mc: master } });
+    }
+  });
+
+  return {
+    name, id, status: 0, order, hide: 0,
+    row: Math.max(60, (ws.rowCount || 0) + 10),
+    column: Math.max(15, (ws.columnCount || 0) + 5),
+    celldata,
+    config: { merge, rowlen, columnlen },
+  };
+}
 
 function buildSheet(name, id, order, active, title, subtitle, rows) {
   const celldata = [];
@@ -65,8 +179,8 @@ function buildSheet(name, id, order, active, title, subtitle, rows) {
     status: active ? 1 : 0,
     order,
     hide: 0,
-    row: 60,
-    column: 15,
+    row: 20,
+    column: 22,
     celldata,
     config: {
       merge,
@@ -98,13 +212,13 @@ function initialSheets() {
   return [
     buildSheet(
       "사업용", "biz", 0, true,
-      "PES-TOP 방역 서비스 가격표",
+      "PRZO 방역 서비스 가격표",
       "초기관리 2개월 (2개월 선결제) / 정기관리 10개월",
       BIZ_ROWS
     ),
     buildSheet(
       "가정용", "home", 1, false,
-      "PES-TOP 방역 서비스 가격표 (가정용)",
+      "PRZO 방역 서비스 가격표 (가정용)",
       "초기관리 2개월 (2개월 선결제) / 정기관리 10개월",
       HOME_ROWS
     ),
@@ -118,8 +232,21 @@ export default function EstimateSheet() {
   const sheetsRef = useRef(null);             // 저장용 live 상태 (re-render 없음)
   const decreaseHandlerRef = useRef(null);    // DOM injection 버튼용 핸들러 ref
   const workbookApiRef = useRef(null);        // Fortune Sheet 명령 API
+  const [modal, setModal] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [workbookKey, setWorkbookKey] = useState(0);
   const workbookRef = useRef(null);
+  // 저장된 상태의 스냅샷 (셀 값만 비교)
+  const savedSnapshotRef = useRef(null);
+  // true이면 다음 onChange에서 스냅샷을 새로 캡처 (로드·저장 직후)
+  const captureNextAsBaseline = useRef(true);
+  // onChange 타이밍 문제 보정용: 언제든 호출 가능한 dirty 재확인 함수
+  const recheckDirtyRef = useRef(null);
+  // 엑셀 불러오기
+  const fileInputRef = useRef(null);
+  const importSheetsRef = useRef([]);
+  const [importModal, setImportModal] = useState(null); // { names: string[], selected: Set<number> }
 
   const handleWheel = useCallback((e) => {
     const el = workbookRef.current;
@@ -215,10 +342,14 @@ export default function EstimateSheet() {
           const initial = hasContent ? parsed : initialSheets();
           setSheets(initial);
           sheetsRef.current = initial;
+          captureNextAsBaseline.current = true;
+          setIsDirty(false);
         } else {
           const initial = initialSheets();
           setSheets(initial);
           sheetsRef.current = initial;
+          captureNextAsBaseline.current = true;
+          setIsDirty(false);
         }
       })
       .catch((e) => {
@@ -226,18 +357,55 @@ export default function EstimateSheet() {
         const initial = initialSheets();
         setSheets(initial);
         sheetsRef.current = initial;
+        captureNextAsBaseline.current = true;
+        setIsDirty(false);
       });
   }, [loading, isAdmin]);
+
+  // Fortune Sheet data(2D배열)에서 셀 값만 추출해 JSON 문자열로 반환
+  const makeSnapshot = useCallback((sheets) =>
+    JSON.stringify(sheets.map((s) =>
+      (s.data || []).map((row) =>
+        (row || []).map((c) => (c != null ? (c.v ?? null) : null))
+      )
+    ))
+  , []);
 
   // onChange는 ref에만 저장 → setSheets 호출 없음 → Fortune Sheet re-render/스크롤 초기화 없음
   const handleChange = useCallback((newSheets) => {
     const prev = sheetsRef.current;
+    // data도 함께 보관 → mouseup 재확인 시 최신 값 접근 가능
     sheetsRef.current = newSheets.map((sheet, i) => {
       const prevSheet = prev?.[i];
       const actualRows = sheet.data?.length; // 실제 표시 행 수 (줄이기 버튼에서 사용)
       if (!prevSheet?.celldata?.length) return { ...sheet, _rows: actualRows };
-      return { ...sheet, celldata: prevSheet.celldata, _rows: actualRows };
+      return { ...sheet, celldata: prevSheet.celldata, data: sheet.data, _rows: actualRows };
     });
+
+    // 로드·저장 직후 첫 onChange → 현재 상태를 기준 스냅샷으로 캡처
+    if (captureNextAsBaseline.current) {
+      savedSnapshotRef.current = makeSnapshot(newSheets);
+      captureNextAsBaseline.current = false;
+      setIsDirty(false);
+      return;
+    }
+
+    // 현재 값과 저장된 스냅샷을 비교해 dirty 여부 결정
+    setIsDirty(makeSnapshot(newSheets) !== savedSnapshotRef.current);
+  }, [makeSnapshot]);
+
+  // onChange 타이밍 보정: mouseup 후 100ms 뒤 sheetsRef.data 기준으로 재확인
+  recheckDirtyRef.current = () => {
+    if (captureNextAsBaseline.current || !savedSnapshotRef.current) return;
+    setIsDirty(makeSnapshot(sheetsRef.current) !== savedSnapshotRef.current);
+  };
+
+  useEffect(() => {
+    const el = workbookRef.current;
+    if (!el) return;
+    const onMouseUp = () => setTimeout(() => recheckDirtyRef.current?.(), 100);
+    el.addEventListener("mouseup", onMouseUp);
+    return () => el.removeEventListener("mouseup", onMouseUp);
   }, []);
 
   const handleSave = async () => {
@@ -276,47 +444,166 @@ export default function EstimateSheet() {
       });
       const result = await res.json();
       if (result.success) {
-        alert("저장되었습니다.");
+        setModal({ title: "저장되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        captureNextAsBaseline.current = true;
+        setIsDirty(false);
       } else {
-        alert(result.message || "저장 실패");
+        setModal({ title: result.message || "저장 실패", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (e) {
       console.error("[EstimateSheet] 저장 중 예외:", e);
-      alert("저장 중 오류가 발생했습니다: " + e.message);
+      setModal({ title: "저장 중 오류가 발생했습니다.", subtitle: e.message, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDownload = () => {
-    const wb = XLSX.utils.book_new();
+  const addImportedSheets = (selectedIndices) => {
+    const current = sheetsRef.current || [];
+    const usedNames = new Set(current.map((s) => s.name));
+    const getUniqueName = (name) => {
+      let n = name, i = 1;
+      while (usedNames.has(n)) n = `${name} (${i++})`;
+      usedNames.add(n);
+      return n;
+    };
+    const startOrder = current.length;
+    const newSheets = selectedIndices.map((wi, idx) => {
+      const ws = importSheetsRef.current[wi];
+      return wsToFortuneSheet(ws, getUniqueName(ws.name), `imp_${Date.now()}_${idx}`, startOrder + idx);
+    });
+    const merged = [...current, ...newSheets];
+    setSheets(merged);
+    sheetsRef.current = merged;
+    setWorkbookKey((k) => k + 1);
+    setImportModal(null);
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const ExcelJS = (await import("exceljs")).default;
+      const wb = new ExcelJS.Workbook();
+      await wb.xlsx.load(await file.arrayBuffer());
+      importSheetsRef.current = wb.worksheets;
+      if (wb.worksheets.length === 1) {
+        addImportedSheets([0]);
+      } else {
+        setImportModal({ names: wb.worksheets.map((ws) => ws.name), selected: new Set(wb.worksheets.map((_, i) => i)) });
+      }
+    } catch (err) {
+      console.error("[Import] 파일 읽기 실패:", err);
+      setModal({ title: "엑셀 파일을 읽는 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    }
+  };
+
+  const handleDownload = async () => {
+    const ExcelJS = (await import("exceljs")).default;
+    const wb = new ExcelJS.Workbook();
+
+    const FONT_NAMES = ["Arial", "Times New Roman", "Tahoma", "Verdana", "Georgia", "Courier New"];
+    const toArgb = (hex) => hex ? "FF" + hex.replace("#", "").toUpperCase() : null;
+    const htMap = { 0: "center", 1: "left", 2: "right", 3: "justify" };
+    const vtMap = { 0: "middle", 1: "top", 2: "bottom" };
+
     (sheetsRef.current || []).forEach((sheet) => {
-      if (!sheet.celldata?.length) return;
-      const maxR = Math.max(...sheet.celldata.map((c) => c.r)) + 1;
-      const maxC = Math.max(...sheet.celldata.map((c) => c.c)) + 1;
-      const grid = Array.from({ length: maxR }, () => Array(maxC).fill(""));
-      sheet.celldata.forEach(({ r, c, v }) => {
+      // celldata(스타일 포함) + data(최신 편집값) 병합
+      const celldataMap = new Map(
+        (sheet.celldata || []).map((c) => [`${c.r}_${c.c}`, { ...c, v: { ...c.v } }])
+      );
+      if (sheet.data) {
+        sheet.data.forEach((row, r) => {
+          if (!row) return;
+          row.forEach((cell, c) => {
+            if (cell == null) return;
+            const key = `${r}_${c}`;
+            const existing = celldataMap.get(key);
+            if (existing) {
+              celldataMap.set(key, { ...existing, v: { ...existing.v, v: cell.v, m: cell.m } });
+            } else {
+              celldataMap.set(key, { r, c, v: cell });
+            }
+          });
+        });
+      }
+
+      const cells = Array.from(celldataMap.values());
+      if (!cells.length) return;
+
+      const ws = wb.addWorksheet(sheet.name);
+
+      // 행 높이 (px → pt)
+      if (sheet.config?.rowlen) {
+        Object.entries(sheet.config.rowlen).forEach(([ri, h]) => {
+          ws.getRow(Number(ri) + 1).height = Math.round(h * 0.75);
+        });
+      }
+
+      // 열 너비 (px → chars)
+      if (sheet.config?.columnlen) {
+        Object.entries(sheet.config.columnlen).forEach(([ci, w]) => {
+          ws.getColumn(Number(ci) + 1).width = Math.max(w / 7, 3);
+        });
+      }
+
+      // 셀 값 + 스타일
+      cells.forEach(({ r, c, v }) => {
         if (!v) return;
         const isMain = !v.mc || v.mc.rs !== undefined;
+        const cell = ws.getCell(r + 1, c + 1);
+
         if (isMain && v.v !== undefined && v.v !== null) {
-          grid[r][c] = v.m ?? String(v.v);
+          cell.value = v.m ?? v.v;
         }
+        if (v.bg) {
+          cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: toArgb(v.bg) } };
+        }
+        const font = {};
+        if (v.bl) font.bold = true;
+        if (v.it) font.italic = true;
+        if (v.fs) font.size = v.fs;
+        if (v.fc) font.color = { argb: toArgb(v.fc) };
+        if (v.ff != null) font.name = FONT_NAMES[v.ff] ?? "Arial";
+        if (Object.keys(font).length) cell.font = font;
+
+        const align = {};
+        if (v.ht != null) align.horizontal = htMap[v.ht];
+        if (v.vt != null) align.vertical = vtMap[v.vt];
+        if (Object.keys(align).length) cell.alignment = align;
       });
-      const ws = XLSX.utils.aoa_to_sheet(grid);
+
+      // 셀 병합
       if (sheet.config?.merge) {
-        ws["!merges"] = Object.values(sheet.config.merge).map((m) => ({
-          s: { r: m.r, c: m.c },
-          e: { r: m.r + m.rs - 1, c: m.c + m.cs - 1 },
-        }));
+        Object.values(sheet.config.merge).forEach((m) => {
+          ws.mergeCells(m.r + 1, m.c + 1, m.r + m.rs, m.c + m.cs);
+        });
       }
-      XLSX.utils.book_append_sheet(wb, ws, sheet.name);
     });
-    XLSX.writeFile(wb, "방역서비스_가격표.xlsx");
+
+    const buffer = await wb.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "방역서비스_가격표.xlsx";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   if (loading || sheets === null) return null;
 
   return (
+    <>
+    {modal && (
+      <ConfirmModal
+        title={modal.title}
+        subtitle={modal.subtitle}
+        onClose={() => setModal(null)}
+        buttons={modal.buttons}
+      />
+    )}
     <div className="estimate-sheet">
       <div className="estimate-sheet__header">
         <h1 className="estimate-sheet__title">가격 견적 시트</h1>
@@ -324,24 +611,73 @@ export default function EstimateSheet() {
           <button
             className="estimate-sheet__reset-btn"
             onClick={() => {
-              if (!window.confirm("시트를 초기값으로 되돌리겠습니까?")) return;
-              const initial = initialSheets();
-              setSheets(initial);
-              sheetsRef.current = initial;
+              setModal({
+                title: "시트를 초기값으로 되돌리겠습니까?",
+                buttons: [
+                  { label: "확인", variant: "confirm", onClick: () => {
+                    const initial = initialSheets();
+                    setSheets(initial);
+                    sheetsRef.current = initial;
+                    setWorkbookKey((k) => k + 1);
+                    setModal(null);
+                  }},
+                  { label: "취소", variant: "cancel", onClick: () => setModal(null) },
+                ],
+              });
             }}
           >
             초기화
           </button>
-          <button className="estimate-sheet__save-btn" onClick={handleSave} disabled={saving}>
+          <button className="estimate-sheet__save-btn" onClick={handleSave} disabled={saving || !isDirty}>
             {saving ? "저장 중..." : "저장"}
+          </button>
+          <button className="estimate-sheet__import-btn" onClick={() => fileInputRef.current?.click()}>
+            엑셀 불러오기
           </button>
           <button className="estimate-sheet__download-btn" onClick={handleDownload}>
             엑셀 다운로드
           </button>
         </div>
       </div>
+      <input ref={fileInputRef} type="file" accept=".xlsx" style={{ display: "none" }} onChange={handleFileChange} />
+      {importModal && (
+        <div className="estimate-sheet__import-overlay">
+          <div className="estimate-sheet__import-modal">
+            <h3 className="estimate-sheet__import-title">불러올 시트 선택</h3>
+            <ul className="estimate-sheet__import-list">
+              {importModal.names.map((name, i) => (
+                <li key={i}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={importModal.selected.has(i)}
+                      onChange={(e) => {
+                        const next = new Set(importModal.selected);
+                        e.target.checked ? next.add(i) : next.delete(i);
+                        setImportModal({ ...importModal, selected: next });
+                      }}
+                    />
+                    {name}
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <div className="estimate-sheet__import-actions">
+              <button className="estimate-sheet__import-cancel" onClick={() => setImportModal(null)}>취소</button>
+              <button
+                className="estimate-sheet__import-confirm"
+                onClick={() => addImportedSheets([...importModal.selected].sort((a, b) => a - b))}
+                disabled={importModal.selected.size === 0}
+              >
+                불러오기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="estimate-sheet__workbook" ref={workbookRef}>
         <Workbook
+          key={workbookKey}
           ref={workbookApiRef}
           data={sheets}
           onChange={handleChange}
@@ -352,5 +688,6 @@ export default function EstimateSheet() {
         />
       </div>
     </div>
+    </>
   );
 }

@@ -65,7 +65,7 @@
     margin-top: 60px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(90deg, #78FFB5 0%, #51C488 100%);
+    background: linear-gradient(70deg, #51C488 0%, #78FFB5 100%);
     color: #fff;
     font-size: 18px;
     font-weight: 700;
@@ -79,7 +79,7 @@
 }
 
 .admin-login__button:hover {
-    background: linear-gradient(90deg, #51C488 0%, #4A976F 100%);
+    background: linear-gradient(70deg, #4A976F 0%, #51C488 100%);
     color: #fff;
 }
 

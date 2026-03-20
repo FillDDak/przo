@@ -60,8 +60,9 @@
 }
 
 .estimate-sheet__save-btn:disabled {
-  background-color: #7a9fd4;
+  background-color: #2c4e8a;
   cursor: not-allowed;
+  filter: brightness(0.8);
 }
 
 .estimate-sheet__download-btn {
@@ -78,6 +79,115 @@
 
 .estimate-sheet__download-btn:hover {
   background-color: #3aad72;
+}
+
+.estimate-sheet__import-btn {
+  padding: 10px 24px;
+  background-color: #7b68ee;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.estimate-sheet__import-btn:hover {
+  background-color: #6254d4;
+}
+
+.estimate-sheet__import-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.estimate-sheet__import-modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 28px 32px;
+  min-width: 280px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.estimate-sheet__import-title {
+  margin: 0 0 18px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #222;
+}
+
+.estimate-sheet__import-list {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.estimate-sheet__import-list li label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #333;
+  cursor: pointer;
+}
+
+.estimate-sheet__import-list input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.estimate-sheet__import-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.estimate-sheet__import-cancel {
+  padding: 8px 20px;
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.estimate-sheet__import-cancel:hover {
+  background: #e0e0e0;
+}
+
+.estimate-sheet__import-confirm {
+  padding: 8px 20px;
+  background: #7b68ee;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.estimate-sheet__import-confirm:hover {
+  background: #6254d4;
+}
+
+.estimate-sheet__import-confirm:disabled {
+  background: #b0a8f0;
+  cursor: not-allowed;
 }
 
 .estimate-sheet__workbook {

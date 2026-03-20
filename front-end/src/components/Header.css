@@ -257,6 +257,7 @@
   }
 
   .header--menu-open {
+    position: fixed;
     background-color: #51c488;
   }
 
@@ -281,7 +282,7 @@
     background-color: #fff;
     flex-direction: column;
     gap: 0;
-    padding: 20px 0;
+    padding: 0;
     transition: right 0.3s ease;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1001;

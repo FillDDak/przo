@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo, useEffect, useCallback, Fragment } from "react";
+import ConfirmModal from "../components/ConfirmModal";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ReactQuill from "react-quill-new";
@@ -59,6 +60,7 @@ const ReviewWrite = () => {
   const [content, setContent] = useState(
     isEdit ? stripImagesFromHtml(editData?.content) : ""
   );
+  const [modal, setModal] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [thumbnailIdx, setThumbnailIdx] = useState(0);
@@ -157,7 +159,7 @@ const ReviewWrite = () => {
       if (!files.length) return;
       const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
       if (oversized) {
-        alert(`"${oversized.name}" 파일 용량은 10MB를 초과할 수 없습니다.`);
+        setModal({ title: `"${oversized.name}" 파일 용량은 10MB를 초과할 수 없습니다.`, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         return;
       }
       const queue = files.map((file) => ({
@@ -180,7 +182,7 @@ const ReviewWrite = () => {
       setUploadedImages((prev) => [...prev, url]);
       processCropQueue(cropQueue, cropQueueIndex + 1);
     } catch {
-      alert("이미지 처리에 실패했습니다.");
+      setModal({ title: "이미지 처리에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsCropUploading(false);
     }
@@ -195,7 +197,7 @@ const ReviewWrite = () => {
       setUploadedImages((prev) => [...prev, url]);
       processCropQueue(cropQueue, cropQueueIndex + 1);
     } catch {
-      alert("이미지 업로드에 실패했습니다.");
+      setModal({ title: "이미지 업로드에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsCropUploading(false);
     }
@@ -289,14 +291,9 @@ const ReviewWrite = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title.trim()) {
-      alert("제목을 입력해주세요.");
-      return;
-    }
-    if (title.length > 50) {
-      alert("제목은 50자 이내로 입력해주세요.");
-      return;
-    }
+    const alertMsg = (t) => setModal({ title: t, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    if (!title.trim()) { alertMsg("제목을 입력해주세요."); return; }
+    if (title.length > 50) { alertMsg("제목은 50자 이내로 입력해주세요."); return; }
 
     try {
       setIsSubmitting(true);
@@ -343,13 +340,12 @@ const ReviewWrite = () => {
       const data = await response.json();
 
       if (data.success) {
-        alert(isEdit ? "수정되었습니다." : "등록되었습니다.");
-        navigate("/reviews");
+        setModal({ title: isEdit ? "수정되었습니다." : "등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/reviews"); } }] });
       } else {
-        alert(data.message || "처리에 실패했습니다.");
+        setModal({ title: data.message || "처리에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch {
-      alert("오류가 발생했습니다.");
+      setModal({ title: "오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
@@ -359,6 +355,14 @@ const ReviewWrite = () => {
 
   return (
     <>
+      {modal && (
+        <ConfirmModal
+          title={modal.title}
+          subtitle={modal.subtitle}
+          onClose={() => setModal(null)}
+          buttons={modal.buttons}
+        />
+      )}
       {/* 크롭 모달 */}
       {showCropModal && currentCropItem && (
         <div className="crop-modal__overlay">
@@ -465,7 +469,7 @@ const ReviewWrite = () => {
                       value={createdDate}
                       max="9999-12-31"
                       onChange={(e) => setCreatedDate(e.target.value)}
-                      onClick={() => { try { dateInputRef.current?.showPicker(); } catch (_) {} }}
+                      onClick={() => { try { dateInputRef.current?.showPicker(); } catch { /* ignore */ } }}
                       className="review-write__date-hidden"
                     />
                     <div

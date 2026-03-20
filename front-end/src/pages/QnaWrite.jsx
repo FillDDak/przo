@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate, useBlocker } from "react-router-dom";
 import "./QnaWrite.css";
+import ConfirmModal from "../components/ConfirmModal";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
-import closeIcon from "../assets/other-page-icon-image/close-icon.svg";
 
 const API_BASE_URL = "/api";
 
@@ -20,6 +20,7 @@ const QnaWrite = () => {
   const [attachments, setAttachments] = useState([]);
   const [fileError, setFileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [modal, setModal] = useState(null);
   const submittedRef = useRef(false);
 
   const isDirty =
@@ -104,13 +105,14 @@ const QnaWrite = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim()) { alert("이름을 입력해주세요."); return; }
-    if (!formData.phone.trim()) { alert("전화번호를 입력해주세요."); return; }
+    const alertMsg = (title) => setModal({ title, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    if (!formData.name.trim()) { alertMsg("이름을 입력해주세요."); return; }
+    if (!formData.phone.trim()) { alertMsg("전화번호를 입력해주세요."); return; }
     const phoneDigits = formData.phone.replace(/\D/g, "");
-    if (phoneDigits.length < 4) { alert("올바른 전화번호를 입력해주세요."); return; }
-    if (!formData.email.trim()) { alert("이메일을 입력해주세요."); return; }
-    if (!formData.title.trim()) { alert("제목을 입력해주세요."); return; }
-    if (!formData.content.trim()) { alert("문의 내용을 입력해주세요."); return; }
+    if (phoneDigits.length < 4) { alertMsg("올바른 전화번호를 입력해주세요."); return; }
+    if (!formData.email.trim()) { alertMsg("이메일을 입력해주세요."); return; }
+    if (!formData.title.trim()) { alertMsg("제목을 입력해주세요."); return; }
+    if (!formData.content.trim()) { alertMsg("문의 내용을 입력해주세요."); return; }
 
     try {
       setIsSubmitting(true);
@@ -137,11 +139,11 @@ const QnaWrite = () => {
         setAttachments([]);
         navigate(`/qna/${data.inquiryId}`, { state: { autoVerified: true, autoPassword } });
       } else {
-        alert("문의 등록에 실패했습니다. 다시 시도해주세요.");
+        setModal({ title: "문의 등록에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (error) {
       console.error("문의 등록 오류:", error);
-      alert("문의 등록 중 오류가 발생했습니다.");
+      setModal({ title: "문의 등록 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
@@ -149,35 +151,24 @@ const QnaWrite = () => {
 
   return (
     <>
+    {modal && (
+      <ConfirmModal
+        title={modal.title}
+        subtitle={modal.subtitle}
+        onClose={() => setModal(null)}
+        buttons={modal.buttons}
+      />
+    )}
     {blocker.state === "blocked" && (
-      <div className="qna-write__modal-overlay" onClick={() => blocker.reset()}>
-        <div className="qna-write__modal" onClick={(e) => e.stopPropagation()}>
-          <button className="qna-write__modal-close" onClick={() => blocker.reset()}>
-            <img src={closeIcon} alt="닫기" width="16" height="16" />
-          </button>
-          <div className="qna-write__modal-header">
-            <div className="qna-write__modal-icon">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="#51c488" strokeWidth="2"/>
-                <line x1="12" y1="8" x2="12" y2="12" stroke="#51c488" strokeWidth="2" strokeLinecap="round"/>
-                <circle cx="12" cy="16" r="1" fill="#51c488"/>
-              </svg>
-            </div>
-            <div className="qna-write__modal-text">
-              <h2 className="qna-write__modal-title">변경되지 않은 내용이 있습니다.</h2>
-              <p className="qna-write__modal-subtitle">변경사항을 잃어버릴 수 있습니다.</p>
-            </div>
-          </div>
-          <div className="qna-write__modal-buttons">
-            <button className="qna-write__modal-btn qna-write__modal-btn--cancel" onClick={() => blocker.proceed()}>
-              나가기
-            </button>
-            <button className="qna-write__modal-btn qna-write__modal-btn--save" onClick={() => blocker.reset()}>
-              계속 작성하기
-            </button>
-          </div>
-        </div>
-      </div>
+      <ConfirmModal
+        title="변경되지 않은 내용이 있습니다."
+        subtitle="변경사항을 잃어버릴 수 있습니다."
+        onClose={() => blocker.reset()}
+        buttons={[
+          { label: "나가기", variant: "cancel", onClick: () => blocker.proceed() },
+          { label: "계속 작성하기", variant: "confirm", onClick: () => blocker.reset() },
+        ]}
+      />
     )}
     <div className="qna-write">
       <section className="qna-write__banner">

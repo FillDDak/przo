@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ConfirmModal from "../components/ConfirmModal";
 import "./Home.css";
 const home_banner = "/home_banner.webp";
 
@@ -59,6 +60,7 @@ const truncateFileName = (name, maxLength = 35) => {
 
 const Home = () => {
   const navigate = useNavigate();
+  const [modal, setModal] = useState(null);
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [pestIndex, setPestIndex] = useState(0);
   const [isMosaic, setIsMosaic] = useState(true);
@@ -234,30 +236,13 @@ const Home = () => {
     e.preventDefault();
 
     // 유효성 검사
-    if (!formData.name.trim()) {
-      alert("이름을 입력해주세요.");
-      return;
-    }
-    if (!formData.phone.trim()) {
-      alert("전화번호를 입력해주세요.");
-      return;
-    }
-    if (!formData.email.trim()) {
-      alert("이메일을 입력해주세요.");
-      return;
-    }
-    if (!formData.password.trim()) {
-      alert("비밀번호를 입력해주세요.");
-      return;
-    }
-    if (!formData.title.trim()) {
-      alert("제목을 입력해주세요.");
-      return;
-    }
-    if (!formData.content.trim()) {
-      alert("문의 내용을 입력해주세요.");
-      return;
-    }
+    const alertMsg = (title) => setModal({ title, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    if (!formData.name.trim()) { alertMsg("이름을 입력해주세요."); return; }
+    if (!formData.phone.trim()) { alertMsg("전화번호를 입력해주세요."); return; }
+    if (!formData.email.trim()) { alertMsg("이메일을 입력해주세요."); return; }
+    if (!formData.password.trim()) { alertMsg("비밀번호를 입력해주세요."); return; }
+    if (!formData.title.trim()) { alertMsg("제목을 입력해주세요."); return; }
+    if (!formData.content.trim()) { alertMsg("문의 내용을 입력해주세요."); return; }
 
     try {
       setIsSubmitting(true);
@@ -280,25 +265,15 @@ const Home = () => {
       });
 
       if (response.ok) {
-        alert("문의가 성공적으로 등록되었습니다.");
-        // 폼 초기화
-        setFormData({
-          name: "",
-          companyName: "",
-          phone: "",
-          email: "",
-          password: "",
-          title: "",
-          content: "",
-        });
+        setFormData({ name: "", companyName: "", phone: "", email: "", password: "", title: "", content: "" });
         setAttachment(null);
-        navigate("/qna");
+        setModal({ title: "문의가 성공적으로 등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
       } else {
-        alert("문의 등록에 실패했습니다. 다시 시도해주세요.");
+        setModal({ title: "문의 등록에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (error) {
       console.error("문의 등록 오류:", error);
-      alert("문의 등록 중 오류가 발생했습니다.");
+      setModal({ title: "문의 등록 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
@@ -591,6 +566,15 @@ const Home = () => {
   ];
 
   return (
+    <>
+    {modal && (
+      <ConfirmModal
+        title={modal.title}
+        subtitle={modal.subtitle}
+        onClose={() => setModal(null)}
+        buttons={modal.buttons}
+      />
+    )}
     <div className="home">
       <section
         className="home__section home__section--1"
@@ -1052,6 +1036,7 @@ const Home = () => {
         </div>
       )} */}
     </div>
+    </>
   );
 };
 

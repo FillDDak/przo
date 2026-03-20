@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import ConfirmModal from "../components/ConfirmModal";
 import "./QnaDetail.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
@@ -20,6 +21,7 @@ const QnaDetail = () => {
   const [error, setError] = useState("");
   const [replyMode, setReplyMode] = useState(false);
   const [adminNote, setAdminNote] = useState("");
+  const [modal, setModal] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePasswordSubmit = async (e) => {
@@ -96,7 +98,7 @@ const QnaDetail = () => {
   // 답변 등록
   const handleReplySubmit = async () => {
     if (!adminNote.trim()) {
-      alert("답변 내용을 입력해주세요.");
+      setModal({ title: "답변 내용을 입력해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       return;
     }
 
@@ -114,46 +116,44 @@ const QnaDetail = () => {
       const data = await response.json();
 
       if (data.success) {
-        alert("답변이 등록되었습니다.");
-        setReplyMode(false);
-        fetchInquiry();
+        setModal({ title: "답변이 등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); setReplyMode(false); fetchInquiry(); } }] });
       } else {
-        alert(data.message || "답변 등록에 실패했습니다.");
+        setModal({ title: data.message || "답변 등록에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (error) {
       console.error("답변 등록 오류:", error);
-      alert("답변 등록 중 오류가 발생했습니다.");
+      setModal({ title: "답변 등록 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // 문의 삭제
-  const handleDelete = async () => {
-    if (!window.confirm("정말로 이 문의를 삭제하시겠습니까?")) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/inquiries/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert("문의가 삭제되었습니다.");
-        navigate("/qna");
-      } else {
-        alert(data.message || "삭제에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("삭제 오류:", error);
-      alert("삭제 중 오류가 발생했습니다.");
-    }
+  const handleDelete = () => {
+    setModal({
+      title: "정말로 이 문의를 삭제하시겠습니까?",
+      buttons: [
+        { label: "삭제", variant: "confirm", onClick: async () => {
+          setModal(null);
+          try {
+            const response = await fetch(`${API_BASE_URL}/inquiries/${id}`, {
+              method: "DELETE",
+              headers: { "Authorization": `Bearer ${token}` },
+            });
+            const data = await response.json();
+            if (data.success) {
+              navigate("/qna");
+            } else {
+              setModal({ title: data.message || "삭제에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+            }
+          } catch (error) {
+            console.error("삭제 오류:", error);
+            setModal({ title: "삭제 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+          }
+        }},
+        { label: "취소", variant: "cancel", onClick: () => setModal(null) },
+      ],
+    });
   };
 
   if (loading) {
@@ -231,6 +231,15 @@ const QnaDetail = () => {
   }
 
   return (
+    <>
+    {modal && (
+      <ConfirmModal
+        title={modal.title}
+        subtitle={modal.subtitle}
+        onClose={() => setModal(null)}
+        buttons={modal.buttons}
+      />
+    )}
     <div className="qna-detail">
       {/* 배너 섹션 */}
       <section className="qna-detail__banner">
@@ -401,6 +410,7 @@ const QnaDetail = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 
