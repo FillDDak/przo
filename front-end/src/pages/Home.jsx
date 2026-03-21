@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../components/ConfirmModal";
+import { getErrorMessage } from "../utils/errorMessage";
 import "./Home.css";
 const home_banner = "/home_banner.webp";
 
@@ -50,6 +51,7 @@ import arrowIcon from "../assets/section7-icon/section7-icon-arrow.svg";
 
 const API_BASE_URL = "http://localhost:8080/api";
 
+/*
 const truncateFileName = (name, maxLength = 35) => {
   if (!name || name.length <= maxLength) return name;
   const ext = name.lastIndexOf('.') !== -1 ? name.slice(name.lastIndexOf('.')) : '';
@@ -57,6 +59,7 @@ const truncateFileName = (name, maxLength = 35) => {
   const truncLength = maxLength - ext.length - 3;
   return truncLength > 0 ? nameOnly.slice(0, truncLength) + '...' + ext : name.slice(0, maxLength - 3) + '...';
 };
+*/
 
 const Home = () => {
   const navigate = useNavigate();
@@ -171,16 +174,45 @@ const Home = () => {
     companyName: "",
     phone: "",
     email: "",
-    password: "",
     title: "",
     content: "",
   });
-  const [attachment, setAttachment] = useState(null);
+  const [attachments, setAttachments] = useState([]);
+  const [fileError, setFileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", email: "", title: "", content: "" });
+  const nameRef = useRef(null);
+  const phoneRef = useRef(null);
+  const emailRef = useRef(null);
+  const titleRef = useRef(null);
+  const contentRef = useRef(null);
+
+  const MAX_FILES = 5;
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setAttachment(file);
+    const files = Array.from(e.target.files);
+    const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
+    if (oversized) {
+      setFileError(`"${oversized.name}" 파일 용량은 10MB를 초과할 수 없습니다.`);
+      e.target.value = "";
+      return;
+    }
+    setAttachments((prev) => {
+      const existing = prev.map((f) => f.name);
+      const newFiles = files.filter((f) => !existing.includes(f.name));
+      const merged = [...prev, ...newFiles];
+      if (merged.length > MAX_FILES) {
+        setFileError(`파일은 최대 ${MAX_FILES}개까지 첨부할 수 있습니다.`);
+        return prev;
+      }
+      setFileError("");
+      return merged;
+    });
+    e.target.value = "";
+  };
+
+  const removeAttachment = (index) => {
+    setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
   // 전화번호 포맷팅 함수 (10자리, 11자리 지원)
@@ -218,31 +250,34 @@ const Home = () => {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === 'phone') {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: formatPhoneNumber(value),
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "phone" ? formatPhoneNumber(value) : value,
+    }));
+    if (fieldErrors[name]) setFieldErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    // 유효성 검사
-    const alertMsg = (title) => setModal({ title, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
-    if (!formData.name.trim()) { alertMsg("이름을 입력해주세요."); return; }
-    if (!formData.phone.trim()) { alertMsg("전화번호를 입력해주세요."); return; }
-    if (!formData.email.trim()) { alertMsg("이메일을 입력해주세요."); return; }
-    if (!formData.password.trim()) { alertMsg("비밀번호를 입력해주세요."); return; }
-    if (!formData.title.trim()) { alertMsg("제목을 입력해주세요."); return; }
-    if (!formData.content.trim()) { alertMsg("문의 내용을 입력해주세요."); return; }
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "이름을 입력해주세요.";
+    if (!formData.phone.trim()) errors.phone = "전화번호를 입력해주세요.";
+    if (!formData.email.trim()) errors.email = "이메일을 입력해주세요.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = "올바른 이메일 형식을 입력해주세요.";
+    if (!formData.title.trim()) errors.title = "제목을 입력해주세요.";
+    if (!formData.content.trim()) errors.content = "문의 내용을 입력해주세요.";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      const firstKey = ["name", "phone", "email", "title", "content"].find((k) => errors[k]);
+      const refMap = { name: nameRef, phone: phoneRef, email: emailRef, title: titleRef, content: contentRef };
+      const firstRef = refMap[firstKey];
+      if (firstRef?.current) {
+        firstRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstRef.current.focus({ preventScroll: true });
+      }
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -252,12 +287,10 @@ const Home = () => {
       submitData.append("companyName", formData.companyName);
       submitData.append("phone", formData.phone);
       submitData.append("email", formData.email);
-      submitData.append("password", formData.password);
+      submitData.append("password", formData.phone.replace(/\D/g, "").slice(-4));
       submitData.append("title", formData.title);
       submitData.append("content", formData.content);
-      if (attachment) {
-        submitData.append("attachment", attachment);
-      }
+      attachments.forEach((file) => submitData.append("attachments", file));
 
       const response = await fetch(`${API_BASE_URL}/inquiries`, {
         method: "POST",
@@ -265,15 +298,15 @@ const Home = () => {
       });
 
       if (response.ok) {
-        setFormData({ name: "", companyName: "", phone: "", email: "", password: "", title: "", content: "" });
-        setAttachment(null);
+        setFormData({ name: "", companyName: "", phone: "", email: "", title: "", content: "" });
+        setAttachments([]);
         setModal({ title: "문의가 성공적으로 등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
       } else {
         setModal({ title: "문의 등록에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (error) {
       console.error("문의 등록 오류:", error);
-      setModal({ title: "문의 등록 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      setModal({ title: "문의 등록 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
@@ -879,51 +912,68 @@ const Home = () => {
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">
                     <label>이름</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="홍길동" maxLength={20} />
-                    <span className="home__char-count">{formData.name.length}/20</span>
+                    <input type="text" name="name" value={formData.name} onChange={handleFormChange} ref={nameRef} placeholder="홍길동" maxLength={20} className={fieldErrors.name ? "home__input--error" : undefined} />
+                    <div className="home__field-bottom">
+                      {fieldErrors.name && <p className="home__field-error">{fieldErrors.name}</p>}
+                      <span className="home__char-count">{formData.name.length}/20</span>
+                    </div>
                   </div>
                   <div className="home__section7-form-group">
-                    <label>업체명/주소</label>
+                    <label>업체명/주소 (선택)</label>
                     <input type="text" name="companyName" value={formData.companyName} onChange={handleFormChange} placeholder="프르조" maxLength={100} />
                   </div>
                 </div>
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">
                     <label>전화번호</label>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} placeholder="010-1234-5678" maxLength={13} />
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} ref={phoneRef} placeholder="010-1234-5678" maxLength={13} className={fieldErrors.phone ? "home__input--error" : undefined} />
+                    {fieldErrors.phone && <p className="home__field-error">{fieldErrors.phone}</p>}
                   </div>
                   <div className="home__section7-form-group">
                     <label>이메일</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="przo@naver.com" maxLength={100} />
+                    <input type="text" name="email" value={formData.email} onChange={handleFormChange} ref={emailRef} placeholder="przo@naver.com" maxLength={100} className={fieldErrors.email ? "home__input--error" : undefined} />
+                    {fieldErrors.email && <p className="home__field-error">{fieldErrors.email}</p>}
                   </div>
                 </div>
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">
                     <label>제목</label>
-                    <input type="text" name="title" value={formData.title} onChange={handleFormChange} placeholder="30평 가정집 견적 문의 드립니다." maxLength={100} />
-                    <span className="home__char-count">{formData.title.length}/100</span>
-                  </div>
-                  <div className="home__section7-form-group">
-                    <label>비밀번호</label>
-                    <input type="password" name="password" value={formData.password} onChange={handleFormChange} placeholder="비밀번호" />
+                    <input type="text" name="title" value={formData.title} onChange={handleFormChange} ref={titleRef} placeholder="30평 가정집 견적 문의 드립니다." maxLength={100} className={fieldErrors.title ? "home__input--error" : undefined} />
+                    <div className="home__field-bottom">
+                      {fieldErrors.title && <p className="home__field-error">{fieldErrors.title}</p>}
+                      <span className="home__char-count">{formData.title.length}/100</span>
+                    </div>
                   </div>
                 </div>
                 <div className="home__section7-form-group home__section7-form-group--full">
                   <label>문의 내용</label>
-                  <textarea name="content" value={formData.content} onChange={handleFormChange} placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?" rows="5" maxLength={2000}></textarea>
-                  <span className="home__char-count">{formData.content.length}/2000</span>
+                  <textarea name="content" value={formData.content} onChange={handleFormChange} ref={contentRef} placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?" rows="5" maxLength={2000} className={fieldErrors.content ? "home__input--error" : undefined}></textarea>
+                  <div className="home__field-bottom">
+                    {fieldErrors.content && <p className="home__field-error">{fieldErrors.content}</p>}
+                    <span className="home__char-count">{formData.content.length}/2000</span>
+                  </div>
                 </div>
                 <div className="home__section7-form-group home__section7-form-group--full">
                   <label>첨부파일</label>
                   <div className="home__section7-file-input">
-                    <input type="file" id="contactFile" onChange={handleFileChange} />
+                    <input type="file" id="contactFile" multiple onChange={handleFileChange} />
                     <label htmlFor="contactFile" className="home__section7-file-label">
-                      <img src={fileIcon} alt="첨부파일" />
-                      <span className="home__section7-file-name">
-                        {attachment ? truncateFileName(attachment.name) : "파일을 선택해주세요"}
-                      </span>
+                      <img src={fileIcon} alt="첨부파일" className="home__section7-file-label-icon" />
+                      <span className="home__section7-file-name">파일 선택 (최대 5개, 파일당 최대 10MB)</span>
                     </label>
                   </div>
+                  {attachments.length > 0 && (
+                    <ul className="home__section7-file-list">
+                      {attachments.map((file, i) => (
+                        <li key={i} className="home__section7-file-item">
+                          <img src={fileIcon} alt="" className="home__section7-file-icon" />
+                          <span className="home__section7-file-name--selected">{file.name}</span>
+                          <button type="button" className="home__section7-file-remove" onClick={() => removeAttachment(i)}>×</button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {fileError && <p className="home__field-error">{fileError}</p>}
                 </div>
                 <button type="submit" className="home__section7-submit" disabled={isSubmitting}>
                   <span className="home__section7-submit-icon">
@@ -979,7 +1029,7 @@ const Home = () => {
                       <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="홍길동" />
                     </div>
                     <div className="home__modal-form-group">
-                      <label>업체명/주소</label>
+                      <label>업체명/주소 (선택)</label>
                       <input type="text" name="companyName" value={formData.companyName} onChange={handleFormChange} placeholder="프르조" />
                     </div>
                   </div>
@@ -990,7 +1040,7 @@ const Home = () => {
                     </div>
                     <div className="home__modal-form-group">
                       <label>이메일</label>
-                      <input type="email" name="email" value={formData.email} onChange={handleFormChange} placeholder="przo@naver.com" />
+                      <input type="text" name="email" value={formData.email} onChange={handleFormChange} placeholder="przo@naver.com" />
                     </div>
                   </div>
                   <div className="home__modal-form-group home__modal-form-group--full">

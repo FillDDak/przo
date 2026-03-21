@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import ConfirmModal from "../components/ConfirmModal";
+import { getErrorMessage } from "../utils/errorMessage";
 import "./Qna.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import messageIcon from "../assets/other-page-icon-image/message-icon.svg";
@@ -13,6 +15,7 @@ const Qna = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const pageSize = 10;
@@ -30,6 +33,7 @@ const Qna = () => {
         setTotalElements(data.totalElements);
       } catch (error) {
         console.error("문의 목록을 불러오는데 실패했습니다:", error);
+        setModal({ title: "문의 목록을 불러오지 못했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       } finally {
         setLoading(false);
       }
@@ -74,6 +78,15 @@ const Qna = () => {
   };
 
   return (
+    <>
+    {modal && (
+      <ConfirmModal
+        title={modal.title}
+        subtitle={modal.subtitle}
+        onClose={() => setModal(null)}
+        buttons={modal.buttons}
+      />
+    )}
     <div className="qna">
       {/* 배너 섹션 */}
       <section className="qna__banner">
@@ -210,6 +223,7 @@ const Qna = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

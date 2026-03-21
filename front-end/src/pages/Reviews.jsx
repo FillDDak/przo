@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Reviews.css";
 import ConfirmModal from "../components/ConfirmModal";
+import { getErrorMessage } from "../utils/errorMessage";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import writeIcon from "../assets/other-page-icon-image/review-write-icon.svg";
 import deleteIcon from "../assets/other-page-icon-image/review-delete-icon.svg";
@@ -39,6 +40,7 @@ const Reviews = () => {
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error("시공 사진을 불러오는데 실패했습니다:", error);
+      setModal({ title: "시공 사진 목록을 불러오지 못했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setLoading(false);
     }

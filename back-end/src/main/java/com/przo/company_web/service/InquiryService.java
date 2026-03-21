@@ -70,6 +70,7 @@ public class InquiryService {
                     inquiry.setCompanyName(request.getCompanyName());
                     inquiry.setPhone(request.getPhone());
                     inquiry.setEmail(request.getEmail());
+                    inquiry.setPassword(request.getPassword());
                     inquiry.setTitle(request.getTitle());
                     inquiry.setContent(request.getContent());
                     if (attachmentPath != null) {

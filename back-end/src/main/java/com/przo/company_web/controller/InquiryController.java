@@ -131,6 +131,7 @@ public class InquiryController {
             @RequestParam String phone,
             @RequestParam String email,
             @RequestParam String password,
+            @RequestParam(required = false) String newPassword,
             @RequestParam String title,
             @RequestParam String content,
             @RequestParam(required = false) List<MultipartFile> attachments) {
@@ -154,7 +155,7 @@ public class InquiryController {
             request.setCompanyName(companyName);
             request.setPhone(phone);
             request.setEmail(email);
-            request.setPassword(password);
+            request.setPassword(newPassword != null && !newPassword.isEmpty() ? newPassword : password);
             request.setTitle(title);
             request.setContent(content);
 

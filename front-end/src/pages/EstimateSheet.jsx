@@ -5,6 +5,7 @@ import { Workbook } from "@fortune-sheet/react";
 import "@fortune-sheet/react/dist/index.css";
 import { locale as fsLocale } from "@fortune-sheet/core";
 import { observeKoreanTitles } from "../utils/fortuneSheetKo";
+import { getErrorMessage } from "../utils/errorMessage";
 import ConfirmModal from "../components/ConfirmModal";
 import "./EstimateSheet.css";
 
@@ -359,6 +360,7 @@ export default function EstimateSheet() {
         sheetsRef.current = initial;
         captureNextAsBaseline.current = true;
         setIsDirty(false);
+        setModal({ title: "저장된 데이터를 불러오지 못했습니다. 초기값으로 표시합니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       });
   }, [loading, isAdmin]);
 
@@ -452,7 +454,7 @@ export default function EstimateSheet() {
       }
     } catch (e) {
       console.error("[EstimateSheet] 저장 중 예외:", e);
-      setModal({ title: "저장 중 오류가 발생했습니다.", subtitle: e.message, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      setModal({ title: "저장 중 오류가 발생했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setSaving(false);
     }
@@ -495,7 +497,7 @@ export default function EstimateSheet() {
       }
     } catch (err) {
       console.error("[Import] 파일 읽기 실패:", err);
-      setModal({ title: "엑셀 파일을 읽는 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      setModal({ title: "엑셀 파일을 읽는 중 오류가 발생했습니다.", subtitle: getErrorMessage(err), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     }
   };
 

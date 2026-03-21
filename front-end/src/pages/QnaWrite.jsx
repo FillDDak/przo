@@ -1,14 +1,20 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Link, useNavigate, useBlocker } from "react-router-dom";
+import { Link, useNavigate, useParams, useLocation, useBlocker } from "react-router-dom";
 import "./QnaWrite.css";
 import ConfirmModal from "../components/ConfirmModal";
+import { getErrorMessage } from "../utils/errorMessage";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
 
 const API_BASE_URL = "/api";
 
 const QnaWrite = () => {
+  const { id } = useParams();
+  const isEdit = !!id;
   const navigate = useNavigate();
+  const location = useLocation();
+  const passedPassword = location.state?.password || "";
+
   const [formData, setFormData] = useState({
     name: "",
     companyName: "",
@@ -18,10 +24,18 @@ const QnaWrite = () => {
     content: "",
   });
   const [attachments, setAttachments] = useState([]);
+  const [currentAttachments, setCurrentAttachments] = useState([]);
   const [fileError, setFileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(isEdit);
   const [modal, setModal] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", email: "", title: "", content: "" });
   const submittedRef = useRef(false);
+  const nameRef = useRef(null);
+  const phoneRef = useRef(null);
+  const emailRef = useRef(null);
+  const titleRef = useRef(null);
+  const contentRef = useRef(null);
 
   const isDirty =
     formData.name.trim() !== "" ||
@@ -53,6 +67,40 @@ const QnaWrite = () => {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [isDirty]);
 
+  // 수정 모드: 기존 데이터 불러오기
+  useEffect(() => {
+    if (!isEdit) return;
+    const fetchInquiry = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/inquiries/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setFormData({
+            name: data.name || "",
+            companyName: data.companyName || "",
+            phone: data.phone || "",
+            email: data.email || "",
+            title: data.title || "",
+            content: data.content || "",
+          });
+          if (data.attachments?.length) {
+            setCurrentAttachments(data.attachments);
+          } else if (data.attachment) {
+            setCurrentAttachments([data.attachment]);
+          }
+        } else {
+          setModal({ title: "문의를 불러올 수 없습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
+        }
+      } catch (error) {
+        console.error("문의 불러오기 오류:", error);
+        setModal({ title: "문의를 불러오는 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInquiry();
+  }, [id, isEdit, navigate]);
+
   const formatPhoneNumber = (value) => {
     const numbers = value.replace(/[^\d]/g, '');
     if (numbers.startsWith('02')) {
@@ -73,6 +121,7 @@ const QnaWrite = () => {
       ...prev,
       [name]: name === "phone" ? formatPhoneNumber(value) : value,
     }));
+    if (fieldErrors[name]) setFieldErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const MAX_FILES = 5;
@@ -105,49 +154,89 @@ const QnaWrite = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const alertMsg = (title) => setModal({ title, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
-    if (!formData.name.trim()) { alertMsg("이름을 입력해주세요."); return; }
-    if (!formData.phone.trim()) { alertMsg("전화번호를 입력해주세요."); return; }
+
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "이름을 입력해주세요.";
     const phoneDigits = formData.phone.replace(/\D/g, "");
-    if (phoneDigits.length < 4) { alertMsg("올바른 전화번호를 입력해주세요."); return; }
-    if (!formData.email.trim()) { alertMsg("이메일을 입력해주세요."); return; }
-    if (!formData.title.trim()) { alertMsg("제목을 입력해주세요."); return; }
-    if (!formData.content.trim()) { alertMsg("문의 내용을 입력해주세요."); return; }
+    if (!formData.phone.trim()) errors.phone = "전화번호를 입력해주세요.";
+    else if (!isEdit && phoneDigits.length < 4) errors.phone = "올바른 전화번호를 입력해주세요.";
+    if (!formData.email.trim()) errors.email = "이메일을 입력해주세요.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = "올바른 이메일 형식을 입력해주세요.";
+    if (!formData.title.trim()) errors.title = "제목을 입력해주세요.";
+    if (!formData.content.trim()) errors.content = "문의 내용을 입력해주세요.";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      const firstKey = ["name", "phone", "email", "title", "content"].find((k) => errors[k]);
+      const refMap = { name: nameRef, phone: phoneRef, email: emailRef, title: titleRef, content: contentRef };
+      const firstRef = refMap[firstKey];
+      if (firstRef?.current) {
+        firstRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstRef.current.focus({ preventScroll: true });
+      }
+      return;
+    }
 
     try {
       setIsSubmitting(true);
-      const autoPassword = formData.phone.replace(/\D/g, "").slice(-4);
       const submitData = new FormData();
       submitData.append("name", formData.name);
       submitData.append("companyName", formData.companyName);
       submitData.append("phone", formData.phone);
       submitData.append("email", formData.email);
-      submitData.append("password", autoPassword);
       submitData.append("title", formData.title);
       submitData.append("content", formData.content);
       attachments.forEach((file) => submitData.append("attachments", file));
 
-      const response = await fetch(`${API_BASE_URL}/inquiries`, {
-        method: "POST",
-        body: submitData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        submittedRef.current = true;
-        setFormData({ name: "", companyName: "", phone: "", email: "", title: "", content: "" });
-        setAttachments([]);
-        navigate(`/qna/${data.inquiryId}`, { state: { autoVerified: true, autoPassword } });
+      if (isEdit) {
+        submitData.append("password", passedPassword);
+        const newPassword = phoneDigits.slice(-4);
+        submitData.append("newPassword", newPassword);
+        const response = await fetch(`${API_BASE_URL}/inquiries/${id}/update`, {
+          method: "POST",
+          body: submitData,
+        });
+        if (response.ok) {
+          submittedRef.current = true;
+          setModal({ title: "문의가 성공적으로 수정되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate(`/qna/${id}`, { state: { password: phoneDigits.slice(-4) } }); } }] });
+        } else if (response.status === 401) {
+          setModal({ title: "인증이 만료되었습니다.", subtitle: "문의 목록에서 다시 접근해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
+        } else {
+          setModal({ title: "문의 수정에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        }
       } else {
-        setModal({ title: "문의 등록에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        const autoPassword = phoneDigits.slice(-4);
+        submitData.append("password", autoPassword);
+        const response = await fetch(`${API_BASE_URL}/inquiries`, {
+          method: "POST",
+          body: submitData,
+        });
+        if (response.ok) {
+          const data = await response.json();
+          submittedRef.current = true;
+          setFormData({ name: "", companyName: "", phone: "", email: "", title: "", content: "" });
+          setAttachments([]);
+          navigate(`/qna/${data.inquiryId}`, { state: { autoVerified: true, autoPassword } });
+        } else {
+          setModal({ title: "문의 등록에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        }
       }
     } catch (error) {
-      console.error("문의 등록 오류:", error);
-      setModal({ title: "문의 등록 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      console.error(isEdit ? "문의 수정 오류:" : "문의 등록 오류:", error);
+      setModal({ title: isEdit ? "문의 수정 중 오류가 발생했습니다." : "문의 등록 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="qna-write">
+        <div className="qna-write__content" style={{ textAlign: "center", padding: "100px 0" }}>
+          로딩 중...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -185,18 +274,22 @@ const QnaWrite = () => {
 
       <section className="qna-write__main">
         <div className="qna-write__content">
-          <h1 className="qna-write__title">상담 문의</h1>
+          <h1 className="qna-write__title">{isEdit ? "상담 수정" : "상담 문의"}</h1>
 
           <form className="qna-write__form" onSubmit={handleSubmit}>
             <div className="qna-write__row">
               <div className="qna-write__field">
                 <label className="qna-write__label">이름</label>
                 <input type="text" name="name" value={formData.name} onChange={handleChange}
-                  className="qna-write__input" placeholder="홍길동" maxLength={20} />
-                <span className="qna-write__char-count">{formData.name.length}/20</span>
+                  ref={nameRef} className={`qna-write__input${fieldErrors.name ? " qna-write__input--error" : ""}`}
+                  placeholder="홍길동" maxLength={20} />
+                <div className="qna-write__field-bottom">
+                  {fieldErrors.name && <p className="qna-write__field-error">{fieldErrors.name}</p>}
+                  <span className="qna-write__char-count">{formData.name.length}/20</span>
+                </div>
               </div>
               <div className="qna-write__field">
-                <label className="qna-write__label">업체명/주소</label>
+                <label className="qna-write__label">업체명/주소 (선택)</label>
                 <input type="text" name="companyName" value={formData.companyName} onChange={handleChange}
                   className="qna-write__input" placeholder="프르조" maxLength={100} />
               </div>
@@ -206,34 +299,60 @@ const QnaWrite = () => {
               <div className="qna-write__field">
                 <label className="qna-write__label">전화번호</label>
                 <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
-                  className="qna-write__input" placeholder="010-1234-5678" maxLength={13} />
-                <p className="qna-write__hint">전화번호 뒷자리 4자리가 게시글 비밀번호로 자동 설정됩니다.</p>
+                  ref={phoneRef} className={`qna-write__input${fieldErrors.phone ? " qna-write__input--error" : ""}`}
+                  placeholder="010-1234-5678" maxLength={13} />
+                <p className="qna-write__hint">
+                  {isEdit
+                    ? `전화번호 뒷자리 4자리가 게시글 비밀번호로 자동 설정됩니다.${formData.phone.replace(/\D/g, "").length >= 4 ? ` (현재: ${formData.phone.replace(/\D/g, "").slice(-4)})` : ""}`
+                    : "전화번호 뒷자리 4자리가 게시글 비밀번호로 자동 설정됩니다."}
+                </p>
+                {fieldErrors.phone && <p className="qna-write__field-error">{fieldErrors.phone}</p>}
               </div>
               <div className="qna-write__field">
                 <label className="qna-write__label">이메일</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange}
-                  className="qna-write__input" placeholder="przo@naver.com" maxLength={100} />
+                <input type="text" name="email" value={formData.email} onChange={handleChange}
+                  ref={emailRef} className={`qna-write__input${fieldErrors.email ? " qna-write__input--error" : ""}`}
+                  placeholder="przo@naver.com" maxLength={100} />
+                {fieldErrors.email && <p className="qna-write__field-error">{fieldErrors.email}</p>}
               </div>
             </div>
 
             <div className="qna-write__field qna-write__field--full">
               <label className="qna-write__label">제목</label>
               <input type="text" name="title" value={formData.title} onChange={handleChange}
-                className="qna-write__input" placeholder="30평 가정집 견적 문의 드립니다." maxLength={100} />
-              <span className="qna-write__char-count">{formData.title.length}/100</span>
+                ref={titleRef} className={`qna-write__input${fieldErrors.title ? " qna-write__input--error" : ""}`}
+                placeholder="30평 가정집 견적 문의 드립니다." maxLength={100} />
+              <div className="qna-write__field-bottom">
+                {fieldErrors.title && <p className="qna-write__field-error">{fieldErrors.title}</p>}
+                <span className="qna-write__char-count">{formData.title.length}/100</span>
+              </div>
             </div>
 
             <div className="qna-write__field qna-write__field--full">
               <label className="qna-write__label">문의 내용</label>
               <textarea name="content" value={formData.content} onChange={handleChange}
-                className="qna-write__textarea" placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?"
+                ref={contentRef} className={`qna-write__textarea${fieldErrors.content ? " qna-write__textarea--error" : ""}`}
+                placeholder="해충방제 정기 관리를 신청하면 매월 얼마의 비용이 드나요?"
                 rows={6} maxLength={2000} />
-              <span className="qna-write__char-count">{formData.content.length}/2000</span>
+              <div className="qna-write__field-bottom">
+                {fieldErrors.content && <p className="qna-write__field-error">{fieldErrors.content}</p>}
+                <span className="qna-write__char-count">{formData.content.length}/2000</span>
+              </div>
             </div>
 
             {/* 첨부파일 */}
             <div className="qna-write__field qna-write__field--full">
               <label className="qna-write__label">첨부파일</label>
+              {isEdit && currentAttachments.length > 0 && attachments.length === 0 && (
+                <ul className="qna-write__file-list">
+                  {currentAttachments.map((url, i) => (
+                    <li key={i} className="qna-write__file-item">
+                      <img src={fileIcon} alt="" className="qna-write__file-icon" />
+                      <span className="qna-write__file-name--selected">{url.split('/').pop()}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <div className="qna-write__file-wrapper">
                 <input type="file" id="attachment" multiple onChange={handleFileChange}
                   className="qna-write__file-input" />
@@ -258,8 +377,14 @@ const QnaWrite = () => {
             </div>
 
             <div className="qna-write__button-wrapper">
+              {isEdit && (
+                <button type="button" onClick={() => navigate(`/qna/${id}`)}
+                  className="qna-write__submit-btn" style={{ marginRight: "12px" }}>
+                  취소
+                </button>
+              )}
               <button type="submit" className="qna-write__submit-btn" disabled={isSubmitting}>
-                {isSubmitting ? "등록 중..." : "작성하기"}
+                {isSubmitting ? (isEdit ? "수정 중..." : "등록 중...") : (isEdit ? "수정하기" : "작성하기")}
               </button>
             </div>
           </form>

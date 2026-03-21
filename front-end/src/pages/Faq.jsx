@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import ConfirmModal from "../components/ConfirmModal";
+import { getErrorMessage } from "../utils/errorMessage";
 import "./Faq.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import { useAuth } from "../context/AuthContext";
@@ -17,6 +19,9 @@ const Faq = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [reorderMode, setReorderMode] = useState(false);
 
+  const [errorModal, setErrorModal] = useState(null);
+  const showError = (title, subtitle) => setErrorModal({ title, subtitle, buttons: [{ label: "확인", variant: "confirm", onClick: () => setErrorModal(null) }] });
+
   const dragGlobalIndex = useRef(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
@@ -27,6 +32,7 @@ const Faq = () => {
       setFaqs(data);
     } catch (e) {
       console.error(e);
+      showError("FAQ 목록을 불러오지 못했습니다.", getErrorMessage(e));
     }
   };
 
@@ -107,6 +113,7 @@ const Faq = () => {
       });
     } catch (e) {
       console.error(e);
+      showError("순서 변경에 실패했습니다.", getErrorMessage(e));
       fetchFaqs();
     }
   };
@@ -134,6 +141,7 @@ const Faq = () => {
       });
     } catch (e) {
       console.error(e);
+      showError("순서 변경에 실패했습니다.", getErrorMessage(e));
       fetchFaqs();
     }
   };
@@ -171,9 +179,12 @@ const Faq = () => {
       if (data.success) {
         closeModal();
         fetchFaqs();
+      } else {
+        showError(isEdit ? "FAQ 수정에 실패했습니다." : "FAQ 추가에 실패했습니다.");
       }
     } catch (e) {
       console.error(e);
+      showError(isEdit ? "FAQ 수정 중 오류가 발생했습니다." : "FAQ 추가 중 오류가 발생했습니다.", getErrorMessage(e));
     }
   };
 
@@ -188,13 +199,24 @@ const Faq = () => {
       if (data.success) {
         setDeleteTarget(null);
         fetchFaqs();
+      } else {
+        showError("FAQ 삭제에 실패했습니다.");
       }
     } catch (e) {
       console.error(e);
+      showError("FAQ 삭제 중 오류가 발생했습니다.", getErrorMessage(e));
     }
   };
 
   return (
+    <>
+    {errorModal && (
+      <ConfirmModal
+        title={errorModal.title}
+        onClose={() => setErrorModal(null)}
+        buttons={errorModal.buttons}
+      />
+    )}
     <div className="faq">
       {/* 배너 섹션 */}
       <section className="faq__banner">
@@ -425,6 +447,7 @@ const Faq = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

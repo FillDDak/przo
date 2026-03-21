@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, useEffect, useCallback, Fragment } from "react";
 import ConfirmModal from "../components/ConfirmModal";
+import { getErrorMessage } from "../utils/errorMessage";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ReactQuill from "react-quill-new";
@@ -39,6 +40,7 @@ const ReviewWrite = () => {
 
   const dateInputRef = useRef(null);
   const quillRef = useRef(null);
+  const titleRef = useRef(null);
   const tokenRef = useRef(token);
   tokenRef.current = token;
 
@@ -62,6 +64,9 @@ const ReviewWrite = () => {
   );
   const [modal, setModal] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [titleError, setTitleError] = useState("");
+  const [imageError, setImageError] = useState("");
+  const imagesRef = useRef(null);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [thumbnailIdx, setThumbnailIdx] = useState(0);
   const [dragIdx, setDragIdx] = useState(null);
@@ -180,9 +185,10 @@ const ReviewWrite = () => {
       const blob = await getCroppedImg(currentItem.objectUrl, croppedAreaPixels);
       const url = await uploadImageBlob(blob, currentItem.file.name);
       setUploadedImages((prev) => [...prev, url]);
+      setImageError("");
       processCropQueue(cropQueue, cropQueueIndex + 1);
-    } catch {
-      setModal({ title: "이미지 처리에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    } catch (e) {
+      setModal({ title: "이미지 처리에 실패했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsCropUploading(false);
     }
@@ -195,9 +201,10 @@ const ReviewWrite = () => {
       const currentItem = cropQueue[cropQueueIndex];
       const url = await uploadImageBlob(currentItem.file, currentItem.file.name);
       setUploadedImages((prev) => [...prev, url]);
+      setImageError("");
       processCropQueue(cropQueue, cropQueueIndex + 1);
-    } catch {
-      setModal({ title: "이미지 업로드에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    } catch (e) {
+      setModal({ title: "이미지 업로드에 실패했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsCropUploading(false);
     }
@@ -291,9 +298,24 @@ const ReviewWrite = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const alertMsg = (t) => setModal({ title: t, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
-    if (!title.trim()) { alertMsg("제목을 입력해주세요."); return; }
-    if (title.length > 50) { alertMsg("제목은 50자 이내로 입력해주세요."); return; }
+    const errMsg = !title.trim() ? "제목을 입력해주세요." : title.length > 50 ? "제목은 50자 이내로 입력해주세요." : "";
+    if (errMsg) {
+      setTitleError(errMsg);
+      if (titleRef.current) {
+        titleRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        titleRef.current.focus({ preventScroll: true });
+      }
+      return;
+    }
+
+    if (uploadedImages.length === 0) {
+      setImageError("사진을 최소 1장 이상 추가해주세요.");
+      if (imagesRef.current) {
+        imagesRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+    setImageError("");
 
     try {
       setIsSubmitting(true);
@@ -344,8 +366,8 @@ const ReviewWrite = () => {
       } else {
         setModal({ title: data.message || "처리에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
-    } catch {
-      setModal({ title: "오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    } catch (e) {
+      setModal({ title: isEdit ? "수정 중 오류가 발생했습니다." : "등록 중 오류가 발생했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
@@ -451,14 +473,17 @@ const ReviewWrite = () => {
                   <input
                     type="text"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="review-write__input"
+                    onChange={(e) => { setTitle(e.target.value); if (titleError) setTitleError(""); }}
+                    onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
+                    ref={titleRef}
+                    className={`review-write__input${titleError ? " review-write__input--error" : ""}`}
                     placeholder="제목을 입력해주세요."
                     maxLength={50}
                   />
-                  <span className="review-write__char-count">
-                    {title.length}/50
-                  </span>
+                  <div className="review-write__field-bottom">
+                    {titleError && <p className="review-write__field-error">{titleError}</p>}
+                    <span className="review-write__char-count">{title.length}/50</span>
+                  </div>
                 </div>
                 <div className="review-write__field review-write__field--date">
                   <label className="review-write__label">날짜</label>
@@ -525,7 +550,7 @@ const ReviewWrite = () => {
               </div>
 
               {/* 사진 관리 */}
-              <div className="review-write__field">
+              <div className="review-write__field" ref={imagesRef}>
                 <div className="review-write__images-header">
                   <label className="review-write__label">
                     사진 {uploadedImages.length > 0 && `(${uploadedImages.length})`}
@@ -560,7 +585,7 @@ const ReviewWrite = () => {
                         onDrop={() => handleDrop()}
                         onDragEnd={handleDragEnd}
                         onClick={() => setThumbnailIdx(idx)}
-                        title="클릭하여 대표 사진 선택 / 드래그하여 순서 변경"
+                        title="클릭하여 대표 이미지 선택 / 드래그하여 순서 변경"
                       >
                         <img
                           src={url}
@@ -593,7 +618,7 @@ const ReviewWrite = () => {
                           &times;
                         </button>
                         {idx === thumbnailIdx && (
-                          <span className="review-write__image-badge">대표</span>
+                          <span className="review-write__image-badge">대표 이미지</span>
                         )}
                       </div>
                       </Fragment>
@@ -618,6 +643,7 @@ const ReviewWrite = () => {
                     <span>사진을 추가해주세요.</span>
                   </div>
                 )}
+                {imageError && <p className="review-write__field-error">{imageError}</p>}
               </div>
 
               {/* 버튼 */}

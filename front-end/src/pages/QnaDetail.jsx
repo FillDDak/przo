@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ConfirmModal from "../components/ConfirmModal";
+import { getErrorMessage } from "../utils/errorMessage";
 import "./QnaDetail.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
@@ -27,6 +28,10 @@ const QnaDetail = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (!password.trim()) {
+      setError("비밀번호를 입력해주세요.");
+      return;
+    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/inquiries/${id}/verify`, {
@@ -63,6 +68,7 @@ const QnaDetail = () => {
       }
     } catch (error) {
       console.error("문의를 불러오는데 실패했습니다:", error);
+      setModal({ title: "문의 내용을 불러오지 못했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setLoading(false);
     }
@@ -89,7 +95,14 @@ const QnaDetail = () => {
             setLoading(false);
           }
         })
-        .catch(() => setLoading(false));
+        .catch((error) => {
+          setLoading(false);
+          setModal({
+            title: "비밀번호 자동 확인에 실패했습니다.",
+            subtitle: getErrorMessage(error),
+            buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }],
+          });
+        });
     } else {
       setLoading(false);
     }
@@ -122,7 +135,7 @@ const QnaDetail = () => {
       }
     } catch (error) {
       console.error("답변 등록 오류:", error);
-      setModal({ title: "답변 등록 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      setModal({ title: "답변 등록 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setIsSubmitting(false);
     }
@@ -148,7 +161,7 @@ const QnaDetail = () => {
             }
           } catch (error) {
             console.error("삭제 오류:", error);
-            setModal({ title: "삭제 중 오류가 발생했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+            setModal({ title: "삭제 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
           }
         }},
         { label: "취소", variant: "cancel", onClick: () => setModal(null) },

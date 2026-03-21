@@ -169,10 +169,26 @@
   color: #e53935;
 }
 
-.qna-write__file-error {
+.qna-write__file-error,
+.qna-write__field-error {
   margin-top: 6px;
   font-size: 12px;
   color: #e53935;
+}
+
+.qna-write__input--error,
+.qna-write__textarea--error {
+  border-color: #e53935 !important;
+}
+
+.qna-write__field-bottom {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.qna-write__field-bottom .qna-write__field-error {
+  margin-top: 0;
 }
 
 .qna-write__char-count {
@@ -181,6 +197,12 @@
   font-size: 12px;
   color: #bcbcbc;
   margin-top: 4px;
+}
+
+.qna-write__field-bottom .qna-write__char-count {
+  margin-top: 0;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .qna-write__char-count--warn {
