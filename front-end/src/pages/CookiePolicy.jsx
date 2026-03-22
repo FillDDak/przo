@@ -20,7 +20,7 @@ const CookiePolicy = () => {
           <h1 className="policy__title">쿠키 정책</h1>
 
           <div className="policy__body">
-            <p className="policy__updated">시행일: 2025년 1월 1일</p>
+            <p className="policy__updated">시행일: 2026년 3월 18일</p>
 
             <div className="policy__section">
               <h2 className="policy__section-title">쿠키란?</h2>
@@ -33,27 +33,9 @@ const CookiePolicy = () => {
             <div className="policy__section">
               <h2 className="policy__section-title">사이트의 저장 데이터</h2>
               <p className="policy__text">
-                프르조 사이트는 외부 추적 쿠키나 광고 쿠키를 사용하지 않습니다.
-                사이트 운영에 필요한 최소한의 데이터만을 브라우저에 저장합니다.
+                프르조 사이트는 일반 이용자의 브라우저에 쿠키 또는 로컬 스토리지 데이터를 저장하지 않습니다.
+                외부 추적 쿠키, 광고 쿠키 또한 사용하지 않습니다.
               </p>
-              <table className="policy__table">
-                <thead>
-                  <tr>
-                    <th>저장 항목</th>
-                    <th>저장 방식</th>
-                    <th>목적</th>
-                    <th>보관 기간</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>adminToken</td>
-                    <td>localStorage</td>
-                    <td>관리자 로그인 인증 유지</td>
-                    <td>로그아웃 시 즉시 삭제</td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
 
             <div className="policy__section">

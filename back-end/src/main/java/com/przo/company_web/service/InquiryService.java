@@ -92,6 +92,17 @@ public class InquiryService {
     }
 
     @Transactional
+    public Optional<Inquiry> clearAdminReply(Long id) {
+        return inquiryRepository.findById(id)
+                .map(inquiry -> {
+                    inquiry.setAdminNote(null);
+                    inquiry.setStatus("pending");
+                    inquiry.setRespondedAt(null);
+                    return inquiryRepository.save(inquiry);
+                });
+    }
+
+    @Transactional
     public boolean deleteInquiry(Long id) {
         if (inquiryRepository.existsById(id)) {
             inquiryRepository.deleteById(id);

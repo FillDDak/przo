@@ -213,6 +213,37 @@ public class InquiryController {
                 });
     }
 
+    // 관리자 전용: 답변 초기화
+    @DeleteMapping("/{id}/reply")
+    public ResponseEntity<Map<String, Object>> clearAdminReply(
+            @PathVariable Long id,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        String token = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+        if (!adminService.validateToken(token)) {
+            response.put("success", false);
+            response.put("message", "관리자 권한이 필요합니다.");
+            return ResponseEntity.status(403).body(response);
+        }
+
+        return inquiryService.clearAdminReply(id)
+                .map(inquiry -> {
+                    response.put("success", true);
+                    response.put("message", "답변이 초기화되었습니다.");
+                    return ResponseEntity.ok(response);
+                })
+                .orElseGet(() -> {
+                    response.put("success", false);
+                    response.put("message", "문의를 찾을 수 없습니다.");
+                    return ResponseEntity.notFound().build();
+                });
+    }
+
     // 관리자 전용: 문의 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteInquiry(

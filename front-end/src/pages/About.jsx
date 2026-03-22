@@ -1,12 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "./About.css";
 import greetingsBanner from "../assets/image/greetings_banner.webp";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
 
+
 const About = () => {
   const { state } = useLocation();
+  const mapRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -19,6 +21,54 @@ const About = () => {
       }
     }
   }, [state]);
+
+  useEffect(() => {
+    const renderMap = (coords) => {
+      if (!mapRef.current) return;
+      const map = new window.naver.maps.Map(mapRef.current, {
+        center: coords,
+        zoom: 17,
+      });
+      const marker = new window.naver.maps.Marker({ position: coords, map });
+      const infoWindow = new window.naver.maps.InfoWindow({
+        content: `
+          <div style="padding:12px 14px;min-width:140px;max-width:220px;word-break:keep-all;word-wrap:break-word;">
+            <strong style="font-size:14px;">프르조</strong>
+            <p style="margin:4px 0 0;font-size:12px;color:#555;line-height:1.5;">인천 계양구 마장로544번길 10, 판매시설동 2층 B1동 207호</p>
+          </div>
+        `,
+        borderWidth: 1,
+        anchorSkew: true,
+      });
+      infoWindow.open(map, marker);
+      window.naver.maps.Event.addListener(marker, "click", () => {
+        if (infoWindow.getMap()) infoWindow.close();
+        else infoWindow.open(map, marker);
+      });
+    };
+
+    const initMap = () => {
+      if (!mapRef.current || !window.naver?.maps) return;
+      renderMap(new window.naver.maps.LatLng(37.526595, 126.706445));
+    };
+
+    if (window.naver?.maps) {
+      initMap();
+      return;
+    }
+
+    const scriptId = "naver-map-script";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${import.meta.env.VITE_NAVER_MAP_CLIENT_ID}`;
+      script.async = true;
+      script.onload = initMap;
+      document.head.appendChild(script);
+    } else {
+      document.getElementById(scriptId).addEventListener("load", initMap);
+    }
+  }, []);
 
   return (
     <div className="about">
@@ -84,7 +134,7 @@ const About = () => {
               <p className="about__location-address">인천 계양구 마장로544번길 10, 제일풍경채 계양위너스카이 A1블럭 B1동 207호</p>
             </div>
             <a
-              href="https://map.naver.com/v5/search/인천 계양구 마장로544번길 10, 제일풍경채 계양위너스카이 A1블럭 B1동 207호"
+              href={`https://map.naver.com/p/search/${encodeURIComponent("프르조")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="about__location-link"
@@ -92,14 +142,7 @@ const About = () => {
               네이버지도 바로가기 &gt;
             </a>
           </div>
-          <iframe
-            src="https://map.naver.com/p/search/인천%20계양구%20마장로544번길%2010,%20제일풍경채%20계양위너스카이%20A1블럭%20B1동%20207호"
-            className="about__map"
-            style={{ border: 0 }}
-            allowFullScreen=""
-            loading="lazy"
-            title="프르조 위치"
-          ></iframe>
+          <div ref={mapRef} className="about__map" />
         </div>
       </section>
     </div>

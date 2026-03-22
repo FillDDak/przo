@@ -4,10 +4,12 @@ import "./Header.css";
 import logoWhite from "../assets/logo/przo-logo-white.webp";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
 import logoGreenGradation from "../assets/logo/przo-logo-green-gradation.webp";
+import { useAuth } from "../context/AuthContext";
 
 const Header = ({ variant = "default" }) => {
   const location = useLocation();
   const isAdmin = variant === "admin";
+  const { isAdmin: isAdminLoggedIn, adminName } = useAuth();
   const subPagePrefixes = ["/about", "/service", "/qna", "/reviews", "/faq", "/terms", "/cookie-policy", "/privacy-policy"];
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
   const navigate = useNavigate();
@@ -46,11 +48,16 @@ const Header = ({ variant = "default" }) => {
   return (
     <header className={`header ${isAdmin ? "header--admin" : ""} ${isSubPage ? "header--subpage" : ""} ${isMenuOpen && !isSubPage && !isAdmin ? "header--menu-open" : ""}`}>
       <div className="header__container">
-        <Link to="/" className="header__logo" onClick={() => {
-          window.scrollTo(0, 0);
-        }}>
-          <img src={isAdmin ? logoGreenGradation : isSubPage ? logoGreen : logoWhite} alt="PRZO" />
-        </Link>
+        <div className="header__logo-wrap">
+          <Link to="/" className="header__logo" onClick={() => {
+            window.scrollTo(0, 0);
+          }}>
+            <img src={isAdmin ? logoGreenGradation : isSubPage ? logoGreen : logoWhite} alt="PRZO" />
+          </Link>
+          {isAdminLoggedIn && (
+            <Link to="/admin" className="header__admin-badge"><strong>{adminName} 님</strong></Link>
+          )}
+        </div>
 
         <button className="header__menu-btn" onClick={toggleMenu} aria-label="메뉴">
           <span className={`header__menu-icon ${isMenuOpen ? 'header__menu-icon--open' : ''}`}>

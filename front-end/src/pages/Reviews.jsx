@@ -51,6 +51,10 @@ const Reviews = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  useEffect(() => {
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
   // 캐러셀 터치 이동 시 수직 스크롤 방지 (passive: false 필요)
   useEffect(() => {
     const el = carouselRef.current;
@@ -114,10 +118,12 @@ const Reviews = () => {
   const openModal = (review) => {
     setSelectedReview(review);
     setCurrentImageIndex(0);
+    document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     setSelectedReview(null);
+    document.body.style.overflow = "";
   };
 
   const handleOverlayClick = (e) => {
@@ -141,10 +147,10 @@ const Reviews = () => {
       if (data.success) {
         fetchReviews();
       } else {
-        setModal({ title: data.message, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({ title: data.message || "삭제에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
-    } catch {
-      setModal({ title: "삭제에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+    } catch (error) {
+      setModal({ title: "삭제에 실패했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
     } finally {
       setDeleteTargetId(null);
     }
@@ -176,6 +182,135 @@ const Reviews = () => {
         ]}
       />
     )}
+    {/* 모달 - .reviews 밖에 렌더링하여 position:fixed containment 문제 방지 */}
+    {selectedReview && (() => {
+      const images = getReviewImages(selectedReview);
+      const textContent = getContentWithoutImages(selectedReview.content);
+      const hasText = textContent.replace(/<[^>]*>/g, "").trim().length > 0;
+
+      return (
+        <div className="reviews__modal-overlay" onClick={handleOverlayClick}>
+          <div className="reviews__modal">
+            <div className="reviews__modal-header">
+              <span className="reviews__modal-title">{selectedReview.title}</span>
+              <button className="reviews__modal-close" onClick={closeModal}>
+                <img src={closeIcon} alt="닫기" width="16" height="16" />
+              </button>
+            </div>
+
+            {images.length > 0 && (
+              <div
+                className="reviews__carousel"
+                ref={carouselRef}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  isDragging.current = true;
+                  dragStartX.current = e.clientX;
+                  const onMove = (me) => {
+                    setDragOffset(me.clientX - dragStartX.current);
+                  };
+                  const onUp = (me) => {
+                    isDragging.current = false;
+                    const diff = dragStartX.current - me.clientX;
+                    dragStartX.current = null;
+                    setDragOffset(0);
+                    if (Math.abs(diff) > 50) {
+                      if (diff > 0) setCurrentImageIndex((i) => Math.min(i + 1, images.length - 1));
+                      else setCurrentImageIndex((i) => Math.max(i - 1, 0));
+                    }
+                    document.removeEventListener("mousemove", onMove);
+                    document.removeEventListener("mouseup", onUp);
+                  };
+                  document.addEventListener("mousemove", onMove);
+                  document.addEventListener("mouseup", onUp);
+                }}
+                onTouchStart={(e) => {
+                  isDragging.current = true;
+                  dragStartX.current = e.touches[0].clientX;
+                  dragStartY.current = e.touches[0].clientY;
+                }}
+                onTouchEnd={(e) => {
+                  if (!isDragging.current) return;
+                  isDragging.current = false;
+                  const diff = dragStartX.current - e.changedTouches[0].clientX;
+                  dragStartX.current = null;
+                  setDragOffset(0);
+                  if (Math.abs(diff) > 50) {
+                    if (diff > 0) setCurrentImageIndex((i) => Math.min(i + 1, images.length - 1));
+                    else setCurrentImageIndex((i) => Math.max(i - 1, 0));
+                  }
+                }}
+              >
+                <div
+                  className="reviews__carousel-track"
+                  style={{
+                    transform: `translateX(calc(${-currentImageIndex * 100}% + ${dragOffset}px))`,
+                    transition: isDragging.current ? "none" : "transform 0.35s ease",
+                  }}
+                >
+                  {images.map((src, idx) => (
+                    <img
+                      key={idx}
+                      src={src}
+                      alt={`${selectedReview.title} ${idx + 1}`}
+                      className="reviews__carousel-img"
+                      draggable={false}
+                    />
+                  ))}
+                </div>
+                {images.length > 1 && (
+                  <span className="reviews__carousel-counter">
+                    {currentImageIndex + 1}/{images.length}
+                  </span>
+                )}
+                {currentImageIndex > 0 && (
+                  <button className="reviews__carousel-btn reviews__carousel-btn--prev" onClick={() => setCurrentImageIndex((i) => i - 1)}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </button>
+                )}
+                {currentImageIndex < images.length - 1 && (
+                  <button className="reviews__carousel-btn reviews__carousel-btn--next" onClick={() => setCurrentImageIndex((i) => i + 1)}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </button>
+                )}
+                {images.length > 1 && (
+                  <div className="reviews__carousel-dots">
+                    {images.map((_, idx) => (
+                      <span
+                        key={idx}
+                        className={`reviews__carousel-dot ${idx === currentImageIndex ? "reviews__carousel-dot--active" : ""}`}
+                        onClick={() => setCurrentImageIndex(idx)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {images.length === 0 && (
+              <div className="reviews__modal-thumbnail">
+                <div className="reviews__modal-placeholder" />
+              </div>
+            )}
+
+            <div className="reviews__modal-info">
+              <span className="reviews__modal-location">{selectedReview.location || ""}</span>
+              <span className="reviews__modal-date">{selectedReview.createdAt}</span>
+            </div>
+            {hasText && (
+              <div
+                className="reviews__modal-content"
+                dangerouslySetInnerHTML={{ __html: textContent }}
+              />
+            )}
+          </div>
+        </div>
+      );
+    })()}
     <div className="reviews">
       {/* 배너 섹션 */}
       <section className="reviews__banner">
@@ -277,146 +412,6 @@ const Reviews = () => {
         </div>
       </section>
 
-      {/* 모달 */}
-      {selectedReview && (() => {
-        const images = getReviewImages(selectedReview);
-        const textContent = getContentWithoutImages(selectedReview.content);
-        const hasText = textContent.replace(/<[^>]*>/g, "").trim().length > 0;
-
-        return (
-          <div className="reviews__modal-overlay" onClick={handleOverlayClick}>
-            <div className="reviews__modal">
-              {/* 제목 + 닫기 버튼 */}
-              <div className="reviews__modal-header">
-                <span className="reviews__modal-title">{selectedReview.title}</span>
-                <button className="reviews__modal-close" onClick={closeModal}>
-                  <img src={closeIcon} alt="닫기" width="16" height="16" />
-                </button>
-              </div>
-
-              {/* 이미지 캐러셀 */}
-              {images.length > 0 && (
-                <div
-                  className="reviews__carousel"
-                  ref={carouselRef}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    isDragging.current = true;
-                    dragStartX.current = e.clientX;
-                    const onMove = (me) => {
-                      setDragOffset(me.clientX - dragStartX.current);
-                    };
-                    const onUp = (me) => {
-                      isDragging.current = false;
-                      const diff = dragStartX.current - me.clientX;
-                      dragStartX.current = null;
-                      setDragOffset(0);
-                      if (Math.abs(diff) > 50) {
-                        if (diff > 0) setCurrentImageIndex((i) => Math.min(i + 1, images.length - 1));
-                        else setCurrentImageIndex((i) => Math.max(i - 1, 0));
-                      }
-                      document.removeEventListener("mousemove", onMove);
-                      document.removeEventListener("mouseup", onUp);
-                    };
-                    document.addEventListener("mousemove", onMove);
-                    document.addEventListener("mouseup", onUp);
-                  }}
-                  onTouchStart={(e) => {
-                    isDragging.current = true;
-                    dragStartX.current = e.touches[0].clientX;
-                    dragStartY.current = e.touches[0].clientY;
-                  }}
-                  onTouchEnd={(e) => {
-                    if (!isDragging.current) return;
-                    isDragging.current = false;
-                    const diff = dragStartX.current - e.changedTouches[0].clientX;
-                    dragStartX.current = null;
-                    setDragOffset(0);
-                    if (Math.abs(diff) > 50) {
-                      if (diff > 0) setCurrentImageIndex((i) => Math.min(i + 1, images.length - 1));
-                      else setCurrentImageIndex((i) => Math.max(i - 1, 0));
-                    }
-                  }}
-                >
-                  {/* 슬라이드 트랙 */}
-                  <div
-                    className="reviews__carousel-track"
-                    style={{
-                      transform: `translateX(calc(${-currentImageIndex * 100}% + ${dragOffset}px))`,
-                      transition: isDragging.current ? "none" : "transform 0.35s ease",
-                    }}
-                  >
-                    {images.map((src, idx) => (
-                      <img
-                        key={idx}
-                        src={src}
-                        alt={`${selectedReview.title} ${idx + 1}`}
-                        className="reviews__carousel-img"
-                        draggable={false}
-                      />
-                    ))}
-                  </div>
-
-                  {images.length > 1 && (
-                    <span className="reviews__carousel-counter">
-                      {currentImageIndex + 1}/{images.length}
-                    </span>
-                  )}
-                  {currentImageIndex > 0 && (
-                    <button
-                      className="reviews__carousel-btn reviews__carousel-btn--prev"
-                      onClick={() => setCurrentImageIndex((i) => i - 1)}
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="15 18 9 12 15 6" />
-                      </svg>
-                    </button>
-                  )}
-                  {currentImageIndex < images.length - 1 && (
-                    <button
-                      className="reviews__carousel-btn reviews__carousel-btn--next"
-                      onClick={() => setCurrentImageIndex((i) => i + 1)}
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="9 18 15 12 9 6" />
-                      </svg>
-                    </button>
-                  )}
-                  {images.length > 1 && (
-                    <div className="reviews__carousel-dots">
-                      {images.map((_, idx) => (
-                        <span
-                          key={idx}
-                          className={`reviews__carousel-dot ${idx === currentImageIndex ? "reviews__carousel-dot--active" : ""}`}
-                          onClick={() => setCurrentImageIndex(idx)}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* 이미지 없을 때 플레이스홀더 */}
-              {images.length === 0 && (
-                <div className="reviews__modal-thumbnail">
-                  <div className="reviews__modal-placeholder" />
-                </div>
-              )}
-
-              <div className="reviews__modal-info">
-                <span className="reviews__modal-location">{selectedReview.location || ""}</span>
-                <span className="reviews__modal-date">{selectedReview.createdAt}</span>
-              </div>
-              {hasText && (
-                <div
-                  className="reviews__modal-content"
-                  dangerouslySetInnerHTML={{ __html: textContent }}
-                />
-              )}
-            </div>
-          </div>
-        );
-      })()}
     </div>
     </>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate, useParams, useLocation, useBlocker } from "react-router-dom";
 import "./QnaWrite.css";
 import ConfirmModal from "../components/ConfirmModal";
+import PrivacyModal from "../components/PrivacyModal";
 import { getErrorMessage } from "../utils/errorMessage";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
@@ -25,6 +26,8 @@ const QnaWrite = () => {
   });
   const [attachments, setAttachments] = useState([]);
   const [currentAttachments, setCurrentAttachments] = useState([]);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [fileError, setFileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(isEdit);
@@ -83,10 +86,8 @@ const QnaWrite = () => {
             title: data.title || "",
             content: data.content || "",
           });
-          if (data.attachments?.length) {
-            setCurrentAttachments(data.attachments);
-          } else if (data.attachment) {
-            setCurrentAttachments([data.attachment]);
+          if (data.attachmentList?.length) {
+            setCurrentAttachments(data.attachmentList);
           }
         } else {
           setModal({ title: "문의를 불러올 수 없습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
@@ -152,6 +153,10 @@ const QnaWrite = () => {
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const removeCurrentAttachment = (index) => {
+    setCurrentAttachments((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -173,6 +178,10 @@ const QnaWrite = () => {
         firstRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
         firstRef.current.focus({ preventScroll: true });
       }
+      return;
+    }
+    if (!isEdit && !privacyAgreed) {
+      setModal({ title: "개인정보 수집 및 이용에 동의해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       return;
     }
 
@@ -240,6 +249,7 @@ const QnaWrite = () => {
 
   return (
     <>
+    {privacyModalOpen && <PrivacyModal onClose={() => setPrivacyModalOpen(false)} />}
     {modal && (
       <ConfirmModal
         title={modal.title}
@@ -317,6 +327,22 @@ const QnaWrite = () => {
               </div>
             </div>
 
+            {!isEdit && (
+              <div className="qna-write__privacy-agree">
+                <label className="qna-write__privacy-agree__label">
+                  <input
+                    type="checkbox"
+                    checked={privacyAgreed}
+                    onChange={(e) => setPrivacyAgreed(e.target.checked)}
+                  />
+                  <span className="qna-write__privacy-agree__text">
+                    <strong>개인정보 수집 및 이용</strong>에 동의합니다. <span className="qna-write__privacy-agree__required">(필수)</span>
+                    <button type="button" className="qna-write__privacy-view" onClick={() => setPrivacyModalOpen(true)}>내용 보기</button>
+                  </span>
+                </label>
+              </div>
+            )}
+
             <div className="qna-write__field qna-write__field--full">
               <label className="qna-write__label">제목</label>
               <input type="text" name="title" value={formData.title} onChange={handleChange}
@@ -343,16 +369,6 @@ const QnaWrite = () => {
             {/* 첨부파일 */}
             <div className="qna-write__field qna-write__field--full">
               <label className="qna-write__label">첨부파일</label>
-              {isEdit && currentAttachments.length > 0 && attachments.length === 0 && (
-                <ul className="qna-write__file-list">
-                  {currentAttachments.map((url, i) => (
-                    <li key={i} className="qna-write__file-item">
-                      <img src={fileIcon} alt="" className="qna-write__file-icon" />
-                      <span className="qna-write__file-name--selected">{url.split('/').pop()}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
               <div className="qna-write__file-wrapper">
                 <input type="file" id="attachment" multiple onChange={handleFileChange}
                   className="qna-write__file-input" />
@@ -361,7 +377,7 @@ const QnaWrite = () => {
                   <span>파일 선택 (최대 5개, 파일당 최대 10MB)</span>
                 </label>
               </div>
-              {attachments.length > 0 && (
+              {attachments.length > 0 ? (
                 <ul className="qna-write__file-list">
                   {attachments.map((file, i) => (
                     <li key={i} className="qna-write__file-item">
@@ -372,7 +388,18 @@ const QnaWrite = () => {
                     </li>
                   ))}
                 </ul>
-              )}
+              ) : isEdit && currentAttachments.length > 0 ? (
+                <ul className="qna-write__file-list">
+                  {currentAttachments.map((url, i) => (
+                    <li key={i} className="qna-write__file-item">
+                      <img src={fileIcon} alt="" className="qna-write__file-icon" />
+                      <span className="qna-write__file-name--selected">{url.split('/').pop()}</span>
+                      <button type="button" className="qna-write__file-remove"
+                        onClick={() => removeCurrentAttachment(i)}>×</button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               {fileError && <p className="qna-write__file-error">{fileError}</p>}
             </div>
 

@@ -104,11 +104,13 @@
 }
 
 .policy__list {
+  list-style-type: disc;
   margin: 8px 0 10px 0;
-  padding-left: 20px;
+  padding-left: 24px;
 }
 
 .policy__list li {
+  list-style-type: disc;
   font-size: 15px;
   color: #444;
   margin-bottom: 6px;
@@ -160,6 +162,10 @@
   .policy__breadcrumb {
     left: 24px;
   }
+
+  .policy__body {
+    padding: 32px 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -177,7 +183,7 @@
 
   .policy__title {
     font-size: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
   }
 
   .policy__main {
@@ -185,13 +191,11 @@
   }
 
   .policy__body {
-    padding: 24px 0;
+    padding: 20px 0;
   }
-}
 
-@media (max-width: 480px) {
-  .policy__title {
-    font-size: 20px;
+  .policy__section {
+    margin-bottom: 32px;
   }
 
   .policy__section-title {
@@ -204,6 +208,58 @@
   }
 
   .policy__table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 13px;
+  }
+
+  .policy__table th,
+  .policy__table td {
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+
+  .policy__highlight {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .policy__title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .policy__section-title {
+    font-size: 15px;
+  }
+
+  .policy__text,
+  .policy__list li {
+    font-size: 13px;
+  }
+
+  .policy__list {
+    padding-left: 18px;
+  }
+
+  .policy__table {
+    font-size: 12px;
+  }
+
+  .policy__table th,
+  .policy__table td {
+    padding: 6px 8px;
+  }
+
+  .policy__updated {
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .policy__highlight {
+    padding: 12px 14px;
     font-size: 13px;
   }
 }

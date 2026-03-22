@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
           <h1 className="policy__title">개인정보처리방침</h1>
 
           <div className="policy__body">
-            <p className="policy__updated">시행일: 2025년 1월 1일</p>
+            <p className="policy__updated">시행일: 2026년 3월 18일</p>
 
             <p className="policy__text">
               프르조(이하 "회사")는 개인정보보호법 제30조에 따라 정보주체의 개인정보를 보호하고
@@ -101,13 +101,8 @@ const PrivacyPolicy = () => {
                 <tbody>
                   <tr>
                     <td>상담 문의 기록</td>
-                    <td>문의 처리 완료 후 1년</td>
-                    <td>서비스 운영 목적</td>
-                  </tr>
-                  <tr>
-                    <td>전자상거래 관련 기록</td>
-                    <td>5년</td>
-                    <td>전자상거래법 제6조</td>
+                    <td>문의 처리 완료 후 3년</td>
+                    <td>정보주체 동의</td>
                   </tr>
                 </tbody>
               </table>
@@ -130,7 +125,6 @@ const PrivacyPolicy = () => {
               </p>
               <ul className="policy__list">
                 <li>전자적 파일: 복원이 불가능한 방법으로 영구 삭제</li>
-                <li>종이 문서: 분쇄기로 분쇄 또는 소각</li>
               </ul>
             </div>
 
@@ -153,7 +147,6 @@ const PrivacyPolicy = () => {
               <p className="policy__text">회사는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
               <ul className="policy__list">
                 <li>개인정보 접근 권한 최소화</li>
-                <li>비밀번호의 암호화 저장</li>
                 <li>해킹 등에 대비한 기술적 대책 수립</li>
                 <li>개인정보 접근 기록 보관</li>
               </ul>

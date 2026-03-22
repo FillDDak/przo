@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../components/ConfirmModal";
+import PrivacyModal from "../components/PrivacyModal";
 import { getErrorMessage } from "../utils/errorMessage";
 import "./Home.css";
-const home_banner = "/home_banner.webp";
 
 // 섹션 2 갤러리 이미지
 import gallery1_1 from "../assets/section2-gallery/gallery1-item1.webp";
@@ -180,6 +180,8 @@ const Home = () => {
   const [attachments, setAttachments] = useState([]);
   const [fileError, setFileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", email: "", title: "", content: "" });
   const nameRef = useRef(null);
   const phoneRef = useRef(null);
@@ -276,6 +278,11 @@ const Home = () => {
         firstRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
         firstRef.current.focus({ preventScroll: true });
       }
+      return;
+    }
+
+    if (!privacyAgreed) {
+      setModal({ title: "개인정보 수집 및 이용에 동의해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       return;
     }
 
@@ -600,6 +607,7 @@ const Home = () => {
 
   return (
     <>
+    {privacyModalOpen && <PrivacyModal onClose={() => setPrivacyModalOpen(false)} />}
     {modal && (
       <ConfirmModal
         title={modal.title}
@@ -611,7 +619,6 @@ const Home = () => {
     <div className="home">
       <section
         className="home__section home__section--1"
-        style={{ backgroundImage: `url(${home_banner})` }}
       >
         <div className="home__content">
           <div className="home__section1-wrapper">
@@ -623,7 +630,7 @@ const Home = () => {
               <br />
               안전하게 지켜드립니다
             </h1>
-            <button className="home__section1-btn fade-up fade-up-delay-2" onClick={() => document.querySelector('.home__section--7').scrollIntoView({ behavior: 'smooth' })}>무료 상담 문의</button>
+            <button className="home__section1-btn fade-up fade-up-delay-2" onClick={() => document.querySelector('.home__section--7').scrollIntoView({ behavior: 'smooth', block: 'center' })}>무료 상담 문의</button>
           </div>
           <div className="home__section1-scroll-hint">
             <svg className="home__section1-scroll-hint__icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -927,6 +934,7 @@ const Home = () => {
                   <div className="home__section7-form-group">
                     <label>전화번호</label>
                     <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} ref={phoneRef} placeholder="010-1234-5678" maxLength={13} className={fieldErrors.phone ? "home__input--error" : undefined} />
+                    <p className="home__field-hint">전화번호 뒷자리 4자리가 게시글 비밀번호로 자동 설정됩니다.</p>
                     {fieldErrors.phone && <p className="home__field-error">{fieldErrors.phone}</p>}
                   </div>
                   <div className="home__section7-form-group">
@@ -934,6 +942,19 @@ const Home = () => {
                     <input type="text" name="email" value={formData.email} onChange={handleFormChange} ref={emailRef} placeholder="przo@naver.com" maxLength={100} className={fieldErrors.email ? "home__input--error" : undefined} />
                     {fieldErrors.email && <p className="home__field-error">{fieldErrors.email}</p>}
                   </div>
+                </div>
+                <div className="home__privacy-agree">
+                  <label className="home__privacy-agree__label">
+                    <input
+                      type="checkbox"
+                      checked={privacyAgreed}
+                      onChange={(e) => setPrivacyAgreed(e.target.checked)}
+                    />
+                    <span className="home__privacy-agree__text">
+                      <strong>개인정보 수집 및 이용</strong>에 동의합니다. <span className="home__privacy-agree__required">(필수)</span>
+                      <button type="button" className="home__privacy-view" onClick={() => setPrivacyModalOpen(true)}>내용 보기</button>
+                    </span>
+                  </label>
                 </div>
                 <div className="home__section7-form-row">
                   <div className="home__section7-form-group">

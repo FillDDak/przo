@@ -19,6 +19,12 @@
   align-items: center;
 }
 
+.header__logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .header__logo {
   display: flex;
   align-items: center;
@@ -26,6 +32,36 @@
 
 .header__logo img {
   height: 30px;
+}
+
+.header__admin-badge {
+  font-size: 17px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.header__admin-badge:hover {
+  color: #51c488;
+  opacity: 1;
+}
+
+.header--subpage .header__admin-badge {
+  color: #51c488;
+}
+
+.header--subpage .header__admin-badge:hover {
+  color: #4A976F;
+}
+
+.header--admin .header__admin-badge {
+  color: #51c488;
+}
+
+.header--admin .header__admin-badge:hover {
+  color: #4A976F;
 }
 
 .header__nav {

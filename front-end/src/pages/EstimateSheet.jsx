@@ -360,7 +360,7 @@ export default function EstimateSheet() {
         sheetsRef.current = initial;
         captureNextAsBaseline.current = true;
         setIsDirty(false);
-        setModal({ title: "저장된 데이터를 불러오지 못했습니다. 초기값으로 표시합니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({ title: "저장된 데이터를 불러오지 못했습니다.", subtitle: "초기값으로 표시합니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       });
   }, [loading, isAdmin]);
 
@@ -450,7 +450,7 @@ export default function EstimateSheet() {
         captureNextAsBaseline.current = true;
         setIsDirty(false);
       } else {
-        setModal({ title: result.message || "저장 실패", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({ title: result.message || "저장에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (e) {
       console.error("[EstimateSheet] 저장 중 예외:", e);

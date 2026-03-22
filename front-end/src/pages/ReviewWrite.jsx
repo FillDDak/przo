@@ -122,16 +122,26 @@ const ReviewWrite = () => {
 
   // Upload a single blob/file to server, return URL
   const uploadImageBlob = async (blobOrFile, filename) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30000);
     const formData = new FormData();
     formData.append("image", blobOrFile, filename);
-    const res = await fetch(`${API_BASE_URL}/reviews/upload-image`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${tokenRef.current}` },
-      body: formData,
-    });
-    const data = await res.json();
-    if (data.success) return data.url;
-    throw new Error("Upload failed");
+    try {
+      const res = await fetch(`${API_BASE_URL}/reviews/upload-image`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${tokenRef.current}` },
+        body: formData,
+        signal: controller.signal,
+      });
+      const data = await res.json();
+      if (data.success) return data.url;
+      throw new Error("Upload failed");
+    } catch (e) {
+      if (e.name === "AbortError") throw new Error("이미지 업로드 시간이 초과되었습니다.");
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
   };
 
   // Process next item in crop queue
@@ -351,20 +361,31 @@ const ReviewWrite = () => {
         ? `${API_BASE_URL}/reviews/${editData.id}`
         : `${API_BASE_URL}/reviews`;
 
-      const response = await fetch(url, {
-        method: isEdit ? "PUT" : "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+      const submitController = new AbortController();
+      const submitTimer = setTimeout(() => submitController.abort(), 30000);
+      let response;
+      try {
+        response = await fetch(url, {
+          method: isEdit ? "PUT" : "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+          signal: submitController.signal,
+        });
+      } catch (e) {
+        if (e.name === "AbortError") throw new Error("요청 시간이 초과되었습니다. 다시 시도해주세요.");
+        throw e;
+      } finally {
+        clearTimeout(submitTimer);
+      }
 
       const data = await response.json();
 
       if (data.success) {
         setModal({ title: isEdit ? "수정되었습니다." : "등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/reviews"); } }] });
       } else {
-        setModal({ title: data.message || "처리에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({ title: data.message || (isEdit ? "시공 사진 수정에 실패했습니다." : "시공 사진 등록에 실패했습니다."), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (e) {
       setModal({ title: isEdit ? "수정 중 오류가 발생했습니다." : "등록 중 오류가 발생했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
@@ -530,7 +551,7 @@ const ReviewWrite = () => {
                   onChange={(e) => setLocation(e.target.value)}
                   className="review-write__input"
                   placeholder="시공 장소를 입력해주세요. (예: 인천광역시 계양구 효성동)"
-                  maxLength={100}
+                  maxLength={50}
                 />
               </div>
 

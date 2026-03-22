@@ -283,6 +283,78 @@
   filter: brightness(0) saturate(100%) invert(81%) sepia(0%) saturate(0%) hue-rotate(166deg) brightness(91%) contrast(87%);
 }
 
+/* 개인정보 동의 */
+.qna-write__privacy-agree {
+  margin-bottom: 40px;
+}
+
+.qna-write__privacy-agree__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1f1f1f;
+}
+
+.qna-write__privacy-agree__text {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #1f1f1f;
+  line-height: 1;
+}
+
+.qna-write__privacy-agree__label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid #1f1f1f;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.qna-write__privacy-agree__label input[type="checkbox"]:checked {
+  background: #1f1f1f;
+}
+
+.qna-write__privacy-agree__label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.qna-write__privacy-agree__required {
+  color: #1f1f1f;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+.qna-write__privacy-view {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 14px;
+  vertical-align: middle;
+  font-size: 12px;
+  color: #1f1f1f;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* 작성하기 버튼 */
 .qna-write__button-wrapper {
   display: flex;

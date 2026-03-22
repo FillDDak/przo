@@ -16,27 +16,44 @@
 .home__section--1 {
   height: 100vh;
   position: relative;
+  overflow: hidden;
+}
+
+.home__section--1::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/home_banner.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  transform: scale(1.08);
+  animation: bannerZoomOut 6s ease-out forwards;
+}
+
+@keyframes bannerZoomOut {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1); }
 }
 
 .home__section--1::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: linear-gradient(
     90deg,
     rgba(31, 31, 31, 0.6) 0%,
     rgba(31, 31, 31, 0.3) 100%
   );
   pointer-events: none;
+  z-index: 1;
 }
 
 /* 섹션 1 콘텐츠 스타일 */
 .home__section1-wrapper {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -93,6 +110,7 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    z-index: 2;
   }
 }
 
@@ -1007,6 +1025,12 @@
   flex-shrink: 0;
 }
 
+.home__field-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #999;
+}
+
 .home__field-error {
   margin-top: 6px;
   font-size: 12px;
@@ -1118,6 +1142,77 @@
 
 .home__section7-file-remove:hover {
   color: #e53935;
+}
+
+.home__privacy-agree {
+  margin-bottom: 40px;
+}
+
+.home__privacy-agree__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1f1f1f;
+}
+
+.home__privacy-agree__label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 2px solid #1f1f1f;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.home__privacy-agree__label input[type="checkbox"]:checked {
+  background: #1f1f1f;
+}
+
+.home__privacy-agree__label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.home__privacy-agree__text {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #1f1f1f;
+  line-height: 1;
+}
+
+.home__privacy-agree__required {
+  color: #1f1f1f;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+.home__privacy-view {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 14px;
+  font-size: 12px;
+  color: #1f1f1f;
+  text-decoration: underline;
+  cursor: pointer;
+  vertical-align: middle;
 }
 
 .home__section7-submit {

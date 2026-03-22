@@ -20,7 +20,7 @@ const Terms = () => {
           <h1 className="policy__title">사이트 이용 약관</h1>
 
           <div className="policy__body">
-            <p className="policy__updated">시행일: 2025년 1월 1일</p>
+            <p className="policy__updated">시행일: 2026년 3월 18일</p>
 
             <div className="policy__section">
               <h2 className="policy__section-title">제1조 (목적)</h2>
@@ -43,7 +43,7 @@ const Terms = () => {
               <h2 className="policy__section-title">제3조 (약관의 효력 및 변경)</h2>
               <ul className="policy__list">
                 <li>이 약관은 사이트 내 공시함으로써 효력이 발생합니다.</li>
-                <li>회사는 필요한 경우 약관을 변경할 수 있으며, 변경된 약관은 사이트에 공시함으로써 효력이 발생합니다.</li>
+                <li>회사는 필요한 경우 약관을 변경할 수 있으며, 변경된 약관은 시행 7일 전부터 사이트를 통해 공시합니다.</li>
                 <li>이용자는 변경된 약관에 동의하지 않을 경우 서비스 이용을 중단하여야 합니다.</li>
               </ul>
             </div>
@@ -77,10 +77,10 @@ const Terms = () => {
 
             <div className="policy__section">
               <h2 className="policy__section-title">제7조 (지식재산권)</h2>
-              <p className="policy__text">
-                사이트에 게시된 모든 콘텐츠(텍스트, 이미지, 영상 등)의 저작권은 회사에 귀속됩니다.
-                이용자는 회사의 사전 동의 없이 이를 복제, 배포, 수정하거나 상업적으로 이용할 수 없습니다.
-              </p>
+              <ul className="policy__list">
+                <li>사이트에 게시된 모든 콘텐츠(텍스트, 이미지, 영상 등)의 저작권은 회사에 귀속됩니다.</li>
+                <li>이용자는 회사의 사전 동의 없이 이를 복제, 배포, 수정하거나 상업적으로 이용할 수 없습니다.</li>
+              </ul>
             </div>
 
             <div className="policy__section">

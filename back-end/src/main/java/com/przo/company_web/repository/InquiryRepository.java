@@ -6,10 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository
 public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 
     Page<Inquiry> findAllByOrderByIdDesc(Pageable pageable);
 
     Page<Inquiry> findByTitleContainingIgnoreCaseOrderByIdDesc(String title, Pageable pageable);
+
+    void deleteByCreatedAtBefore(LocalDateTime dateTime);
 }

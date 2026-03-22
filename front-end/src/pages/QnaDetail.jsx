@@ -141,10 +141,44 @@ const QnaDetail = () => {
     }
   };
 
+  // 답변 초기화
+  const handleReplyReset = () => {
+    setModal({
+      title: "답변을 초기화하시겠습니까?",
+      subtitle: "답변 내용이 삭제되고 미답변 상태로 변경됩니다.",
+      buttons: [
+        { label: "초기화", variant: "confirm", onClick: async () => {
+          setModal(null);
+          try {
+            setIsSubmitting(true);
+            const response = await fetch(`${API_BASE_URL}/inquiries/${id}/reply`, {
+              method: "DELETE",
+              headers: { "Authorization": `Bearer ${token}` },
+            });
+            const data = await response.json();
+            if (data.success) {
+              setReplyMode(false);
+              setAdminNote("");
+              fetchInquiry();
+            } else {
+              setModal({ title: data.message || "초기화에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+            }
+          } catch (error) {
+            setModal({ title: "초기화 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+          } finally {
+            setIsSubmitting(false);
+          }
+        }},
+        { label: "취소", variant: "cancel", onClick: () => setModal(null) },
+      ],
+    });
+  };
+
   // 문의 삭제
   const handleDelete = () => {
     setModal({
       title: "정말로 이 문의를 삭제하시겠습니까?",
+      subtitle: "삭제 후 복구할 수 없습니다.",
       buttons: [
         { label: "삭제", variant: "confirm", onClick: async () => {
           setModal(null);
@@ -411,6 +445,15 @@ const QnaDetail = () => {
                 >
                   {replyMode ? "취소" : (inquiry.adminNote ? "수정하기" : "답변하기")}
                 </button>
+                {inquiry.adminNote && (
+                  <button
+                    onClick={handleReplyReset}
+                    className="qna-detail__list-btn qna-detail__list-btn--delete"
+                    disabled={isSubmitting}
+                  >
+                    답변 초기화
+                  </button>
+                )}
                 <button
                   onClick={handleDelete}
                   className="qna-detail__list-btn qna-detail__list-btn--delete"
