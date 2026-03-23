@@ -61,9 +61,13 @@ out/
 ### VS Code ###
 .vscode/
 
+### Kakao Setup (임시 토큰 발급 컨트롤러, 운영 시 삭제) ###
+KakaoSetupController.java
+
 ### Environment ###
 .env
 application.properties
+application-local.properties
 application-prod.properties
 
 ### Guide ###

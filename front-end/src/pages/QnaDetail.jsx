@@ -108,6 +108,8 @@ const QnaDetail = () => {
     }
   }, [id, isAdmin, fetchInquiry, location.state?.autoVerified, location.state?.autoPassword]);
 
+
+
   // 답변 등록
   const handleReplySubmit = async () => {
     if (!adminNote.trim()) {
@@ -214,6 +216,15 @@ const QnaDetail = () => {
   // 비밀번호 확인 전 화면 (관리자가 아닌 경우에만)
   if (!isVerified) {
     return (
+      <>
+      {modal && (
+        <ConfirmModal
+          title={modal.title}
+          subtitle={modal.subtitle}
+          onClose={() => setModal(null)}
+          buttons={modal.buttons}
+        />
+      )}
       <div className="qna-detail">
         {/* 배너 섹션 */}
         <section className="qna-detail__banner">
@@ -266,6 +277,7 @@ const QnaDetail = () => {
           </div>
         </section>
       </div>
+      </>
     );
   }
 

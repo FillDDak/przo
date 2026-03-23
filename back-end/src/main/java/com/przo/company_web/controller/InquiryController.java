@@ -6,6 +6,7 @@ import com.przo.company_web.dto.InquiryListResponse;
 import com.przo.company_web.entity.Inquiry;
 import com.przo.company_web.service.AdminService;
 import com.przo.company_web.service.InquiryService;
+import com.przo.company_web.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ public class InquiryController {
 
     private final InquiryService inquiryService;
     private final AdminService adminService;
+    private final NotificationService notificationService;
 
     @Value("${file.upload-dir:uploads/inquiries}")
     private String uploadDir;
@@ -109,6 +111,9 @@ public class InquiryController {
 
             // 문의 저장
             Inquiry inquiry = inquiryService.createInquiry(request, attachmentPath);
+
+            // 관리자 알림 (이메일 + 카카오톡)
+            notificationService.sendNewInquiryNotification(inquiry);
 
             response.put("success", true);
             response.put("message", "문의가 성공적으로 등록되었습니다.");

@@ -20,6 +20,7 @@ import ReviewWrite from "./pages/ReviewWrite";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import EstimateSheet from "./pages/EstimateSheet";
+import AdminInquiryRedirect from "./pages/AdminInquiryRedirect";
 import Faq from "./pages/Faq";
 import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
       {
         path: "privacy-policy",
         element: <PrivacyPolicy />,
+      },
+      {
+        path: "admin/inquiry/:id",
+        element: <AdminInquiryRedirect />,
       },
     ],
   },
