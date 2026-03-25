@@ -86,7 +86,7 @@ const ReviewWrite = () => {
   const isDirty =
     title.trim() !== "" ||
     location.trim() !== "" ||
-    (content !== "" && content !== "<p><br></p>") ||
+    content.replace(/<[^>]*>/g, "").trim() !== "" ||
     uploadedImages.length > 0;
 
   const shouldBlock = useCallback(
