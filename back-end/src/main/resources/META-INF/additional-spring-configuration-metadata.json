@@ -1,6 +1,16 @@
 {
   "properties": [
     {
+      "name": "admin.username",
+      "type": "java.lang.String",
+      "description": "관리자 계정 아이디 (최초 1회 생성 시 사용)"
+    },
+    {
+      "name": "admin.password",
+      "type": "java.lang.String",
+      "description": "관리자 계정 초기 비밀번호 (최초 1회 생성 시 사용)"
+    },
+    {
       "name": "notification.admin-email",
       "type": "java.lang.String",
       "description": "관리자 알림 수신 이메일 주소"
