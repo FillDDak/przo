@@ -31,10 +31,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:uploads/");
     }
 
-    // SPA 폴백: /api/**, /uploads/** 이외의 모든 경로를 index.html로
+    // SPA 폴백: /uploads/** 이외의 모든 경로를 index.html로 (uploads는 정적 파일 핸들러가 처리)
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/{path:[^\\.]*}").setViewName("forward:/index.html");
-        registry.addViewController("/{path:[^\\.]*}/**").setViewName("forward:/index.html");
+        registry.addViewController("/{path:(?!uploads$)[^\\.]*}").setViewName("forward:/index.html");
+        registry.addViewController("/{path:(?!uploads$)[^\\.]*}/**").setViewName("forward:/index.html");
     }
 }

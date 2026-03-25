@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
+@org.springframework.scheduling.annotation.EnableAsync
 public class CompanyWebApplication {
 
 	public static void main(String[] args) {

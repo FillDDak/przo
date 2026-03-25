@@ -32,6 +32,11 @@ const Header = ({ variant = "default" }) => {
     setIsQnaOpen(false);
   };
 
+  const handleNavClick = (to) => {
+    if (location.pathname === to) navigate(0);
+    closeMenu();
+  };
+
   const handleDropdownEnter = () => {
     if (isMenuOpen) return;
     clearTimeout(dropdownTimerRef.current);
@@ -68,10 +73,10 @@ const Header = ({ variant = "default" }) => {
         </button>
 
         <nav className={`header__nav ${isMenuOpen ? 'header__nav--open' : ''}`}>
-          <Link to="/about" className="header__nav-link" onClick={closeMenu}>
+          <Link to="/about" className="header__nav-link" onClick={() => handleNavClick("/about")}>
             회사 소개
           </Link>
-          <Link to="/service" className="header__nav-link" onClick={closeMenu}>
+          <Link to="/service" className="header__nav-link" onClick={() => handleNavClick("/service")}>
             서비스 소개
           </Link>
           <div
@@ -82,8 +87,9 @@ const Header = ({ variant = "default" }) => {
             <button
               className="header__nav-link header__nav-link--dropdown-trigger"
               onClick={() => {
-                if (window.innerWidth <= 768) setIsQnaOpen(prev => !prev);
+                if (location.pathname === "/qna") navigate(0);
                 else navigate("/qna");
+                closeMenu();
               }}
             >
               상담 서비스
@@ -92,15 +98,15 @@ const Header = ({ variant = "default" }) => {
               </svg>
             </button>
             <div className="header__dropdown">
-              <Link to="/qna" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); closeMenu(); }}>
+              <Link to="/qna" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); handleNavClick("/qna"); }}>
                 상담 문의
               </Link>
-              <Link to="/faq" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); closeMenu(); }}>
+              <Link to="/faq" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); handleNavClick("/faq"); }}>
                 많이 묻는 질문
               </Link>
             </div>
           </div>
-          <Link to="/reviews" className="header__nav-link" onClick={closeMenu}>
+          <Link to="/reviews" className="header__nav-link" onClick={() => handleNavClick("/reviews")}>
             시공 사진
           </Link>
         </nav>

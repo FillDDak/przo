@@ -28,6 +28,7 @@ const Reviews = () => {
   const pageSize = 6;
   const [deleteTargetId, setDeleteTargetId] = useState(null);
   const [modal, setModal] = useState(null);
+  const [modalContentLoading, setModalContentLoading] = useState(false);
 
   const fetchReviews = async () => {
     try {
@@ -115,10 +116,20 @@ const Reviews = () => {
     return div.innerHTML;
   };
 
-  const openModal = (review) => {
+  const openModal = async (review) => {
     setSelectedReview(review);
     setCurrentImageIndex(0);
     document.body.style.overflow = "hidden";
+    setModalContentLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/${review.id}`);
+      const full = await response.json();
+      setSelectedReview(full);
+    } catch {
+      // content 없이 모달 표시
+    } finally {
+      setModalContentLoading(false);
+    }
   };
 
   const closeModal = () => {
@@ -156,9 +167,15 @@ const Reviews = () => {
     }
   };
 
-  const handleEdit = (e, item) => {
+  const handleEdit = async (e, item) => {
     e.stopPropagation();
-    navigate("/reviews/write", { state: { review: item } });
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/${item.id}`);
+      const full = await response.json();
+      navigate("/reviews/write", { state: { review: full } });
+    } catch {
+      navigate("/reviews/write", { state: { review: item } });
+    }
   };
 
   return (
@@ -184,7 +201,7 @@ const Reviews = () => {
     )}
     {/* 모달 - .reviews 밖에 렌더링하여 position:fixed containment 문제 방지 */}
     {selectedReview && (() => {
-      const images = getReviewImages(selectedReview);
+      const images = modalContentLoading ? (selectedReview.thumbnail ? [selectedReview.thumbnail] : []) : getReviewImages(selectedReview);
       const textContent = getContentWithoutImages(selectedReview.content);
       const hasText = textContent.replace(/<[^>]*>/g, "").trim().length > 0;
 
@@ -301,7 +318,12 @@ const Reviews = () => {
               <span className="reviews__modal-location">{selectedReview.location || ""}</span>
               <span className="reviews__modal-date">{selectedReview.createdAt}</span>
             </div>
-            {hasText && (
+            {modalContentLoading && (
+              <div className="reviews__modal-content" style={{ color: "#aaa", fontSize: "14px", textAlign: "center", padding: "12px 0" }}>
+                불러오는 중...
+              </div>
+            )}
+            {!modalContentLoading && hasText && (
               <div
                 className="reviews__modal-content"
                 dangerouslySetInnerHTML={{ __html: textContent }}

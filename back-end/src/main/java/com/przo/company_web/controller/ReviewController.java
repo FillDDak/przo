@@ -47,6 +47,13 @@ public class ReviewController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ReviewListResponse> getReview(@PathVariable Long id) {
+        ReviewListResponse review = reviewService.getReview(id);
+        if (review == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(review);
+    }
+
     // 관리자 전용: 에디터 이미지 업로드
     @PostMapping("/upload-image")
     public ResponseEntity<Map<String, Object>> uploadImage(

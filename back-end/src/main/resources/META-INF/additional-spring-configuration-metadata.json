@@ -29,6 +29,11 @@
       "name": "kakao.redirect-uri",
       "type": "java.lang.String",
       "description": "카카오 OAuth 콜백 URI (토큰 발급 시 사용, 앱 설정과 동일하게 입력)"
+    },
+    {
+      "name": "kakao.refresh-token-2",
+      "type": "java.lang.String",
+      "description": "두 번째 수신자 카카오 리프레시 토큰 (선택, 비워두면 미발송)"
     }
   ]
 }

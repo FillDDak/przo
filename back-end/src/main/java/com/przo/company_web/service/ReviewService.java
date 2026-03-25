@@ -21,8 +21,13 @@ public class ReviewService {
 
     public Page<ReviewListResponse> getReviewList(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return reviewRepository.findAllByOrderByCreatedAtDescIdDesc(pageable)
-                .map(ReviewListResponse::new);
+        return reviewRepository.findAllForList(pageable);
+    }
+
+    public ReviewListResponse getReview(Long id) {
+        return reviewRepository.findById(id)
+                .map(ReviewListResponse::new)
+                .orElse(null);
     }
 
     @Transactional

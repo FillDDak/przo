@@ -24,11 +24,9 @@ public class InquiryService {
     public Page<InquiryListResponse> getInquiryList(int page, int size, String title) {
         Pageable pageable = PageRequest.of(page, size);
         if (title != null && !title.isBlank()) {
-            return inquiryRepository.findByTitleContainingIgnoreCaseOrderByIdDesc(title, pageable)
-                    .map(InquiryListResponse::new);
+            return inquiryRepository.findByTitleForList(title, pageable);
         }
-        return inquiryRepository.findAllByOrderByIdDesc(pageable)
-                .map(InquiryListResponse::new);
+        return inquiryRepository.findAllForList(pageable);
     }
 
     public Optional<InquiryDetailResponse> getInquiryById(Long id) {

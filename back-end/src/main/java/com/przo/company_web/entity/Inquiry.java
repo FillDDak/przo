@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "INQUIRIES")
+@Table(name = "INQUIRIES", indexes = {
+        @Index(name = "IDX_INQUIRIES_CREATED_AT", columnList = "CREATED_AT")
+})
 @Getter
 @Setter
 @NoArgsConstructor

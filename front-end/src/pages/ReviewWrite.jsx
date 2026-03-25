@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, useEffect, useCallback, Fragment } from "react";
 import ConfirmModal from "../components/ConfirmModal";
 import { getErrorMessage } from "../utils/errorMessage";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, useBlocker } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ReactQuill from "react-quill-new";
 import Cropper from "react-easy-crop";
@@ -80,6 +80,33 @@ const ReviewWrite = () => {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isCropUploading, setIsCropUploading] = useState(false);
+
+  const submittedRef = useRef(false);
+
+  const isDirty =
+    title.trim() !== "" ||
+    location.trim() !== "" ||
+    (content !== "" && content !== "<p><br></p>") ||
+    uploadedImages.length > 0;
+
+  const shouldBlock = useCallback(
+    ({ currentLocation, nextLocation }) =>
+      isDirty && !submittedRef.current && currentLocation.pathname !== nextLocation.pathname,
+    [isDirty]
+  );
+
+  const blocker = useBlocker(shouldBlock);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
 
   const onCropComplete = useCallback((_croppedArea, croppedPixels) => {
     setCroppedAreaPixels(croppedPixels);
@@ -383,6 +410,7 @@ const ReviewWrite = () => {
       const data = await response.json();
 
       if (data.success) {
+        submittedRef.current = true;
         setModal({ title: isEdit ? "수정되었습니다." : "등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/reviews"); } }] });
       } else {
         setModal({ title: data.message || (isEdit ? "시공 사진 수정에 실패했습니다." : "시공 사진 등록에 실패했습니다."), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
@@ -404,6 +432,17 @@ const ReviewWrite = () => {
           subtitle={modal.subtitle}
           onClose={() => setModal(null)}
           buttons={modal.buttons}
+        />
+      )}
+      {blocker.state === "blocked" && (
+        <ConfirmModal
+          title="변경되지 않은 내용이 있습니다."
+          subtitle="변경사항을 잃어버릴 수 있습니다."
+          onClose={() => blocker.reset()}
+          buttons={[
+            { label: "나가기", variant: "cancel", onClick: () => blocker.proceed() },
+            { label: "계속 작성하기", variant: "confirm", onClick: () => blocker.reset() },
+          ]}
         />
       )}
       {/* 크롭 모달 */}
