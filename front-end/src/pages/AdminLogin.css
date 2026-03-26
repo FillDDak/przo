@@ -7,7 +7,6 @@
 
 .admin-login__box {
     width: 530px;
-    height: 579px;
     border-radius: 50px;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
@@ -95,12 +94,45 @@
     margin: 0;
 }
 
+.admin-login__fail-count {
+    opacity: 0.7;
+}
+
 .admin-login__button--logout {
     background: linear-gradient(90deg, #ff6b6b 0%, #e74c3c 100%);
 }
 
 .admin-login__button--logout:hover {
     background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.admin-login__actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 60px;
+}
+
+.admin-login__actions .admin-login__button {
+    margin-top: 0;
+    height: 60px;
+    font-size: 16px;
+}
+
+.admin-login__button--logs {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-login__button--logs:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.admin-login__captcha {
+    display: flex;
+    justify-content: center;
 }
 
 /* 반응형 디자인 */

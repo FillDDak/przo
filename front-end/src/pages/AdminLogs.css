@@ -1,0 +1,262 @@
+.admin-logs {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 24px;
+    box-sizing: border-box;
+}
+
+.admin-logs__panel {
+    width: 100%;
+    max-width: 1100px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 36px 40px;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+/* ── 헤더 ── */
+.admin-logs__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.admin-logs__notice {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.45);
+    margin: -12px 0 24px;
+    line-height: 1.6;
+}
+
+.admin-logs__title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.admin-logs__back {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ddd;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.admin-logs__back:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+}
+
+/* ── 상태 텍스트 ── */
+.admin-logs__status {
+    color: #aaa;
+    text-align: center;
+    padding: 60px 0;
+    font-size: 15px;
+}
+
+/* ── 테이블 ── */
+.admin-logs__table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-logs__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-logs__table th {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #bbb;
+    font-weight: 600;
+    padding: 13px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+}
+
+.admin-logs__table td {
+    padding: 12px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
+    color: #e8e8e8;
+}
+
+.admin-logs__table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-logs__table tbody tr:hover td {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.admin-logs__row--fail td {
+    color: #ffaaaa;
+}
+
+/* ── 배지 ── */
+.admin-logs__badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.admin-logs__badge--success {
+    background-color: rgba(81, 196, 136, 0.22);
+    color: #6dffa8;
+    border: 1px solid rgba(81, 196, 136, 0.35);
+}
+
+.admin-logs__badge--fail {
+    background-color: rgba(255, 100, 100, 0.18);
+    color: #ff8080;
+    border: 1px solid rgba(255, 100, 100, 0.3);
+}
+
+/* ── 페이지네이션 ── */
+.admin-logs__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.admin-logs__page-btn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ccc;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.admin-logs__page-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #fff;
+}
+
+.admin-logs__page-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+.admin-logs__page-btn--active {
+    background: linear-gradient(70deg, #51C488 0%, #78FFB5 100%);
+    border-color: transparent;
+    color: #fff;
+    font-weight: 700;
+    cursor: default;
+}
+
+.admin-logs__page-btn--active:hover {
+    background: linear-gradient(70deg, #51C488 0%, #78FFB5 100%);
+    color: #fff;
+}
+
+.admin-logs__ellipsis {
+    color: #666;
+    font-size: 14px;
+    padding: 0 4px;
+    line-height: 36px;
+}
+
+/* ── 반응형 ── */
+
+/* 1024px 이하: 패딩 줄이기 */
+@media (max-width: 1024px) {
+    .admin-logs__panel {
+        padding: 28px 28px;
+    }
+}
+
+/* 768px 이하: IP 컬럼 숨기기, 패딩 축소 */
+@media (max-width: 768px) {
+    .admin-logs {
+        padding: 24px 16px;
+    }
+
+    .admin-logs__panel {
+        padding: 24px 20px;
+        border-radius: 18px;
+    }
+
+    .admin-logs__title {
+        font-size: 18px;
+    }
+
+    .admin-logs__table th,
+    .admin-logs__table td {
+        padding: 11px 13px;
+        font-size: 13px;
+    }
+
+    .col-ip {
+        display: none;
+    }
+}
+
+/* 480px 이하: 위치 컬럼도 숨기기, 카드형 */
+@media (max-width: 480px) {
+    .admin-logs {
+        padding: 16px 12px;
+    }
+
+    .admin-logs__panel {
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+
+    .admin-logs__header {
+        margin-bottom: 20px;
+    }
+
+    .admin-logs__title {
+        font-size: 16px;
+    }
+
+    .admin-logs__back {
+        font-size: 13px;
+        padding: 7px 12px;
+    }
+
+    .admin-logs__table th,
+    .admin-logs__table td {
+        padding: 10px 10px;
+        font-size: 12px;
+    }
+
+    .col-ip,
+    .col-location {
+        display: none;
+    }
+
+    .admin-logs__page-btn {
+        min-width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+}

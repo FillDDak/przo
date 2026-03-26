@@ -1,30 +1,33 @@
-import { StrictMode } from "react";
+import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
 
-// 레이아웃
+// 레이아웃 (즉시 로드)
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";
 
-// 페이지
+// 홈은 즉시 로드 (첫 진입 페이지)
 import Home from "./pages/Home";
-import About from "./pages/About";
-import Service from "./pages/Service";
-import Qna from "./pages/Qna";
-import QnaWrite from "./pages/QnaWrite";
-import QnaDetail from "./pages/QnaDetail";
-import Reviews from "./pages/Reviews";
-import ReviewWrite from "./pages/ReviewWrite";
-import NotFound from "./pages/NotFound";
-import AdminLogin from "./pages/AdminLogin";
-import EstimateSheet from "./pages/EstimateSheet";
-import AdminInquiryRedirect from "./pages/AdminInquiryRedirect";
-import Faq from "./pages/Faq";
-import Terms from "./pages/Terms";
-import CookiePolicy from "./pages/CookiePolicy";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
+
+// 나머지 페이지 (lazy 로드)
+const About = lazy(() => import("./pages/About"));
+const Service = lazy(() => import("./pages/Service"));
+const Qna = lazy(() => import("./pages/Qna"));
+const QnaWrite = lazy(() => import("./pages/QnaWrite"));
+const QnaDetail = lazy(() => import("./pages/QnaDetail"));
+const Reviews = lazy(() => import("./pages/Reviews"));
+const ReviewWrite = lazy(() => import("./pages/ReviewWrite"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminLogs = lazy(() => import("./pages/AdminLogs"));
+const EstimateSheet = lazy(() => import("./pages/EstimateSheet"));
+const AdminInquiryRedirect = lazy(() => import("./pages/AdminInquiryRedirect"));
+const Faq = lazy(() => import("./pages/Faq"));
+const Terms = lazy(() => import("./pages/Terms"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
 const router = createBrowserRouter([
   {
@@ -38,55 +41,55 @@ const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <About />,
+        element: <Suspense fallback={null}><About /></Suspense>,
       },
       {
         path: "service",
-        element: <Service />,
+        element: <Suspense fallback={null}><Service /></Suspense>,
       },
       {
         path: "qna",
-        element: <Qna />,
+        element: <Suspense fallback={null}><Qna /></Suspense>,
       },
       {
         path: "qna/write",
-        element: <QnaWrite />,
+        element: <Suspense fallback={null}><QnaWrite /></Suspense>,
       },
       {
         path: "qna/:id",
-        element: <QnaDetail />,
+        element: <Suspense fallback={null}><QnaDetail /></Suspense>,
       },
       {
         path: "qna/:id/edit",
-        element: <QnaWrite />,
+        element: <Suspense fallback={null}><QnaWrite /></Suspense>,
       },
       {
         path: "reviews",
-        element: <Reviews />,
+        element: <Suspense fallback={null}><Reviews /></Suspense>,
       },
       {
         path: "reviews/write",
-        element: <ReviewWrite />,
+        element: <Suspense fallback={null}><ReviewWrite /></Suspense>,
       },
       {
         path: "faq",
-        element: <Faq />,
+        element: <Suspense fallback={null}><Faq /></Suspense>,
       },
       {
         path: "terms",
-        element: <Terms />,
+        element: <Suspense fallback={null}><Terms /></Suspense>,
       },
       {
         path: "cookie-policy",
-        element: <CookiePolicy />,
+        element: <Suspense fallback={null}><CookiePolicy /></Suspense>,
       },
       {
         path: "privacy-policy",
-        element: <PrivacyPolicy />,
+        element: <Suspense fallback={null}><PrivacyPolicy /></Suspense>,
       },
       {
         path: "admin/inquiry/:id",
-        element: <AdminInquiryRedirect />,
+        element: <Suspense fallback={null}><AdminInquiryRedirect /></Suspense>,
       },
     ],
   },
@@ -96,11 +99,15 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AdminLogin />,
+        element: <Suspense fallback={null}><AdminLogin /></Suspense>,
       },
       {
         path: "estimate",
-        element: <EstimateSheet />,
+        element: <Suspense fallback={null}><EstimateSheet /></Suspense>,
+      },
+      {
+        path: "logs",
+        element: <Suspense fallback={null}><AdminLogs /></Suspense>,
       },
     ],
   },

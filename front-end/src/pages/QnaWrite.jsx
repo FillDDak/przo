@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate, useParams, useLocation, useBlocker } from "react-router-dom";
+import { Turnstile } from "@marsidev/react-turnstile";
 import "./QnaWrite.css";
 import ConfirmModal from "../components/ConfirmModal";
 import PrivacyModal from "../components/PrivacyModal";
@@ -33,6 +34,9 @@ const QnaWrite = () => {
   const [loading, setLoading] = useState(isEdit);
   const [modal, setModal] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", email: "", title: "", content: "" });
+  const [captchaSiteKey, setCaptchaSiteKey] = useState("");
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
   const submittedRef = useRef(false);
   const nameRef = useRef(null);
   const phoneRef = useRef(null);
@@ -58,6 +62,13 @@ const QnaWrite = () => {
   const blocker = useBlocker(shouldBlock);
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  useEffect(() => {
+    fetch("/api/config/turnstile-site-key")
+      .then((r) => r.json())
+      .then((d) => setCaptchaSiteKey(d.siteKey || ""))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -215,6 +226,7 @@ const QnaWrite = () => {
       } else {
         const autoPassword = phoneDigits.slice(-4);
         submitData.append("password", autoPassword);
+        if (captchaToken) submitData.append("captchaToken", captchaToken);
         const response = await fetch(`${API_BASE_URL}/inquiries`, {
           method: "POST",
           body: submitData,
@@ -226,6 +238,8 @@ const QnaWrite = () => {
           setAttachments([]);
           navigate(`/qna/${data.inquiryId}`, { state: { autoVerified: true, autoPassword } });
         } else {
+          setCaptchaToken(null);
+          captchaRef.current?.reset();
           setModal({ title: "문의 등록에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         }
       }
@@ -402,6 +416,18 @@ const QnaWrite = () => {
               ) : null}
               {fileError && <p className="qna-write__file-error">{fileError}</p>}
             </div>
+
+            {!isEdit && captchaSiteKey && (
+              <div className="qna-write__captcha">
+                <Turnstile
+                  ref={captchaRef}
+                  siteKey={captchaSiteKey}
+                  onSuccess={(token) => setCaptchaToken(token)}
+                  onExpire={() => setCaptchaToken(null)}
+                  options={{ theme: "light" }}
+                />
+              </div>
+            )}
 
             <div className="qna-write__button-wrapper">
               {isEdit && (

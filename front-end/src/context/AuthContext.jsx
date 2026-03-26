@@ -46,14 +46,14 @@ export const AuthProvider = ({ children }) => {
     validateToken();
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (username, password, captchaToken) => {
     // 1. 네트워크 연결 오류
     let response;
     try {
       response = await fetch(`${API_BASE_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, captchaToken }),
       });
     } catch {
       return { success: false, message: "서버에 연결할 수 없습니다. 인터넷 연결을 확인해주세요." };
@@ -85,7 +85,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     // 4. 서버에서 내려온 메시지 (아이디/비밀번호 불일치 등)
-    return { success: false, message: data.message || "로그인에 실패했습니다." };
+    return {
+      success: false,
+      message: data.message || "로그인에 실패했습니다.",
+      captchaRequired: data.captchaRequired || false,
+      captchaSiteKey: data.captchaSiteKey || null,
+      failCount: data.failCount ?? null,
+    };
   };
 
   const logout = () => {

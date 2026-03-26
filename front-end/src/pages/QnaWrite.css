@@ -356,6 +356,12 @@
 }
 
 /* 작성하기 버튼 */
+.qna-write__captcha {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
 .qna-write__button-wrapper {
   display: flex;
   justify-content: center;

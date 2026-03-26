@@ -5,6 +5,7 @@ import com.przo.company_web.dto.InquiryDetailResponse;
 import com.przo.company_web.dto.InquiryListResponse;
 import com.przo.company_web.entity.Inquiry;
 import com.przo.company_web.service.AdminService;
+import com.przo.company_web.service.CaptchaService;
 import com.przo.company_web.service.InquiryService;
 import com.przo.company_web.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class InquiryController {
     private final InquiryService inquiryService;
     private final AdminService adminService;
     private final NotificationService notificationService;
+    private final CaptchaService captchaService;
 
     @Value("${file.upload-dir:uploads/inquiries}")
     private String uploadDir;
@@ -91,9 +93,16 @@ public class InquiryController {
             @RequestParam String password,
             @RequestParam String title,
             @RequestParam String content,
-            @RequestParam(required = false) List<MultipartFile> attachments) {
+            @RequestParam(required = false) List<MultipartFile> attachments,
+            @RequestParam(required = false) String captchaToken) {
 
         Map<String, Object> response = new HashMap<>();
+
+        if (!captchaService.verify(captchaToken)) {
+            response.put("success", false);
+            response.put("message", "보안 확인에 실패했습니다. 다시 시도해주세요.");
+            return ResponseEntity.status(400).body(response);
+        }
 
         try {
             // 파일 저장 처리

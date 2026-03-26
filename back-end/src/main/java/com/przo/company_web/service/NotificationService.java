@@ -214,10 +214,11 @@ public class NotificationService {
             body.add("client_secret", kakaoClientSecret);
             body.add("refresh_token", refreshToken);
 
-            ResponseEntity<Map> response = restTemplate.postForEntity(
+            @SuppressWarnings("unchecked")
+            ResponseEntity<Map<String, Object>> response = restTemplate.postForEntity(
                     "https://kauth.kakao.com/oauth/token",
                     new HttpEntity<>(body, headers),
-                    Map.class
+                    (Class<Map<String, Object>>) (Class<?>) Map.class
             );
 
             if (response.getBody() != null) {
