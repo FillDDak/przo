@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,11 +33,14 @@ public class AdminController {
         String ip = extractIp(httpRequest);
         AdminLoginResponse response = adminService.login(request, ip);
         if (response.isSuccess()) {
-            Cookie cookie = new Cookie("admin_token", response.getToken());
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setMaxAge(24 * 60 * 60);
-            httpResponse.addCookie(cookie);
+            ResponseCookie cookie = ResponseCookie.from("admin_token", response.getToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(24 * 60 * 60)
+                    .sameSite("Strict")
+                    .build();
+            httpResponse.addHeader("Set-Cookie", cookie.toString());
             response.setToken(null);
             return ResponseEntity.ok(response);
         }
@@ -54,11 +58,14 @@ public class AdminController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         adminService.invalidateToken(extractTokenFromRequest(request));
-        Cookie cookie = new Cookie("admin_token", "");
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("admin_token", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
         return ResponseEntity.ok().build();
     }
 
