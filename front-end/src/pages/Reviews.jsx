@@ -23,7 +23,7 @@ const Reviews = () => {
   const dragStartX = useRef(null);
   const dragStartY = useRef(null);
   const carouselRef = useRef(null);
-  const { isAdmin, token } = useAuth();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const pageSize = 6;
   const [deleteTargetId, setDeleteTargetId] = useState(null);
@@ -152,7 +152,7 @@ const Reviews = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/reviews/${deleteTargetId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const data = await response.json();
       if (data.success) {

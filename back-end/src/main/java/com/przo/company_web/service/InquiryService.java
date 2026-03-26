@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Page<InquiryListResponse> getInquiryList(int page, int size, String title) {
         Pageable pageable = PageRequest.of(page, size);
@@ -45,7 +47,7 @@ public class InquiryService {
         inquiry.setCompanyName(request.getCompanyName());
         inquiry.setPhone(request.getPhone());
         inquiry.setEmail(request.getEmail());
-        inquiry.setPassword(request.getPassword());
+        inquiry.setPassword(passwordEncoder.encode(request.getPassword()));
         inquiry.setTitle(request.getTitle());
         inquiry.setContent(request.getContent());
         inquiry.setAttachment(attachmentPath);
@@ -56,7 +58,7 @@ public class InquiryService {
 
     public boolean verifyPassword(Long id, String password) {
         return inquiryRepository.findById(id)
-                .map(inquiry -> inquiry.getPassword().equals(password))
+                .map(inquiry -> passwordEncoder.matches(password, inquiry.getPassword()))
                 .orElse(false);
     }
 
@@ -68,7 +70,7 @@ public class InquiryService {
                     inquiry.setCompanyName(request.getCompanyName());
                     inquiry.setPhone(request.getPhone());
                     inquiry.setEmail(request.getEmail());
-                    inquiry.setPassword(request.getPassword());
+                    inquiry.setPassword(passwordEncoder.encode(request.getPassword()));
                     inquiry.setTitle(request.getTitle());
                     inquiry.setContent(request.getContent());
                     if (attachmentPath != null) {

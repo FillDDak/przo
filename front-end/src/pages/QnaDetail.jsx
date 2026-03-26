@@ -13,7 +13,7 @@ const QnaDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAdmin, token } = useAuth();
+  const { isAdmin } = useAuth();
   const [inquiry, setInquiry] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
@@ -123,8 +123,8 @@ const QnaDetail = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify({ adminNote }),
       });
 
@@ -155,7 +155,7 @@ const QnaDetail = () => {
             setIsSubmitting(true);
             const response = await fetch(`${API_BASE_URL}/inquiries/${id}/reply`, {
               method: "DELETE",
-              headers: { "Authorization": `Bearer ${token}` },
+              credentials: "include",
             });
             const data = await response.json();
             if (data.success) {
@@ -187,7 +187,7 @@ const QnaDetail = () => {
           try {
             const response = await fetch(`${API_BASE_URL}/inquiries/${id}`, {
               method: "DELETE",
-              headers: { "Authorization": `Bearer ${token}` },
+              credentials: "include",
             });
             const data = await response.json();
             if (data.success) {

@@ -16,7 +16,7 @@ const getPageNumbers = (current, total) => {
 };
 
 const AdminLogs = () => {
-    const { isAdmin, token } = useAuth();
+    const { isAdmin } = useAuth();
     const navigate = useNavigate();
     const [logs, setLogs] = useState([]);
     const [page, setPage] = useState(0);
@@ -37,7 +37,7 @@ const AdminLogs = () => {
             try {
                 const res = await fetch(
                     `/api/admin/logs?page=${page}&size=${PAGE_SIZE}`,
-                    { headers: { Authorization: `Bearer ${token}` } }
+                    { credentials: "include" }
                 );
                 if (res.ok) {
                     const data = await res.json();
@@ -51,7 +51,7 @@ const AdminLogs = () => {
             }
         };
         fetchLogs();
-    }, [isAdmin, token, page]);
+    }, [isAdmin, page]);
 
     const pageNumbers = getPageNumbers(page, totalPages);
 

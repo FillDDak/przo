@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -198,16 +202,12 @@ public class InquiryController {
     public ResponseEntity<Map<String, Object>> addAdminReply(
             @PathVariable Long id,
             @RequestBody Map<String, String> request,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            HttpServletRequest httpRequest) {
 
         Map<String, Object> response = new HashMap<>();
 
         // 관리자 인증 확인
-        String token = null;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-        }
-        if (!adminService.validateToken(token)) {
+        if (!adminService.validateToken(extractTokenFromRequest(httpRequest))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -231,15 +231,11 @@ public class InquiryController {
     @DeleteMapping("/{id}/reply")
     public ResponseEntity<Map<String, Object>> clearAdminReply(
             @PathVariable Long id,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            HttpServletRequest httpRequest) {
 
         Map<String, Object> response = new HashMap<>();
 
-        String token = null;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-        }
-        if (!adminService.validateToken(token)) {
+        if (!adminService.validateToken(extractTokenFromRequest(httpRequest))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -262,16 +258,12 @@ public class InquiryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteInquiry(
             @PathVariable Long id,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            HttpServletRequest httpRequest) {
 
         Map<String, Object> response = new HashMap<>();
 
         // 관리자 인증 확인
-        String token = null;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-        }
-        if (!adminService.validateToken(token)) {
+        if (!adminService.validateToken(extractTokenFromRequest(httpRequest))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -288,6 +280,20 @@ public class InquiryController {
         }
     }
 
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("admin_token".equals(cookie.getName())) return cookie.getValue();
+            }
+        }
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) return authHeader.substring(7);
+        return null;
+    }
+
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".gif", ".pdf");
+    private static final Set<String> ALLOWED_MIME_TYPES = Set.of("image/jpeg", "image/png", "image/gif", "application/pdf");
+
     private String saveFiles(List<MultipartFile> files) throws IOException {
         if (files == null || files.isEmpty()) return null;
         Path uploadPath = Paths.get(uploadDir);
@@ -300,7 +306,14 @@ public class InquiryController {
             String originalFilename = file.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
-                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                extension = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+            }
+            if (!ALLOWED_EXTENSIONS.contains(extension)) {
+                throw new IllegalArgumentException("허용되지 않는 파일 형식입니다. (jpg, jpeg, png, gif, pdf만 가능)");
+            }
+            String mimeType = file.getContentType();
+            if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType)) {
+                throw new IllegalArgumentException("허용되지 않는 파일 형식입니다. (jpg, jpeg, png, gif, pdf만 가능)");
             }
             String newFilename = UUID.randomUUID().toString() + extension;
             Files.copy(file.getInputStream(), uploadPath.resolve(newFilename));

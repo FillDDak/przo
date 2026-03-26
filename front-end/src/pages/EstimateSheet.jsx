@@ -227,7 +227,7 @@ function initialSheets() {
 }
 
 export default function EstimateSheet() {
-  const { isAdmin, loading, token } = useAuth();
+  const { isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const [sheets, setSheets] = useState(null); // 초기 렌더링 전용
   const sheetsRef = useRef(null);             // 저장용 live 상태 (re-render 없음)
@@ -438,10 +438,8 @@ export default function EstimateSheet() {
       const bodyStr = JSON.stringify({ data: JSON.stringify(payload) });
       const res = await fetch("/api/estimate-sheet", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: bodyStr,
       });
       const result = await res.json();

@@ -137,9 +137,19 @@ const QnaWrite = () => {
   };
 
   const MAX_FILES = 5;
+  const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".pdf"];
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
+    const invalid = files.find((f) => {
+      const ext = f.name.substring(f.name.lastIndexOf(".")).toLowerCase();
+      return !ALLOWED_EXTENSIONS.includes(ext);
+    });
+    if (invalid) {
+      setFileError(`"${invalid.name}" 파일은 첨부할 수 없습니다. (jpg, jpeg, png, gif, pdf만 가능)`);
+      e.target.value = "";
+      return;
+    }
     const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
     if (oversized) {
       setFileError(`"${oversized.name}" 파일 용량은 10MB를 초과할 수 없습니다.`);

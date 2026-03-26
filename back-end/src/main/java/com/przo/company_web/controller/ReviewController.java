@@ -11,12 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -58,12 +62,11 @@ public class ReviewController {
     @PostMapping("/upload-image")
     public ResponseEntity<Map<String, Object>> uploadImage(
             @RequestParam MultipartFile image,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            HttpServletRequest request) {
 
         Map<String, Object> response = new HashMap<>();
 
-        String token = extractToken(authHeader);
-        if (!adminService.validateToken(token)) {
+        if (!adminService.validateToken(extractTokenFromRequest(request))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -89,12 +92,11 @@ public class ReviewController {
             @RequestParam(required = false) String thumbnailUrl,
             @RequestParam(required = false) String createdDate,
             @RequestParam(required = false) String location,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            HttpServletRequest request) {
 
         Map<String, Object> response = new HashMap<>();
 
-        String token = extractToken(authHeader);
-        if (!adminService.validateToken(token)) {
+        if (!adminService.validateToken(extractTokenFromRequest(request))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -124,12 +126,11 @@ public class ReviewController {
             @RequestParam(required = false) String thumbnailUrl,
             @RequestParam(required = false) String createdDate,
             @RequestParam(required = false) String location,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            HttpServletRequest request) {
 
         Map<String, Object> response = new HashMap<>();
 
-        String token = extractToken(authHeader);
-        if (!adminService.validateToken(token)) {
+        if (!adminService.validateToken(extractTokenFromRequest(request))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -157,12 +158,11 @@ public class ReviewController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteReview(
             @PathVariable Long id,
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            HttpServletRequest request) {
 
         Map<String, Object> response = new HashMap<>();
 
-        String token = extractToken(authHeader);
-        if (!adminService.validateToken(token)) {
+        if (!adminService.validateToken(extractTokenFromRequest(request))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -179,12 +179,19 @@ public class ReviewController {
         }
     }
 
-    private String extractToken(String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("admin_token".equals(cookie.getName())) return cookie.getValue();
+            }
         }
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) return authHeader.substring(7);
         return null;
     }
+
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".gif", ".webp");
+    private static final Set<String> ALLOWED_MIME_TYPES = Set.of("image/jpeg", "image/png", "image/gif", "image/webp");
 
     private String saveFile(MultipartFile file) throws IOException {
         Path uploadPath = Paths.get(uploadDir);
@@ -195,7 +202,14 @@ public class ReviewController {
         String originalFilename = file.getOriginalFilename();
         String extension = "";
         if (originalFilename != null && originalFilename.contains(".")) {
-            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            extension = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
+        }
+        if (!ALLOWED_EXTENSIONS.contains(extension)) {
+            throw new IllegalArgumentException("허용되지 않는 파일 형식입니다. (jpg, jpeg, png, gif, webp만 가능)");
+        }
+        String mimeType = file.getContentType();
+        if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType)) {
+            throw new IllegalArgumentException("허용되지 않는 파일 형식입니다. (jpg, jpeg, png, gif, webp만 가능)");
         }
         String newFilename = UUID.randomUUID().toString() + extension;
 

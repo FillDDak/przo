@@ -10,7 +10,7 @@ const API_BASE_URL = "/api";
 const PAGE_SIZE = 10;
 
 const Faq = () => {
-  const { isAdmin, token } = useAuth();
+  const { isAdmin } = useAuth();
   const [openIndex, setOpenIndex] = useState(null);
   const [faqs, setFaqs] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -105,10 +105,8 @@ const Faq = () => {
     try {
       await fetch(`${API_BASE_URL}/faqs/reorder`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(newFaqs.map((f) => f.id)),
       });
     } catch (e) {
@@ -133,10 +131,8 @@ const Faq = () => {
     try {
       await fetch(`${API_BASE_URL}/faqs/reorder`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(newFaqs.map((f) => f.id)),
       });
     } catch (e) {
@@ -169,10 +165,8 @@ const Faq = () => {
     try {
       const res = await fetch(url, {
         method: isEdit ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(form),
       });
       const data = await res.json();
@@ -193,7 +187,7 @@ const Faq = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/faqs/${deleteTarget.id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success) {

@@ -15,9 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -33,6 +34,10 @@ public class AdminService {
 
     @Value("${turnstile.site-key:}")
     private String captchaSiteKey;
+
+    private record TokenEntry(long expiresAt, String adminName) {}
+    private final ConcurrentHashMap<String, TokenEntry> tokenStore = new ConcurrentHashMap<>();
+    private static final long TOKEN_EXPIRY_MS = 24L * 60 * 60 * 1000;
 
     public AdminLoginResponse login(AdminLoginRequest request, String ip) {
         // 1. IP 차단 확인
@@ -81,9 +86,8 @@ public class AdminService {
         Admin admin = adminOpt.get();
         rateLimiter.recordSuccess(ip);
 
-        String token = Base64.getEncoder().encodeToString(
-                (admin.getId() + ":" + UUID.randomUUID()).getBytes()
-        );
+        String token = UUID.randomUUID().toString();
+        tokenStore.put(token, new TokenEntry(System.currentTimeMillis() + TOKEN_EXPIRY_MS, admin.getAdminName()));
         saveLoginAttemptAsync(ip, request.getUsername(), true);
         return new AdminLoginResponse(true, "로그인 성공", token, admin.getAdminName(), false);
     }
@@ -97,24 +101,29 @@ public class AdminService {
         log.setCountry(geo.country());
         log.setUsername(username);
         log.setSuccess(success);
-        log.setAttemptedAt(LocalDateTime.now());
+        log.setAttemptedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         loginAttemptLogRepository.save(log);
     }
 
     public boolean validateToken(String token) {
-        if (token == null || token.isEmpty()) {
+        if (token == null || token.isEmpty()) return false;
+        TokenEntry entry = tokenStore.get(token);
+        if (entry == null) return false;
+        if (System.currentTimeMillis() > entry.expiresAt()) {
+            tokenStore.remove(token);
             return false;
         }
-        try {
-            String decoded = new String(Base64.getDecoder().decode(token));
-            String[] parts = decoded.split(":");
-            if (parts.length < 2) {
-                return false;
-            }
-            Long adminId = Long.parseLong(parts[0]);
-            return adminRepository.existsById(adminId);
-        } catch (Exception e) {
-            return false;
-        }
+        return true;
+    }
+
+    public String getAdminNameByToken(String token) {
+        if (token == null || token.isEmpty()) return null;
+        TokenEntry entry = tokenStore.get(token);
+        if (entry == null || System.currentTimeMillis() > entry.expiresAt()) return null;
+        return entry.adminName();
+    }
+
+    public void invalidateToken(String token) {
+        if (token != null) tokenStore.remove(token);
     }
 }

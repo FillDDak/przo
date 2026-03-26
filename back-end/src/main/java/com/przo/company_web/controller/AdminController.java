@@ -5,7 +5,9 @@ import com.przo.company_web.dto.AdminLoginResponse;
 import com.przo.company_web.dto.LoginAttemptLogResponse;
 import com.przo.company_web.repository.LoginAttemptLogRepository;
 import com.przo.company_web.service.AdminService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,29 +27,53 @@ public class AdminController {
     @PostMapping("/login")
     public ResponseEntity<AdminLoginResponse> login(
             @RequestBody AdminLoginRequest request,
-            HttpServletRequest httpRequest) {
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse) {
         String ip = extractIp(httpRequest);
         AdminLoginResponse response = adminService.login(request, ip);
         if (response.isSuccess()) {
+            Cookie cookie = new Cookie("admin_token", response.getToken());
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60);
+            httpResponse.addCookie(cookie);
+            response.setToken(null);
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(401).body(response);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, String>> getMe(HttpServletRequest request) {
+        String token = extractTokenFromRequest(request);
+        String adminName = adminService.getAdminNameByToken(token);
+        if (adminName == null) return ResponseEntity.status(401).build();
+        return ResponseEntity.ok(Map.of("adminName", adminName));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        adminService.invalidateToken(extractTokenFromRequest(request));
+        Cookie cookie = new Cookie("admin_token", "");
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/validate")
-    public ResponseEntity<Map<String, Boolean>> validateToken(
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
-        String token = extractToken(authHeader);
-        boolean valid = adminService.validateToken(token);
+    public ResponseEntity<Map<String, Boolean>> validateToken(HttpServletRequest request) {
+        boolean valid = adminService.validateToken(extractTokenFromRequest(request));
         return ResponseEntity.ok(Map.of("valid", valid));
     }
 
     @GetMapping("/logs")
     public ResponseEntity<?> getLogs(
-            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            HttpServletRequest request,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
-        if (!adminService.validateToken(extractToken(authHeader))) {
+        if (!adminService.validateToken(extractTokenFromRequest(request))) {
             return ResponseEntity.status(401).body(Map.of("error", "인증이 필요합니다."));
         }
         Page<LoginAttemptLogResponse> logs = loginAttemptLogRepository
@@ -66,6 +92,15 @@ public class AdminController {
             return realIp.trim();
         }
         return request.getRemoteAddr();
+    }
+
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("admin_token".equals(cookie.getName())) return cookie.getValue();
+            }
+        }
+        return extractToken(request.getHeader("Authorization"));
     }
 
     private String extractToken(String authHeader) {

@@ -2,6 +2,8 @@ package com.przo.company_web.controller;
 
 import com.przo.company_web.service.AdminService;
 import com.przo.company_web.service.EstimateSheetService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +40,10 @@ public class EstimateSheetController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> save(
-            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            HttpServletRequest request,
             @RequestBody Map<String, String> body) {
         Map<String, Object> response = new HashMap<>();
-        if (!adminService.validateToken(extractToken(authHeader))) {
+        if (!adminService.validateToken(extractTokenFromRequest(request))) {
             response.put("success", false);
             response.put("message", "관리자 권한이 필요합니다.");
             return ResponseEntity.status(403).body(response);
@@ -71,10 +73,14 @@ public class EstimateSheetController {
         return ResponseEntity.ok(response);
     }
 
-    private String extractToken(String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("admin_token".equals(cookie.getName())) return cookie.getValue();
+            }
         }
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) return authHeader.substring(7);
         return null;
     }
 }

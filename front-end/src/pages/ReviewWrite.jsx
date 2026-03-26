@@ -2,7 +2,6 @@ import { useState, useRef, useMemo, useEffect, useCallback, Fragment } from "rea
 import ConfirmModal from "../components/ConfirmModal";
 import { getErrorMessage } from "../utils/errorMessage";
 import { Link, useNavigate, useLocation, useBlocker } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import ReactQuill from "react-quill-new";
 import Cropper from "react-easy-crop";
 import "react-quill-new/dist/quill.snow.css";
@@ -36,13 +35,9 @@ const stripImagesFromHtml = (html) => {
 const ReviewWrite = () => {
   const navigate = useNavigate();
   const routerLocation = useLocation();
-  const { token } = useAuth();
-
   const dateInputRef = useRef(null);
   const quillRef = useRef(null);
   const titleRef = useRef(null);
-  const tokenRef = useRef(token);
-  tokenRef.current = token;
 
   const editData = routerLocation.state?.review || null;
   const isEdit = !!editData;
@@ -156,7 +151,7 @@ const ReviewWrite = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/reviews/upload-image`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${tokenRef.current}` },
+        credentials: "include",
         body: formData,
         signal: controller.signal,
       });
@@ -196,9 +191,18 @@ const ReviewWrite = () => {
     input.setAttribute("multiple", "");
     input.click();
 
+    const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
     input.onchange = () => {
       const files = Array.from(input.files);
       if (!files.length) return;
+      const invalid = files.find((f) => {
+        const ext = f.name.substring(f.name.lastIndexOf(".")).toLowerCase();
+        return !ALLOWED_EXTENSIONS.includes(ext);
+      });
+      if (invalid) {
+        setModal({ title: `"${invalid.name}" 파일은 업로드할 수 없습니다. (jpg, jpeg, png, gif, webp만 가능)`, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        return;
+      }
       const oversized = files.find((f) => f.size > 10 * 1024 * 1024);
       if (oversized) {
         setModal({ title: `"${oversized.name}" 파일 용량은 10MB를 초과할 수 없습니다.`, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
@@ -394,9 +398,7 @@ const ReviewWrite = () => {
       try {
         response = await fetch(url, {
           method: isEdit ? "PUT" : "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: "include",
           body: formData,
           signal: submitController.signal,
         });
