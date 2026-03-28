@@ -1,12 +1,12 @@
 package com.przo.company_web.controller;
 
 import com.przo.company_web.dto.InquiryCreateRequest;
-import com.przo.company_web.dto.InquiryDetailResponse;
 import com.przo.company_web.dto.InquiryListResponse;
 import com.przo.company_web.entity.Inquiry;
 import com.przo.company_web.service.AdminService;
 import com.przo.company_web.service.CaptchaService;
 import com.przo.company_web.service.InquiryService;
+import com.przo.company_web.service.InquiryVerifyRateLimiter;
 import com.przo.company_web.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +38,13 @@ public class InquiryController {
     private final AdminService adminService;
     private final NotificationService notificationService;
     private final CaptchaService captchaService;
+    private final InquiryVerifyRateLimiter verifyRateLimiter;
 
     @Value("${file.upload-dir:uploads/inquiries}")
     private String uploadDir;
+
+    @Value("${turnstile.site-key:}")
+    private String captchaSiteKey;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getInquiryList(
@@ -61,31 +65,95 @@ public class InquiryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InquiryDetailResponse> getInquiryById(@PathVariable Long id) {
-        return inquiryService.getInquiryById(id)
-                .map(ResponseEntity::ok)
+    public ResponseEntity<?> getInquiryById(@PathVariable Long id, HttpServletRequest httpRequest) {
+        boolean isAdmin = adminService.validateToken(extractTokenFromRequest(httpRequest));
+        if (isAdmin) {
+            return inquiryService.getInquiryById(id)
+                    .<ResponseEntity<?>>map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+        return inquiryService.getInquiryPublicById(id)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/{id}/verify")
     public ResponseEntity<Map<String, Object>> verifyPassword(
             @PathVariable Long id,
-            @RequestBody Map<String, String> request) {
+            @RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
 
-        String password = request.get("password");
+        String ip = extractClientIp(httpRequest);
         Map<String, Object> response = new HashMap<>();
 
+        if (verifyRateLimiter.isBlocked(ip)) {
+            long remaining = verifyRateLimiter.getRemainingBlockMinutes(ip);
+            response.put("success", false);
+            response.put("blocked", true);
+            response.put("remainingMinutes", remaining);
+            response.put("message", "비밀번호 입력 횟수를 초과했습니다. 약 " + remaining + "분 후에 다시 시도해주세요.");
+            return ResponseEntity.status(429).body(response);
+        }
+
+        // CAPTCHA 검증 (5회 이상 실패 시 필요)
+        if (verifyRateLimiter.isCaptchaRequired(ip)) {
+            String captchaToken = request.get("captchaToken");
+            if (captchaToken == null || captchaToken.isBlank()) {
+                response.put("success", false);
+                response.put("captchaRequired", true);
+                response.put("captchaSiteKey", captchaSiteKey);
+                response.put("attemptCount", verifyRateLimiter.getAttemptCount(ip));
+                response.put("maxAttempts", InquiryVerifyRateLimiter.MAX_ATTEMPTS);
+                response.put("message", "보안 확인을 완료해주세요.");
+                return ResponseEntity.ok(response);
+            }
+            if (!captchaService.verify(captchaToken)) {
+                response.put("success", false);
+                response.put("captchaRequired", true);
+                response.put("captchaSiteKey", captchaSiteKey);
+                response.put("attemptCount", verifyRateLimiter.getAttemptCount(ip));
+                response.put("maxAttempts", InquiryVerifyRateLimiter.MAX_ATTEMPTS);
+                response.put("message", "보안 확인에 실패했습니다. 다시 시도해주세요.");
+                return ResponseEntity.ok(response);
+            }
+        }
+
+        String password = request.get("password");
         boolean verified = inquiryService.verifyPassword(id, password);
 
         if (verified) {
+            verifyRateLimiter.clearAttempts(ip);
             response.put("success", true);
             response.put("message", "비밀번호가 확인되었습니다.");
+            inquiryService.getInquiryById(id).ifPresent(inquiry -> response.put("inquiry", inquiry));
         } else {
+            int count = verifyRateLimiter.recordAttempt(ip);
             response.put("success", false);
+            response.put("attemptCount", count);
+            response.put("maxAttempts", InquiryVerifyRateLimiter.MAX_ATTEMPTS);
+            if (count >= InquiryVerifyRateLimiter.MAX_ATTEMPTS) {
+                long remaining = verifyRateLimiter.getRemainingBlockMinutes(ip);
+                response.put("blocked", true);
+                response.put("remainingMinutes", remaining);
+                response.put("message", "비밀번호 입력 횟수를 초과했습니다. 약 " + remaining + "분 후에 다시 시도해주세요.");
+                return ResponseEntity.status(429).body(response);
+            }
+            if (count >= InquiryVerifyRateLimiter.CAPTCHA_THRESHOLD) {
+                response.put("captchaRequired", true);
+                response.put("captchaSiteKey", captchaSiteKey);
+            }
             response.put("message", "비밀번호가 일치하지 않습니다.");
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    private String extractClientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (forwarded != null && !forwarded.isBlank()) return forwarded.split(",")[0].trim();
+        String realIp = request.getHeader("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) return realIp.trim();
+        return request.getRemoteAddr();
     }
 
     @PostMapping

@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ConfirmModal from "../components/ConfirmModal";
 import { getErrorMessage } from "../utils/errorMessage";
+import { Turnstile } from "@marsidev/react-turnstile";
 import "./QnaDetail.css";
 import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
@@ -24,6 +25,10 @@ const QnaDetail = () => {
   const [adminNote, setAdminNote] = useState("");
   const [modal, setModal] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [captchaRequired, setCaptchaRequired] = useState(false);
+  const [captchaSiteKey, setCaptchaSiteKey] = useState("");
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +44,7 @@ const QnaDetail = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, captchaToken }),
       });
 
       const data = await response.json();
@@ -47,9 +52,26 @@ const QnaDetail = () => {
       if (data.success) {
         setIsVerified(true);
         setVerifiedPassword(password);
-        fetchInquiry();
+        setInquiry(data.inquiry);
+        setAdminNote(data.inquiry?.adminNote || "");
+        setLoading(false);
+      } else if (data.blocked) {
+        setCaptchaRequired(false);
+        setError(`비밀번호 입력 횟수를 초과했습니다. 약 ${data.remainingMinutes}분 후에 다시 시도해주세요.`);
+      } else if (data.captchaRequired) {
+        setCaptchaRequired(true);
+        setCaptchaSiteKey(data.captchaSiteKey || "");
+        setCaptchaToken(null);
+        captchaRef.current?.reset();
+        if (data.attemptCount && data.maxAttempts) {
+          setError(`비밀번호가 일치하지 않습니다. (${data.attemptCount}/${data.maxAttempts}회)`);
+        } else {
+          setError(data.message || "보안 확인을 완료해주세요.");
+        }
       } else {
-        setError("비밀번호가 일치하지 않습니다.");
+        setCaptchaToken(null);
+        captchaRef.current?.reset();
+        setError(`비밀번호가 일치하지 않습니다. (${data.attemptCount}/${data.maxAttempts}회)`);
       }
     } catch (error) {
       console.error("비밀번호 확인 오류:", error);
@@ -90,7 +112,9 @@ const QnaDetail = () => {
           if (data.success) {
             setIsVerified(true);
             setVerifiedPassword(location.state.autoPassword);
-            fetchInquiry();
+            setInquiry(data.inquiry);
+            setAdminNote(data.inquiry?.adminNote || "");
+            setLoading(false);
           } else {
             setLoading(false);
           }
@@ -263,6 +287,17 @@ const QnaDetail = () => {
                     className="qna-detail__password-input"
                   />
                   {error && <p className="qna-detail__password-error">{error}</p>}
+                  {captchaRequired && captchaSiteKey && (
+                    <div className="qna-detail__captcha">
+                      <Turnstile
+                        ref={captchaRef}
+                        siteKey={captchaSiteKey}
+                        onSuccess={(token) => setCaptchaToken(token)}
+                        onExpire={() => setCaptchaToken(null)}
+                        options={{ theme: "light" }}
+                      />
+                    </div>
+                  )}
                   <div className="qna-detail__password-buttons">
                     <button type="button" onClick={() => navigate("/qna")} className="qna-detail__password-cancel">
                       목록으로
@@ -409,7 +444,7 @@ const QnaDetail = () => {
                   목록으로
                 </Link>
                 <button
-                  onClick={() => navigate(`/qna/${id}/edit`, { state: { password: verifiedPassword } })}
+                  onClick={() => navigate(`/qna/${id}/edit`, { state: { password: verifiedPassword, inquiry } })}
                   className="qna-detail__list-btn"
                 >
                   수정하기

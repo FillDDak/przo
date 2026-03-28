@@ -16,6 +16,7 @@ const QnaWrite = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const passedPassword = location.state?.password || "";
+  const passedInquiry = location.state?.inquiry || null;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -84,34 +85,24 @@ const QnaWrite = () => {
   // 수정 모드: 기존 데이터 불러오기
   useEffect(() => {
     if (!isEdit) return;
-    const fetchInquiry = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/inquiries/${id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setFormData({
-            name: data.name || "",
-            companyName: data.companyName || "",
-            phone: data.phone || "",
-            email: data.email || "",
-            title: data.title || "",
-            content: data.content || "",
-          });
-          if (data.attachmentList?.length) {
-            setCurrentAttachments(data.attachmentList);
-          }
-        } else {
-          setModal({ title: "문의를 불러올 수 없습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
-        }
-      } catch (error) {
-        console.error("문의 불러오기 오류:", error);
-        setModal({ title: "문의를 불러오는 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
-      } finally {
-        setLoading(false);
+    if (passedInquiry) {
+      setFormData({
+        name: passedInquiry.name || "",
+        companyName: passedInquiry.companyName || "",
+        phone: passedInquiry.phone || "",
+        email: passedInquiry.email || "",
+        title: passedInquiry.title || "",
+        content: passedInquiry.content || "",
+      });
+      if (passedInquiry.attachmentList?.length) {
+        setCurrentAttachments(passedInquiry.attachmentList);
       }
-    };
-    fetchInquiry();
-  }, [id, isEdit, navigate]);
+      setLoading(false);
+    } else {
+      setModal({ title: "문의를 불러올 수 없습니다.", subtitle: "문의 상세 페이지에서 다시 접근해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
+      setLoading(false);
+    }
+  }, [id, isEdit, navigate, passedInquiry]);
 
   const formatPhoneNumber = (value) => {
     const numbers = value.replace(/[^\d]/g, '');
@@ -247,6 +238,10 @@ const QnaWrite = () => {
           setFormData({ name: "", companyName: "", phone: "", email: "", title: "", content: "" });
           setAttachments([]);
           navigate(`/qna/${data.inquiryId}`, { state: { autoVerified: true, autoPassword } });
+        } else if (response.status === 429) {
+          setCaptchaToken(null);
+          captchaRef.current?.reset();
+          setModal({ title: "요청이 너무 많습니다.", subtitle: "1시간 내 등록 가능한 횟수를 초과했습니다. 잠시 후 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         } else {
           setCaptchaToken(null);
           captchaRef.current?.reset();

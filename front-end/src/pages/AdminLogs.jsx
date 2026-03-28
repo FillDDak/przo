@@ -61,11 +61,15 @@ const AdminLogs = () => {
                 <div className="admin-logs__header">
                     <h1 className="admin-logs__title">로그인 시도 기록</h1>
                     <button className="admin-logs__back" onClick={() => navigate("/admin")}>
-                        ← 돌아가기
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: "block" }}>
+                            <path d="M19 12H5M12 5l-7 7 7 7"/>
+                        </svg>
+                        돌아가기
                     </button>
                 </div>
 
                 <p className="admin-logs__notice">관리자 페이지 로그인 시도 기록입니다. 개인정보보호법에 따라 각 접속 기록은 180일간 보관되며, 이후 매일 새벽 3시에 자동으로 삭제됩니다.</p>
+                <p className="admin-logs__notice">위치 정보는 IP 기반으로 제공되며 실제 위치와 다소 차이가 있을 수 있습니다.</p>
 
                 {loading ? (
                     <p className="admin-logs__status">불러오는 중...</p>

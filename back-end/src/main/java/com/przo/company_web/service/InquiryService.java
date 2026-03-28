@@ -3,6 +3,7 @@ package com.przo.company_web.service;
 import com.przo.company_web.dto.InquiryCreateRequest;
 import com.przo.company_web.dto.InquiryDetailResponse;
 import com.przo.company_web.dto.InquiryListResponse;
+import com.przo.company_web.dto.InquiryPublicResponse;
 import com.przo.company_web.entity.Inquiry;
 import com.przo.company_web.repository.InquiryRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class InquiryService {
     private final PasswordEncoder passwordEncoder;
 
     public Page<InquiryListResponse> getInquiryList(int page, int size, String title) {
+        if (page < 0) page = 0;
+        if (size < 1) size = 1;
         Pageable pageable = PageRequest.of(page, size);
         if (title != null && !title.isBlank()) {
             return inquiryRepository.findByTitleForList(title, pageable);
@@ -34,6 +37,11 @@ public class InquiryService {
     public Optional<InquiryDetailResponse> getInquiryById(Long id) {
         return inquiryRepository.findById(id)
                 .map(InquiryDetailResponse::new);
+    }
+
+    public Optional<InquiryPublicResponse> getInquiryPublicById(Long id) {
+        return inquiryRepository.findById(id)
+                .map(InquiryPublicResponse::new);
     }
 
     public long getTotalCount() {
