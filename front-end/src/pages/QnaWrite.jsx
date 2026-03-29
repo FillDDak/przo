@@ -219,8 +219,19 @@ const QnaWrite = () => {
         if (response.ok) {
           submittedRef.current = true;
           setModal({ title: "문의가 성공적으로 수정되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate(`/qna/${id}`, { state: { password: phoneDigits.slice(-4) } }); } }] });
+        } else if (response.status === 429) {
+          let msg = "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.";
+          try {
+            const data = await response.json();
+            if (data.blocked && data.remainingMinutes) {
+              msg = `비밀번호 입력 횟수를 초과했습니다. 약 ${data.remainingMinutes}분 후에 다시 시도해주세요.`;
+            } else if (data.message) {
+              msg = data.message;
+            }
+          } catch {}
+          setModal({ title: msg, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         } else if (response.status === 401) {
-          setModal({ title: "인증이 만료되었습니다.", subtitle: "문의 목록에서 다시 접근해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
+          setModal({ title: "비밀번호가 일치하지 않습니다.", subtitle: "문의 목록에서 비밀번호를 다시 확인해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
         } else {
           setModal({ title: "문의 수정에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         }

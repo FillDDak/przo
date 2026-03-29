@@ -81,7 +81,7 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
         if (!adminService.validateToken(extractTokenFromRequest(request))) {
-            return ResponseEntity.status(401).body(Map.of("error", "인증이 필요합니다."));
+            return ResponseEntity.status(403).body(Map.of("error", "관리자 권한이 필요합니다."));
         }
         Page<LoginAttemptLogResponse> logs = loginAttemptLogRepository
                 .findAllByOrderByAttemptedAtDesc(PageRequest.of(page, size))

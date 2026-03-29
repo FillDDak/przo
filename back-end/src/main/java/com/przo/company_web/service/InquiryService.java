@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,7 @@ public class InquiryService {
     public Page<InquiryListResponse> getInquiryList(int page, int size, String title) {
         if (page < 0) page = 0;
         if (size < 1) size = 1;
+        if (size > 100) size = 100;
         Pageable pageable = PageRequest.of(page, size);
         if (title != null && !title.isBlank()) {
             return inquiryRepository.findByTitleForList(title, pageable);
@@ -94,7 +96,7 @@ public class InquiryService {
                 .map(inquiry -> {
                     inquiry.setAdminNote(adminNote);
                     inquiry.setStatus("completed");
-                    inquiry.setRespondedAt(java.time.LocalDateTime.now());
+                    inquiry.setRespondedAt(java.time.LocalDateTime.now(ZoneId.of("Asia/Seoul")));
                     return inquiryRepository.save(inquiry);
                 });
     }

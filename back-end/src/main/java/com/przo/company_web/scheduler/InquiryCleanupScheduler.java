@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Component
@@ -20,7 +21,7 @@ public class InquiryCleanupScheduler {
     @Scheduled(cron = "0 0 2 * * *")
     @Transactional
     public void deleteOldInquiries() {
-        LocalDateTime threeYearsAgo = LocalDateTime.now().minusYears(3);
+        LocalDateTime threeYearsAgo = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusYears(3);
         inquiryRepository.deleteByCreatedAtBefore(threeYearsAgo);
         log.info("3년 경과 문의 데이터 자동 삭제 완료 (기준: {})", threeYearsAgo);
     }

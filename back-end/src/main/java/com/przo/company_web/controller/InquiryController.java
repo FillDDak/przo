@@ -170,6 +170,14 @@ public class InquiryController {
 
         Map<String, Object> response = new HashMap<>();
 
+        // 서버사이드 입력 검증
+        String validationError = validateInquiryFields(name, phone, email, title, content);
+        if (validationError != null) {
+            response.put("success", false);
+            response.put("message", validationError);
+            return ResponseEntity.status(400).body(response);
+        }
+
         if (!captchaService.verify(captchaToken)) {
             response.put("success", false);
             response.put("message", "보안 확인에 실패했습니다. 다시 시도해주세요.");
@@ -220,16 +228,48 @@ public class InquiryController {
             @RequestParam(required = false) String newPassword,
             @RequestParam String title,
             @RequestParam String content,
-            @RequestParam(required = false) List<MultipartFile> attachments) {
+            @RequestParam(required = false) List<MultipartFile> attachments,
+            HttpServletRequest httpRequest) {
 
         Map<String, Object> response = new HashMap<>();
 
+        // 서버사이드 입력 검증
+        String validationError = validateInquiryFields(name, phone, email, title, content);
+        if (validationError != null) {
+            response.put("success", false);
+            response.put("message", validationError);
+            return ResponseEntity.status(400).body(response);
+        }
+
+        // Rate Limiting 확인
+        String ip = extractClientIp(httpRequest);
+        if (verifyRateLimiter.isBlocked(ip)) {
+            long remaining = verifyRateLimiter.getRemainingBlockMinutes(ip);
+            response.put("success", false);
+            response.put("blocked", true);
+            response.put("remainingMinutes", remaining);
+            response.put("message", "비밀번호 입력 횟수를 초과했습니다. 약 " + remaining + "분 후에 다시 시도해주세요.");
+            return ResponseEntity.status(429).body(response);
+        }
+
         // 비밀번호 확인
         if (!inquiryService.verifyPassword(id, password)) {
+            int count = verifyRateLimiter.recordAttempt(ip);
             response.put("success", false);
+            response.put("attemptCount", count);
+            response.put("maxAttempts", InquiryVerifyRateLimiter.MAX_ATTEMPTS);
+            if (count >= InquiryVerifyRateLimiter.MAX_ATTEMPTS) {
+                long remaining = verifyRateLimiter.getRemainingBlockMinutes(ip);
+                response.put("blocked", true);
+                response.put("remainingMinutes", remaining);
+                response.put("message", "비밀번호 입력 횟수를 초과했습니다. 약 " + remaining + "분 후에 다시 시도해주세요.");
+                return ResponseEntity.status(429).body(response);
+            }
             response.put("message", "비밀번호가 일치하지 않습니다.");
             return ResponseEntity.status(401).body(response);
         }
+
+        verifyRateLimiter.clearAttempts(ip);
 
         try {
             // 파일 저장 처리
@@ -356,6 +396,20 @@ public class InquiryController {
         }
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) return authHeader.substring(7);
+        return null;
+    }
+
+    private String validateInquiryFields(String name, String phone, String email, String title, String content) {
+        if (name == null || name.isBlank()) return "이름을 입력해주세요.";
+        if (name.length() > 20) return "이름은 20자 이내로 입력해주세요.";
+        if (phone == null || phone.isBlank()) return "전화번호를 입력해주세요.";
+        if (email == null || email.isBlank()) return "이메일을 입력해주세요.";
+        if (email.length() > 100) return "이메일은 100자 이내로 입력해주세요.";
+        if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) return "올바른 이메일 형식을 입력해주세요.";
+        if (title == null || title.isBlank()) return "제목을 입력해주세요.";
+        if (title.length() > 100) return "제목은 100자 이내로 입력해주세요.";
+        if (content == null || content.isBlank()) return "문의 내용을 입력해주세요.";
+        if (content.length() > 2000) return "문의 내용은 2000자 이내로 입력해주세요.";
         return null;
     }
 
