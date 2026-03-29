@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./Header.css";
 import logoWhite from "../assets/logo/przo-logo-white.webp";
 import logoGreen from "../assets/logo/przo-logo-green.webp";
@@ -16,7 +16,6 @@ const Header = ({ variant = "default" }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isQnaOpen, setIsQnaOpen] = useState(false);
   const [isDesktopDropdownOpen, setIsDesktopDropdownOpen] = useState(false);
-  const dropdownTimerRef = useRef(null);
 
   useEffect(() => {
     document.documentElement.style.overflow = isMenuOpen ? "hidden" : "";
@@ -39,15 +38,12 @@ const Header = ({ variant = "default" }) => {
 
   const handleDropdownEnter = () => {
     if (isMenuOpen) return;
-    clearTimeout(dropdownTimerRef.current);
     setIsDesktopDropdownOpen(true);
   };
 
   const handleDropdownLeave = () => {
     if (isMenuOpen) return;
-    dropdownTimerRef.current = setTimeout(() => {
-      setIsDesktopDropdownOpen(false);
-    }, 300);
+    setIsDesktopDropdownOpen(false);
   };
 
   return (
@@ -87,9 +83,13 @@ const Header = ({ variant = "default" }) => {
             <button
               className="header__nav-link header__nav-link--dropdown-trigger"
               onClick={() => {
-                if (location.pathname === "/qna") navigate(0);
-                else navigate("/qna");
-                closeMenu();
+                if (isMenuOpen) {
+                  setIsQnaOpen(!isQnaOpen);
+                } else {
+                  if (location.pathname === "/qna") navigate(0);
+                  else navigate("/qna");
+                  closeMenu();
+                }
               }}
             >
               상담 서비스
@@ -98,10 +98,10 @@ const Header = ({ variant = "default" }) => {
               </svg>
             </button>
             <div className="header__dropdown">
-              <Link to="/qna" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); handleNavClick("/qna"); }}>
+              <Link to="/qna" className="header__dropdown-link" onClick={() => { setIsDesktopDropdownOpen(false); setIsQnaOpen(false); handleNavClick("/qna"); }}>
                 상담 문의
               </Link>
-              <Link to="/faq" className="header__dropdown-link" onClick={() => { clearTimeout(dropdownTimerRef.current); setIsDesktopDropdownOpen(false); setIsQnaOpen(false); handleNavClick("/faq"); }}>
+              <Link to="/faq" className="header__dropdown-link" onClick={() => { setIsDesktopDropdownOpen(false); setIsQnaOpen(false); handleNavClick("/faq"); }}>
                 많이 묻는 질문
               </Link>
             </div>
