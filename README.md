@@ -1,4 +1,4 @@
-<img width="1200" height="630" alt="og-przo-logo" src="https://github.com/user-attachments/assets/dc398275-aa4f-4723-ad12-80c5e05615e0" />
+<img width="500" height="263" alt="og-przo-logo" src="https://github.com/user-attachments/assets/dc398275-aa4f-4723-ad12-80c5e05615e0" />
 
 # 프르조 (PRZO) — 해충방제 전문 기업 웹사이트
 
