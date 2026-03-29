@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /qna/write
+Disallow: /qna/*/edit
+Disallow: /reviews/write
+
+Sitemap: https://przo.kr/sitemap.xml
