@@ -1,3 +1,5 @@
+<img width="1200" height="630" alt="og-przo-logo" src="https://github.com/user-attachments/assets/dc398275-aa4f-4723-ad12-80c5e05615e0" />
+
 # 프르조 (PRZO) — 해충방제 전문 기업 웹사이트
 
 > 실제 클라이언트 수주 프로젝트입니다. 요구사항 수집부터 설계, 개발, 배포까지 1인 풀스택으로 진행했습니다.
