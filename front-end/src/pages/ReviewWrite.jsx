@@ -258,7 +258,8 @@ const ReviewWrite = () => {
     setIsCropUploading(true);
     try {
       const currentItem = cropQueue[cropQueueIndex];
-      const url = await uploadImageBlob(currentItem.file, currentItem.file.name);
+      const compressed = await compressImage(currentItem.file, currentItem.file.name);
+      const url = await uploadImageBlob(compressed, currentItem.file.name);
       setUploadedImages((prev) => [...prev, url]);
       setImageError("");
       processCropQueue(cropQueue, cropQueueIndex + 1);
