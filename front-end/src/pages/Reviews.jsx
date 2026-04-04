@@ -315,7 +315,7 @@ const Reviews = () => {
             )}
 
             <div className="reviews__modal-info">
-              <span className="reviews__modal-location">{selectedReview.location || ""}</span>
+              {/* <span className="reviews__modal-location">{selectedReview.location || ""}</span> */}
               <span className="reviews__modal-date">{selectedReview.createdAt}</span>
             </div>
             {modalContentLoading && (

@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo, useEffect, useCallback, Fragment } from "react";
+import imageCompression from "browser-image-compression";
 import ConfirmModal from "../components/ConfirmModal";
 import { getErrorMessage } from "../utils/errorMessage";
 import { Link, useNavigate, useLocation, useBlocker } from "react-router-dom";
@@ -50,7 +51,7 @@ const ReviewWrite = () => {
     return `${y}-${m}-${day}`;
   })();
   const [title, setTitle] = useState(editData?.title || "");
-  const [location, setLocation] = useState(editData?.location || "");
+  // const [location, setLocation] = useState(editData?.location || "");
   const [createdDate, setCreatedDate] = useState(
     editData?.createdAt ? editData.createdAt.replaceAll(".", "-") : today
   );
@@ -80,7 +81,7 @@ const ReviewWrite = () => {
 
   const isDirty =
     title.trim() !== "" ||
-    location.trim() !== "" ||
+    // location.trim() !== "" ||
     content.replace(/<[^>]*>/g, "").trim() !== "" ||
     uploadedImages.length > 0;
 
@@ -141,6 +142,22 @@ const ReviewWrite = () => {
       ],
     },
   }), []);
+
+  // GIF는 압축 제외, 나머지는 최대 1MB / 1920px / WebP 변환
+  const compressImage = async (blobOrFile, filename) => {
+    const isGif = filename.toLowerCase().endsWith(".gif");
+    if (isGif) return blobOrFile;
+    try {
+      return await imageCompression(blobOrFile, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        fileType: "image/webp",
+      });
+    } catch {
+      return blobOrFile;
+    }
+  };
 
   // Upload a single blob/file to server, return URL
   const uploadImageBlob = async (blobOrFile, filename) => {
@@ -224,7 +241,8 @@ const ReviewWrite = () => {
     try {
       const currentItem = cropQueue[cropQueueIndex];
       const blob = await getCroppedImg(currentItem.objectUrl, croppedAreaPixels);
-      const url = await uploadImageBlob(blob, currentItem.file.name);
+      const compressed = await compressImage(blob, currentItem.file.name);
+      const url = await uploadImageBlob(compressed, currentItem.file.name);
       setUploadedImages((prev) => [...prev, url]);
       setImageError("");
       processCropQueue(cropQueue, cropQueueIndex + 1);
@@ -363,7 +381,7 @@ const ReviewWrite = () => {
 
       const formData = new FormData();
       formData.append("title", title);
-      if (location) formData.append("location", location);
+      // if (location) formData.append("location", location);
 
       const textOnly = content.replace(/<[^>]*>/g, "").trim();
       const hasText = textOnly.length > 0;
@@ -584,7 +602,7 @@ const ReviewWrite = () => {
               </div>
 
               {/* 시공 장소 */}
-              <div className="review-write__field">
+              {/* <div className="review-write__field">
                 <label className="review-write__label">시공 장소</label>
                 <input
                   type="text"
@@ -594,7 +612,7 @@ const ReviewWrite = () => {
                   placeholder="시공 장소를 입력해주세요. (예: 인천광역시 계양구 효성동)"
                   maxLength={50}
                 />
-              </div>
+              </div> */}
 
               {/* 내용 (텍스트 전용) */}
               <div className="review-write__field">
