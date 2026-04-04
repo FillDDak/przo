@@ -1,0 +1,38 @@
+diff --git a/node_modules/@fortune-sheet/core/dist/index.esm.js b/node_modules/@fortune-sheet/core/dist/index.esm.js
+index 5c9820b..40d25bb 100644
+--- a/node_modules/@fortune-sheet/core/dist/index.esm.js
++++ b/node_modules/@fortune-sheet/core/dist/index.esm.js
+@@ -70198,10 +70198,10 @@ function handleOverlayTouchMove(ctx, e, globalCache, scrollbarX, scrollbarY) {
+     if (!globalCache.touchMoveStartPos) return;
+     var slideX = touch.pageX - globalCache.touchMoveStartPos.x;
+     var slideY = touch.pageY - globalCache.touchMoveStartPos.y;
+-    var scrollLeft = ctx.scrollLeft;
+-    var scrollTop = ctx.scrollTop;
+-    scrollLeft -= slideX;
+-    scrollTop -= slideY;
++    globalCache.touchMoveStartPos.x = touch.pageX;
++    globalCache.touchMoveStartPos.y = touch.pageY;
++    var scrollLeft = scrollbarX.scrollLeft - slideX;
++    var scrollTop = scrollbarY.scrollTop - slideY;
+     scrollbarY.scrollTop = scrollTop;
+     globalCache.touchMoveStartPos.vy_y = slideY;
+     globalCache.touchMoveStartPos.scrollTop = scrollTop;
+diff --git a/node_modules/@fortune-sheet/core/dist/index.js b/node_modules/@fortune-sheet/core/dist/index.js
+index 04113a1..83e48a5 100644
+--- a/node_modules/@fortune-sheet/core/dist/index.js
++++ b/node_modules/@fortune-sheet/core/dist/index.js
+@@ -70208,10 +70208,10 @@ function handleOverlayTouchMove(ctx, e, globalCache, scrollbarX, scrollbarY) {
+     if (!globalCache.touchMoveStartPos) return;
+     var slideX = touch.pageX - globalCache.touchMoveStartPos.x;
+     var slideY = touch.pageY - globalCache.touchMoveStartPos.y;
+-    var scrollLeft = ctx.scrollLeft;
+-    var scrollTop = ctx.scrollTop;
+-    scrollLeft -= slideX;
+-    scrollTop -= slideY;
++    globalCache.touchMoveStartPos.x = touch.pageX;
++    globalCache.touchMoveStartPos.y = touch.pageY;
++    var scrollLeft = scrollbarX.scrollLeft - slideX;
++    var scrollTop = scrollbarY.scrollTop - slideY;
+     scrollbarY.scrollTop = scrollTop;
+     globalCache.touchMoveStartPos.vy_y = slideY;
+     globalCache.touchMoveStartPos.scrollTop = scrollTop;
