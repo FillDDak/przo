@@ -192,7 +192,7 @@
 
 .estimate-sheet__workbook {
   flex: 1;
-  min-height: 0;
+  min-height: 500px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #e0e0e0;
@@ -230,7 +230,8 @@
 @media (max-width: 768px) {
   .estimate-sheet {
     padding: 16px 16px;
-    height: calc(100vh - 60px);
+    height: auto;
+    min-height: calc(100vh - 60px);
   }
 
   .estimate-sheet__header {
@@ -259,6 +260,45 @@
     font-size: 13px;
     width: 100%;
   }
+
+  /* Fortune Sheet는 flex:1 대신 명시적 height가 있어야 셀을 정상 렌더링함 */
+  .estimate-sheet__workbook {
+    flex: none;
+    height: calc(100vh - 260px);
+    min-height: 500px;
+  }
+}
+
+/* 480px~768px: 버튼을 768px 이상과 동일하게 가로 배치 */
+@media (min-width: 481px) and (max-width: 768px) {
+  .estimate-sheet__header {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 12px;
+  }
+
+  .estimate-sheet__header > div {
+    width: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .estimate-sheet__reset-btn,
+  .estimate-sheet__save-btn,
+  .estimate-sheet__import-btn,
+  .estimate-sheet__download-btn {
+    width: auto;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  /* 헤더가 1줄이므로 더 많은 높이 확보 */
+  .estimate-sheet__workbook {
+    height: calc(100vh - 190px);
+    min-height: 500px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -286,5 +326,19 @@
   .estimate-sheet__import-modal {
     padding: 20px 18px;
     min-width: unset;
+  }
+}
+
+/* 핸드폰 가로모드 대응: 엑셀 최소 높이 보장 */
+@media (orientation: landscape) and (max-height: 520px) {
+  .estimate-sheet {
+    height: auto;
+    min-height: 0;
+  }
+
+  .estimate-sheet__workbook {
+    flex: none;
+    height: calc(100vh - 150px);
+    min-height: 500px;
   }
 }

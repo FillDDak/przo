@@ -2,6 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #0e1a28;
   background-image: url('../assets/image/admin_banner.webp');
   background-size: cover;
   background-position: center;
