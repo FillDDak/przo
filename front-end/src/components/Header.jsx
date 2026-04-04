@@ -10,7 +10,7 @@ const Header = ({ variant = "default" }) => {
   const location = useLocation();
   const isAdmin = variant === "admin";
   const { isAdmin: isAdminLoggedIn, adminName } = useAuth();
-  const subPagePrefixes = ["/about", "/service", "/qna", "/reviews", "/faq", "/terms", "/cookie-policy", "/privacy-policy"];
+  const subPagePrefixes = ["/about", /* "/service", */ "/qna", "/reviews", "/faq", "/terms", "/cookie-policy", "/privacy-policy"];
   const isSubPage = subPagePrefixes.some(prefix => location.pathname.startsWith(prefix));
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -72,9 +72,9 @@ const Header = ({ variant = "default" }) => {
           <Link to="/about" className="header__nav-link" onClick={() => handleNavClick("/about")}>
             회사 소개
           </Link>
-          <Link to="/service" className="header__nav-link" onClick={() => handleNavClick("/service")}>
+          {/* <Link to="/service" className="header__nav-link" onClick={() => handleNavClick("/service")}>
             서비스 소개
-          </Link>
+          </Link> */}
           <div
             className={`header__nav-item header__nav-item--dropdown ${isQnaOpen ? "header__nav-item--open" : ""} ${isDesktopDropdownOpen ? "header__nav-item--desktop-open" : ""}`}
             onMouseEnter={handleDropdownEnter}

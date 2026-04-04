@@ -13,7 +13,7 @@ import Home from "./pages/Home";
 
 // 나머지 페이지 (lazy 로드)
 const About = lazy(() => import("./pages/About"));
-const Service = lazy(() => import("./pages/Service"));
+// const Service = lazy(() => import("./pages/Service"));
 const Qna = lazy(() => import("./pages/Qna"));
 const QnaWrite = lazy(() => import("./pages/QnaWrite"));
 const QnaDetail = lazy(() => import("./pages/QnaDetail"));
@@ -43,10 +43,10 @@ const router = createBrowserRouter([
         path: "about",
         element: <Suspense fallback={null}><About /></Suspense>,
       },
-      {
-        path: "service",
-        element: <Suspense fallback={null}><Service /></Suspense>,
-      },
+      // {
+      //   path: "service",
+      //   element: <Suspense fallback={null}><Service /></Suspense>,
+      // },
       {
         path: "qna",
         element: <Suspense fallback={null}><Qna /></Suspense>,
