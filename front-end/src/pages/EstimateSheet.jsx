@@ -265,11 +265,12 @@ export default function EstimateSheet() {
   }, []);
 
   useEffect(() => {
+    if (!sheets) return; // sheets가 null이면 workbookRef.current도 null
     const el = workbookRef.current;
     if (!el) return;
     el.addEventListener("wheel", handleWheel, { passive: false, capture: true });
     return () => el.removeEventListener("wheel", handleWheel, { capture: true });
-  }, [handleWheel]);
+  }, [handleWheel, sheets]);
 
 
   // 행 줄이기 핸들러를 ref에 항상 최신 상태로 유지
