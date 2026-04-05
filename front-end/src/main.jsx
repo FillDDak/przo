@@ -23,6 +23,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminLogs = lazy(() => import("./pages/AdminLogs"));
 const EstimateSheet = lazy(() => import("./pages/EstimateSheet"));
+const PriceTable = lazy(() => import("./pages/PriceTable"));
 const AdminInquiryRedirect = lazy(() => import("./pages/AdminInquiryRedirect"));
 const Faq = lazy(() => import("./pages/Faq"));
 const Terms = lazy(() => import("./pages/Terms"));
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
       {
         path: "logs",
         element: <Suspense fallback={null}><AdminLogs /></Suspense>,
+      },
+      {
+        path: "price-table",
+        element: <Suspense fallback={null}><PriceTable /></Suspense>,
       },
     ],
   },

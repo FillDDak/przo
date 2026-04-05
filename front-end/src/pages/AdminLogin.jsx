@@ -77,6 +77,9 @@ const AdminLogin = () => {
                         <Link to="/admin/estimate" className="admin-login__button">
                             가격 견적 시트
                         </Link>
+                        <Link to="/admin/price-table" className="admin-login__button">
+                            가격표 관리
+                        </Link>
                         <Link to="/admin/logs" className="admin-login__button admin-login__button--logs">
                             로그인 기록 확인
                         </Link>
