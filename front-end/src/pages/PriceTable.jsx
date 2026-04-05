@@ -171,6 +171,8 @@ export default function PriceTable() {
     });
   };
 
+  const closeModal = () => setModal(null);
+
   const handleSave = async () => {
     if (!isDirty || saving) return;
     setSaving(true);
@@ -189,20 +191,23 @@ export default function PriceTable() {
         setIsDirty(false);
         setModal({
           title: "저장되었습니다.",
-          buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }],
+          onClose: closeModal,
+          buttons: [{ label: "확인", variant: "confirm", onClick: closeModal }],
         });
       } else {
         setModal({
           title: "저장 실패",
           subtitle: json.message || "다시 시도해 주세요.",
-          buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }],
+          onClose: closeModal,
+          buttons: [{ label: "확인", variant: "confirm", onClick: closeModal }],
         });
       }
     } catch {
       setModal({
         title: "저장 중 오류가 발생했습니다.",
         subtitle: "네트워크를 확인해 주세요.",
-        buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }],
+        onClose: closeModal,
+        buttons: [{ label: "확인", variant: "confirm", onClick: closeModal }],
       });
     } finally {
       setSaving(false);
@@ -213,20 +218,21 @@ export default function PriceTable() {
     setModal({
       title: "초기값으로 되돌리겠습니까?",
       subtitle: "현재 편집 내용이 모두 사라집니다.",
+      onClose: closeModal,
       buttons: [
-        { label: "취소", variant: "cancel", onClick: () => setModal(null) },
         {
           label: "초기화",
-          variant: "danger",
+          variant: "confirm",
           onClick: () => {
             const initial = deepClone(DEFAULT_DATA);
             setData(initial);
             setEditingCell(null);
             setEditValue("");
             checkDirty(initial);
-            setModal(null);
+            closeModal();
           },
         },
+        { label: "취소", variant: "cancel", onClick: closeModal },
       ],
     });
   };

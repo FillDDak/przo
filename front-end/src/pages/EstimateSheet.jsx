@@ -476,12 +476,12 @@ export default function EstimateSheet() {
       });
       const result = await res.json();
       if (result.success) {
-        setModal({ title: "저장되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({ title: "저장되었습니다.", subtitle: "변경 내용이 성공적으로 저장되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         savedSnapshotRef.current = makeSnapshot(sheetsRef.current);
         captureNextAsBaseline.current = false;
         setIsDirty(false);
       } else {
-        setModal({ title: result.message || "저장에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({ title: "저장 실패", subtitle: result.message || "다시 시도해 주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (e) {
       console.error("[EstimateSheet] 저장 중 예외:", e);
@@ -667,6 +667,7 @@ export default function EstimateSheet() {
               onClick={() => {
                 setModal({
                   title: "시트를 초기값으로 되돌리겠습니까?",
+                  subtitle: "현재 편집 내용이 모두 사라집니다.",
                   buttons: [
                     { label: "확인", variant: "confirm", onClick: () => {
                       const initial = initialSheets();
