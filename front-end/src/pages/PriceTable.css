@@ -330,6 +330,7 @@
   display: block;
   padding: 12px 14px;
   font-size: 13.5px;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.82);
   user-select: none;
   cursor: pointer;
@@ -436,6 +437,113 @@
   text-align: center;
 }
 
+/* ── 테마 토글 버튼 ── */
+.price-table__theme-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.price-table__theme-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── 라이트 모드 (카드 영역만) ── */
+.price-table--light .price-table__card {
+  background: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.price-table--light .price-table__card-header {
+  background: #f5f5f5;
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.price-table--light .price-table__card-title {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.price-table--light .price-table__table thead tr {
+  background: linear-gradient(90deg, rgba(46, 140, 85, 0.9) 0%, rgba(33, 115, 68, 0.85) 100%);
+  border-bottom-color: rgba(81, 196, 136, 0.5);
+}
+
+.price-table--light .price-table__table tbody tr {
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+.price-table--light .price-table__row-even {
+  background: #fff;
+}
+
+.price-table--light .price-table__row-odd {
+  background: #f9f9f9;
+}
+
+.price-table--light .price-table__table tbody tr:hover {
+  background: rgba(81, 196, 136, 0.08) !important;
+}
+
+.price-table--light .price-table__cell + .price-table__cell {
+  border-left-color: rgba(0, 0, 0, 0.07);
+}
+
+.price-table--light .price-table__cell--editing {
+  background: rgba(81, 196, 136, 0.1) !important;
+}
+
+.price-table--light .price-table__cell-text {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.price-table--light .price-table__cell:first-child .price-table__cell-text {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.price-table--light .price-table__cell-empty {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.price-table--light .price-table__cell-input {
+  color: #111;
+}
+
+.price-table--light .price-table__action-col {
+  border-left-color: rgba(0, 0, 0, 0.06);
+}
+
+.price-table--light .price-table__card-footer {
+  background: #f5f5f5;
+  border-top-color: rgba(0, 0, 0, 0.07);
+}
+
+.price-table--light .price-table__add-row-btn {
+  color: rgba(30, 122, 74, 0.8);
+  border-color: rgba(81, 196, 136, 0.45);
+}
+
+.price-table--light .price-table__add-row-btn:hover {
+  background: rgba(81, 196, 136, 0.08);
+  border-color: rgba(81, 196, 136, 0.65);
+  color: #1e7a4a;
+}
+
 /* ── 반응형 ── */
 @media (max-width: 1200px) {
   .price-table {
@@ -516,11 +624,13 @@
     height: 17px;
   }
 
-  .price-table__reset-btn .price-table__btn-label {
+  .price-table__reset-btn .price-table__btn-label,
+  .price-table__theme-btn .price-table__btn-label {
     display: none;
   }
 
-  .price-table__reset-btn {
+  .price-table__reset-btn,
+  .price-table__theme-btn {
     padding: 9px;
     gap: 0;
   }
