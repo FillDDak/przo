@@ -201,6 +201,16 @@
   touch-action: none;
 }
 
+/* Fortune Sheet 툴바 SVG 아이콘이 모바일 flex 압축으로 줄어드는 것 방지 */
+.estimate-sheet__workbook .fortune-toolbar-button,
+.estimate-sheet__workbook .fortune-toolbar-combo {
+  flex-shrink: 0;
+}
+
+.estimate-sheet__workbook svg {
+  max-width: none;
+}
+
 /* ── 반응형 ── */
 
 @media (max-width: 1200px) {
