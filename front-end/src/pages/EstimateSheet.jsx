@@ -639,37 +639,59 @@ export default function EstimateSheet() {
     )}
     <div className="estimate-sheet">
       <div className="estimate-sheet__header">
-        <h1 className="estimate-sheet__title">가격 견적 시트</h1>
-        <div>
-          <button
-            className="estimate-sheet__reset-btn"
-            onClick={() => {
-              setModal({
-                title: "시트를 초기값으로 되돌리겠습니까?",
-                buttons: [
-                  { label: "확인", variant: "confirm", onClick: () => {
-                    const initial = initialSheets();
-                    setSheets(initial);
-                    sheetsRef.current = initial;
-                    setWorkbookKey((k) => k + 1);
-                    setModal(null);
-                  }},
-                  { label: "취소", variant: "cancel", onClick: () => setModal(null) },
-                ],
-              });
-            }}
-          >
-            초기화
-          </button>
-          <button className="estimate-sheet__save-btn" onClick={handleSave} disabled={saving || !isDirty}>
-            {saving ? "저장 중..." : "저장"}
-          </button>
-          <button className="estimate-sheet__import-btn" onClick={() => fileInputRef.current?.click()}>
-            엑셀 불러오기
-          </button>
-          <button className="estimate-sheet__download-btn" onClick={handleDownload}>
-            엑셀 다운로드
-          </button>
+        <div className="estimate-sheet__title-area">
+          <svg className="estimate-sheet__title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/>
+          </svg>
+          <h1 className="estimate-sheet__title">가격 견적 시트</h1>
+        </div>
+        <div className="estimate-sheet__actions">
+          <div className="estimate-sheet__btn-group">
+            <button className="estimate-sheet__import-btn" onClick={() => fileInputRef.current?.click()} title="불러오기">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 14l1.5-2.9A2 2 0 019.24 10H20a2 2 0 011.94 2.5l-1.55 6a2 2 0 01-1.94 1.5H4a2 2 0 01-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 011.66.9l.82 1.2a2 2 0 001.66.9H18a2 2 0 012 2v2"/>
+              </svg>
+              <span className="estimate-sheet__btn-label">불러오기</span>
+            </button>
+            <button className="estimate-sheet__download-btn" onClick={handleDownload} title="다운로드">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span className="estimate-sheet__btn-label">다운로드</span>
+            </button>
+          </div>
+          <div className="estimate-sheet__btn-separator" />
+          <div className="estimate-sheet__btn-group">
+            <button
+              className="estimate-sheet__reset-btn"
+              onClick={() => {
+                setModal({
+                  title: "시트를 초기값으로 되돌리겠습니까?",
+                  buttons: [
+                    { label: "확인", variant: "confirm", onClick: () => {
+                      const initial = initialSheets();
+                      setSheets(initial);
+                      sheetsRef.current = initial;
+                      setWorkbookKey((k) => k + 1);
+                      setModal(null);
+                    }},
+                    { label: "취소", variant: "cancel", onClick: () => setModal(null) },
+                  ],
+                });
+              }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+              </svg>
+              <span className="estimate-sheet__btn-label">초기화</span>
+            </button>
+            <button className="estimate-sheet__save-btn" onClick={handleSave} disabled={saving || !isDirty} title={saving ? "저장 중..." : "저장"}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+              </svg>
+              <span className="estimate-sheet__btn-label">{saving ? "저장 중..." : "저장"}</span>
+            </button>
+          </div>
         </div>
       </div>
       <input ref={fileInputRef} type="file" accept=".xlsx" style={{ display: "none" }} onChange={handleFileChange} />

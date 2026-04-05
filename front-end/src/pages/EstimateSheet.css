@@ -7,100 +7,167 @@
   box-sizing: border-box;
 }
 
+/* ── 헤더 (글래스 패널) ── */
 .estimate-sheet__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
   flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 14px 24px;
+  gap: 16px;
+}
+
+.estimate-sheet__title-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.estimate-sheet__title-icon {
+  color: #51c488;
+  flex-shrink: 0;
 }
 
 .estimate-sheet__title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  color: #fff;
   margin: 0;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  background: linear-gradient(100deg, #ffffff 0%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.estimate-sheet__header > div {
+/* ── 액션 영역 ── */
+.estimate-sheet__actions {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
 }
 
-.estimate-sheet__reset-btn {
-  padding: 10px 24px;
-  background-color: #e06060;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 500;
+.estimate-sheet__btn-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.estimate-sheet__btn-separator {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+
+/* ── 버튼 공통 기반 ── */
+.estimate-sheet__reset-btn,
+.estimate-sheet__save-btn,
+.estimate-sheet__import-btn,
+.estimate-sheet__download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* 파일 버튼 (불러오기 / 다운로드) — 뉴트럴 글래스 */
+.estimate-sheet__import-btn,
+.estimate-sheet__download-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: #d4d4d4;
+}
+
+.estimate-sheet__import-btn:hover,
+.estimate-sheet__download-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.36);
+  color: #fff;
+}
+
+/* 초기화 — 레드 글래스 (위험 액션) */
+.estimate-sheet__reset-btn {
+  background: rgba(220, 80, 80, 0.12);
+  border: 1px solid rgba(220, 80, 80, 0.35);
+  color: #ff9a9a;
 }
 
 .estimate-sheet__reset-btn:hover {
-  background-color: #c44444;
+  background: rgba(220, 80, 80, 0.22);
+  border-color: rgba(220, 80, 80, 0.55);
+  color: #ffbcbc;
+  box-shadow: 0 0 12px rgba(220, 80, 80, 0.25);
 }
 
+/* 저장 — 그린 글래스 (주요 CTA) */
 .estimate-sheet__save-btn {
-  padding: 10px 24px;
-  background-color: #4472C4;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  background: rgba(81, 196, 136, 0.22);
+  border: 1px solid rgba(81, 196, 136, 0.45);
+  color: #78ffb5;
+  box-shadow: 0 2px 10px rgba(81, 196, 136, 0.15);
 }
 
-.estimate-sheet__save-btn:hover {
-  background-color: #3560a8;
+.estimate-sheet__save-btn:hover:not(:disabled) {
+  background: rgba(81, 196, 136, 0.32);
+  border-color: rgba(81, 196, 136, 0.62);
+  color: #a4ffd0;
+  box-shadow: 0 4px 16px rgba(81, 196, 136, 0.28);
 }
 
 .estimate-sheet__save-btn:disabled {
-  background-color: #2c4e8a;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.30);
+  box-shadow: none;
   cursor: not-allowed;
-  filter: brightness(0.8);
 }
 
-.estimate-sheet__download-btn {
-  padding: 10px 24px;
-  background-color: #51c488;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
+/* ── 워크북 영역 ── */
+.estimate-sheet__workbook {
+  flex: 1;
+  min-height: 500px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: #fff;
+  position: relative;
+  touch-action: none;
 }
 
-.estimate-sheet__download-btn:hover {
-  background-color: #3aad72;
+/* Fortune Sheet 툴바 SVG 아이콘이 모바일 flex 압축으로 줄어드는 것 방지 */
+.estimate-sheet__workbook .fortune-toolbar-button,
+.estimate-sheet__workbook .fortune-toolbar-combo {
+  flex-shrink: 0;
 }
 
-.estimate-sheet__import-btn {
-  padding: 10px 24px;
-  background-color: #7b68ee;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.estimate-sheet__workbook svg {
+  max-width: none;
 }
 
-.estimate-sheet__import-btn:hover {
-  background-color: #6254d4;
-}
-
+/* ── 임포트 오버레이 ── */
 .estimate-sheet__import-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,20 +175,23 @@
 }
 
 .estimate-sheet__import-modal {
-  background: #fff;
-  border-radius: 10px;
+  background: rgba(14, 26, 40, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
   padding: 28px 32px;
   min-width: 280px;
   max-width: 400px;
   width: 100%;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
 }
 
 .estimate-sheet__import-title {
   margin: 0 0 18px;
   font-size: 17px;
   font-weight: 700;
-  color: #222;
+  color: #fff;
 }
 
 .estimate-sheet__import-list {
@@ -138,7 +208,7 @@
   align-items: center;
   gap: 10px;
   font-size: 15px;
-  color: #333;
+  color: #ccc;
   cursor: pointer;
 }
 
@@ -146,6 +216,7 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
+  accent-color: #51c488;
 }
 
 .estimate-sheet__import-actions {
@@ -156,59 +227,44 @@
 
 .estimate-sheet__import-cancel {
   padding: 8px 20px;
-  background: #f0f0f0;
-  color: #555;
-  border: none;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #aaa;
+  border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .estimate-sheet__import-cancel:hover {
-  background: #e0e0e0;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
 }
 
 .estimate-sheet__import-confirm {
   padding: 8px 20px;
-  background: #7b68ee;
+  background: linear-gradient(110deg, #51c488 0%, #78ffb5 100%);
+  border: 1px solid transparent;
   color: #fff;
-  border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: opacity 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 10px rgba(81, 196, 136, 0.35);
 }
 
 .estimate-sheet__import-confirm:hover {
-  background: #6254d4;
+  opacity: 0.88;
+  box-shadow: 0 4px 16px rgba(81, 196, 136, 0.50);
 }
 
 .estimate-sheet__import-confirm:disabled {
-  background: #b0a8f0;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.30);
+  box-shadow: none;
   cursor: not-allowed;
-}
-
-.estimate-sheet__workbook {
-  flex: 1;
-  min-height: 500px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
-  background: #fff;
-  position: relative;
-  touch-action: none;
-}
-
-/* Fortune Sheet 툴바 SVG 아이콘이 모바일 flex 압축으로 줄어드는 것 방지 */
-.estimate-sheet__workbook .fortune-toolbar-button,
-.estimate-sheet__workbook .fortune-toolbar-combo {
-  flex-shrink: 0;
-}
-
-.estimate-sheet__workbook svg {
-  max-width: none;
 }
 
 /* ── 반응형 ── */
@@ -226,15 +282,12 @@
   }
 
   .estimate-sheet__title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
-  .estimate-sheet__reset-btn,
-  .estimate-sheet__save-btn,
-  .estimate-sheet__import-btn,
-  .estimate-sheet__download-btn {
-    padding: 8px 18px;
-    font-size: 14px;
+  .estimate-sheet__title-icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -246,92 +299,98 @@
   }
 
   .estimate-sheet__header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    gap: 8px;
+  }
+
+  .estimate-sheet__title-area {
+    min-width: 0;
+    overflow: hidden;
   }
 
   .estimate-sheet__title {
-    font-size: 18px;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .estimate-sheet__header > div {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+  .estimate-sheet__title-icon {
+    width: 18px;
+    height: 18px;
   }
 
-  .estimate-sheet__reset-btn,
-  .estimate-sheet__save-btn,
-  .estimate-sheet__import-btn,
-  .estimate-sheet__download-btn {
-    padding: 9px 12px;
+  .estimate-sheet__btn-group > button {
+    padding: 8px 12px;
     font-size: 13px;
-    width: 100%;
   }
 
-  /* Fortune Sheet는 flex:1 대신 명시적 height가 있어야 셀을 정상 렌더링함 */
   .estimate-sheet__workbook {
     flex: none;
-    height: calc(100vh - 260px);
-    min-height: 500px;
-  }
-}
-
-/* 480px~768px: 버튼을 768px 이상과 동일하게 가로 배치 */
-@media (min-width: 481px) and (max-width: 768px) {
-  .estimate-sheet__header {
-    flex-direction: row;
-    align-items: center;
-    gap: 0;
-    margin-bottom: 12px;
-  }
-
-  .estimate-sheet__header > div {
-    width: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .estimate-sheet__reset-btn,
-  .estimate-sheet__save-btn,
-  .estimate-sheet__import-btn,
-  .estimate-sheet__download-btn {
-    width: auto;
-    padding: 8px 14px;
-    font-size: 13px;
-  }
-
-  /* 헤더가 1줄이므로 더 많은 높이 확보 */
-  .estimate-sheet__workbook {
     height: calc(100vh - 190px);
     min-height: 500px;
   }
 }
 
-@media (max-width: 480px) {
+/* ── 아이콘 전용 컴팩트 모드 (600px 이하) ── */
+@media (max-width: 600px) {
   .estimate-sheet {
     padding: 12px 12px;
   }
 
-  .estimate-sheet__title {
-    font-size: 16px;
-  }
-
-  .estimate-sheet__header > div {
-    grid-template-columns: 1fr 1fr;
+  .estimate-sheet__header {
+    padding: 10px 14px;
     gap: 6px;
   }
 
-  .estimate-sheet__reset-btn,
-  .estimate-sheet__save-btn,
+  .estimate-sheet__title {
+    font-size: 15px;
+  }
+
+  .estimate-sheet__title-icon {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+  }
+
+  /* 불러오기·다운로드·초기화 텍스트 라벨 숨김 → 아이콘 전용 */
+  .estimate-sheet__import-btn .estimate-sheet__btn-label,
+  .estimate-sheet__download-btn .estimate-sheet__btn-label,
+  .estimate-sheet__reset-btn .estimate-sheet__btn-label {
+    display: none;
+  }
+
+  .estimate-sheet__actions {
+    gap: 4px;
+  }
+
+  .estimate-sheet__btn-group {
+    gap: 4px;
+  }
+
+  /* 불러오기·다운로드·초기화 — 아이콘 전용 정사각형 */
   .estimate-sheet__import-btn,
-  .estimate-sheet__download-btn {
-    padding: 8px 8px;
-    font-size: 12px;
+  .estimate-sheet__download-btn,
+  .estimate-sheet__reset-btn {
+    padding: 9px;
+    gap: 0;
+    border-radius: 10px;
+  }
+
+  /* 저장 — 텍스트 유지, 패딩만 축소 */
+  .estimate-sheet__save-btn {
+    padding: 8px 11px;
+    font-size: 12.5px;
+  }
+
+  .estimate-sheet__btn-separator {
+    margin: 0 2px;
+    height: 24px;
+  }
+
+  .estimate-sheet__workbook {
+    height: calc(100vh - 170px);
+    min-height: 400px;
   }
 
   .estimate-sheet__import-modal {
@@ -340,7 +399,7 @@
   }
 }
 
-/* 핸드폰 가로모드 대응: 엑셀 최소 높이 보장 */
+/* 핸드폰 가로모드 대응 */
 @media (orientation: landscape) and (max-height: 520px) {
   .estimate-sheet {
     height: auto;
@@ -350,6 +409,6 @@
   .estimate-sheet__workbook {
     flex: none;
     height: calc(100vh - 150px);
-    min-height: 500px;
+    min-height: 400px;
   }
 }
