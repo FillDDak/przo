@@ -30,7 +30,7 @@ const Footer = ({ variant = "default" }) => {
               <a href="https://youtube.com/_yourchannel" target="_blank" rel="noopener noreferrer">
                 <img src={youtubeIcon} alt="youtube" />
               </a>
-              <a href="https://blog.naver.com/_yourblog" target="_blank" rel="noopener noreferrer">
+              <a href="https://blog.naver.com/legnalove" target="_blank" rel="noopener noreferrer">
                 <img src={naverblogIcon} alt="naver blog" />
               </a>
             </div>
