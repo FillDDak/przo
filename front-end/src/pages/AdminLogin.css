@@ -63,33 +63,33 @@
     height: 62px;
     margin-top: 60px;
     border-radius: 12px;
-    background: rgba(81, 196, 136, 0.9);
-    border: 1px solid rgba(81, 196, 136, 0.9);
-    color: #ffffff;
+    background: rgba(81, 196, 136, 0.22);
+    border: 1px solid rgba(81, 196, 136, 0.45);
+    color: #e8e8e8;
     font-size: 17px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, color 0.2s;
     text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
     letter-spacing: -0.2px;
-    box-shadow: 0 2px 14px rgba(81, 196, 136, 0.14);
+    box-shadow: 0 2px 10px rgba(81, 196, 136, 0.15);
 }
 
 .admin-login__button:hover {
-    background: rgba(81, 196, 136, 1);
-    border-color: rgba(81, 196, 136, 1);
+    background: rgba(81, 196, 136, 0.32);
+    border-color: rgba(81, 196, 136, 0.62);
     color: #ffffff;
-    box-shadow: 0 4px 22px rgba(81, 196, 136, 0.28);
+    box-shadow: 0 4px 16px rgba(81, 196, 136, 0.28);
 }
 
 .admin-login__button:disabled {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.32);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.30);
     box-shadow: none;
     cursor: not-allowed;
 }
@@ -106,45 +106,212 @@
 }
 
 .admin-login__button--logout {
-    background: rgba(220, 80, 80, 0.9);
-    border: 1px solid rgba(220, 80, 80, 0.9);
-    color: #ffffff;
+    background: rgba(220, 80, 80, 0.12);
+    border: 1px solid rgba(220, 80, 80, 0.35);
+    color: #ff9a9a;
     box-shadow: none;
 }
 
 .admin-login__button--logout:hover {
-    background: rgba(220, 80, 80, 1);
-    border-color: rgba(220, 80, 80, 1);
-    color: #ffffff;
-    box-shadow: 0 0 18px rgba(220, 80, 80, 0.24);
+    background: rgba(220, 80, 80, 0.22);
+    border-color: rgba(220, 80, 80, 0.55);
+    color: #ffbcbc;
+    box-shadow: 0 0 12px rgba(220, 80, 80, 0.25);
 }
 
-.admin-login__actions {
-    width: 100%;
+/* ── 대시보드 박스 ── */
+.admin-login__box--dashboard {
+    width: 580px;
+    padding: 40px 44px 44px;
+    margin: 30px 0;
+}
+
+.admin-login__dashboard-top {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 60px;
+    align-items: center;
+    margin-bottom: 28px;
 }
 
-.admin-login__actions .admin-login__button {
-    margin-top: 0;
-    height: 56px;
+.admin-login__dashboard-top .admin-login__text {
+    margin-bottom: 0;
     font-size: 16px;
 }
 
-.admin-login__button--logs {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    color: rgba(30, 30, 30, 0.9);
-    box-shadow: none;
+/* ── 벤토 그리드 ── */
+.admin-login__grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
 }
 
-.admin-login__button--logs:hover {
-    background: rgba(255, 255, 255, 1);
-    border-color: rgba(255, 255, 255, 1);
-    color: rgba(30, 30, 30, 1);
-    box-shadow: none;
+/* ── 카드 공통 ── */
+.admin-login__card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    text-align: left;
+    font-family: inherit;
+    min-width: 0;
+}
+
+.admin-login__card:hover {
+    color: inherit;
+}
+
+.admin-login__card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.admin-login__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-login__card-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+}
+
+.admin-login__card-desc {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.65;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-login__card-arrow {
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.admin-login__card--hero:hover .admin-login__card-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* ── 히어로 카드 (견적 시트, 풀 너비) ── */
+.admin-login__card--hero {
+    grid-column: span 2;
+    background: rgba(81, 196, 136, 0.14);
+    border-color: rgba(81, 196, 136, 0.38);
+    color: #e8e8e8;
+    padding: 22px 24px;
+    box-shadow: 0 2px 12px rgba(81, 196, 136, 0.10);
+}
+
+.admin-login__card--hero:hover {
+    background: rgba(81, 196, 136, 0.22);
+    border-color: rgba(81, 196, 136, 0.55);
+    box-shadow: 0 6px 20px rgba(81, 196, 136, 0.18);
+    color: #ffffff;
+}
+
+.admin-login__card--hero .admin-login__card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #51c488;
+}
+
+.admin-login__card--hero .admin-login__card-title {
+    font-size: 16px;
+}
+
+.admin-login__card--hero .admin-login__card-desc {
+    font-size: 12.5px;
+}
+
+/* ── 그린 카드 (가격표 관리) ── */
+.admin-login__card--green {
+    background: rgba(81, 196, 136, 0.08);
+    border-color: rgba(81, 196, 136, 0.25);
+    color: #e8e8e8;
+}
+
+.admin-login__card--green:hover {
+    background: rgba(81, 196, 136, 0.16);
+    border-color: rgba(81, 196, 136, 0.45);
+    box-shadow: 0 4px 14px rgba(81, 196, 136, 0.12);
+    color: #ffffff;
+}
+
+.admin-login__card--green .admin-login__card-icon {
+    color: #51c488;
+}
+
+/* ── 뉴트럴 카드 (로그인 기록) ── */
+.admin-login__card--neutral {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #e8e8e8;
+}
+
+.admin-login__card--neutral:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+.admin-login__card--neutral .admin-login__card-icon {
+    color: #e8e8e8;
+}
+
+/* ── 로그아웃 카드 (풀 너비, 납작) ── */
+.admin-login__card--logout {
+    grid-column: span 2;
+    background: rgba(220, 80, 80, 0.08);
+    border-color: rgba(220, 80, 80, 0.25);
+    color: #e8e8e8;
+    justify-content: center;
+    padding: 13px 20px;
+    gap: 10px;
+}
+
+.admin-login__card--logout:hover {
+    background: rgba(220, 80, 80, 0.16);
+    border-color: rgba(220, 80, 80, 0.45);
+    box-shadow: 0 4px 14px rgba(220, 80, 80, 0.12);
+    color: #ffffff;
+}
+
+.admin-login__card--logout .admin-login__card-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(220, 80, 80, 0.15);
+    color: #ff9a9a;
+}
+
+.admin-login__card--logout .admin-login__card-title {
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .admin-login__captcha {
@@ -159,6 +326,11 @@
         height: auto;
         padding: 50px 40px;
         border-radius: 40px;
+    }
+
+    .admin-login__box--dashboard {
+        width: 520px;
+        padding: 36px 36px 40px;
     }
 
     .admin-login__text {
@@ -188,6 +360,20 @@
         height: 26px;
     }
 
+    .admin-login__box--dashboard {
+        width: 100%;
+        max-width: 500px;
+        padding: 30px 24px 32px;
+    }
+
+    .admin-login__grid {
+        gap: 8px;
+    }
+
+    .admin-login__card--hero {
+        padding: 18px 20px;
+    }
+
     .admin-login__text {
         font-size: 16px;
         margin-bottom: 40px;
@@ -211,6 +397,21 @@
         padding: 30px 24px;
         border-radius: 24px;
         margin: 60px 0;
+    }
+
+    .admin-login__box--dashboard {
+        padding: 28px 20px 30px;
+        border-radius: 28px;
+    }
+
+    .admin-login__grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .admin-login__card--hero,
+    .admin-login__card--logout {
+        grid-column: span 1;
     }
 
     .admin-login__logo {

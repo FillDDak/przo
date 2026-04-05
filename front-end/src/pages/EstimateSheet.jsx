@@ -641,7 +641,7 @@ export default function EstimateSheet() {
       <div className="estimate-sheet__header">
         <div className="estimate-sheet__title-area">
           <svg className="estimate-sheet__title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/>
+            <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 3v18" />
           </svg>
           <h1 className="estimate-sheet__title">가격 견적 시트</h1>
         </div>
