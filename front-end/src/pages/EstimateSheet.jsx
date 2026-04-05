@@ -16,6 +16,24 @@ if (_enLocale?.fontarray) {
   _enLocale.fontarray[1] = "Times New Roman";
 }
 
+// celldata(sparse) → makeSnapshot과 동일한 포맷의 스냅샷 문자열 생성
+// Fortune Sheet는 초기 마운트 시 onChange를 발화하지 않으므로
+// 로드·저장·초기화 직후 이 함수로 baseline을 즉시 설정한다
+function makeCelldataSnapshot(sheets) {
+  return JSON.stringify(sheets.map((s) => {
+    const cellValues = {};
+    (s.celldata || []).forEach(({ r, c, v }) => {
+      const val = v != null ? (v.v ?? null) : null;
+      if (val !== null && val !== "") cellValues[`${r}_${c}`] = val;
+    });
+    return {
+      cellValues,
+      rowlen: s.config?.rowlen || {},
+      columnlen: s.config?.columnlen || {},
+    };
+  }));
+}
+
 const TTL = { bl: 1, ht: 0, vt: 0, bg: "#E8F5E9", fc: "#1A1A1A", fs: 16, ff: 0 };
 const HDR = { bl: 1, ht: 0, vt: 0, bg: "#4CAF50", fc: "#FFFFFF", fs: 12, ff: 0 };
 
@@ -340,13 +358,15 @@ export default function EstimateSheet() {
           const initial = hasContent ? parsed : initialSheets();
           setSheets(initial);
           sheetsRef.current = initial;
-          captureNextAsBaseline.current = true;
+          savedSnapshotRef.current = makeCelldataSnapshot(initial);
+          captureNextAsBaseline.current = false;
           setIsDirty(false);
         } else {
           const initial = initialSheets();
           setSheets(initial);
           sheetsRef.current = initial;
-          captureNextAsBaseline.current = true;
+          savedSnapshotRef.current = makeCelldataSnapshot(initial);
+          captureNextAsBaseline.current = false;
           setIsDirty(false);
         }
       })
@@ -355,19 +375,29 @@ export default function EstimateSheet() {
         const initial = initialSheets();
         setSheets(initial);
         sheetsRef.current = initial;
-        captureNextAsBaseline.current = true;
+        savedSnapshotRef.current = makeCelldataSnapshot(initial);
+        captureNextAsBaseline.current = false;
         setIsDirty(false);
         setModal({ title: "저장된 데이터를 불러오지 못했습니다.", subtitle: "초기값으로 표시합니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       });
   }, [loading, isAdmin]);
 
-  // Fortune Sheet data(2D배열)에서 셀 값만 추출해 JSON 문자열로 반환
+  // Fortune Sheet data(2D배열) → makeCelldataSnapshot과 동일한 포맷의 스냅샷 문자열 생성
   const makeSnapshot = useCallback((sheets) =>
-    JSON.stringify(sheets.map((s) =>
-      (s.data || []).map((row) =>
-        (row || []).map((c) => (c != null ? (c.v ?? null) : null))
-      )
-    ))
+    JSON.stringify(sheets.map((s) => {
+      const cellValues = {};
+      (s.data || []).forEach((row, r) => {
+        (row || []).forEach((cell, c) => {
+          const v = cell != null ? (cell.v ?? null) : null;
+          if (v !== null && v !== "") cellValues[`${r}_${c}`] = v;
+        });
+      });
+      return {
+        cellValues,
+        rowlen: s.config?.rowlen || {},
+        columnlen: s.config?.columnlen || {},
+      };
+    }))
   , []);
 
   // onChange는 ref에만 저장 → setSheets 호출 없음 → Fortune Sheet re-render/스크롤 초기화 없음
@@ -400,12 +430,17 @@ export default function EstimateSheet() {
   };
 
   useEffect(() => {
+    if (!sheets) return;
     const el = workbookRef.current;
     if (!el) return;
-    const onMouseUp = () => setTimeout(() => recheckDirtyRef.current?.(), 100);
-    el.addEventListener("mouseup", onMouseUp);
-    return () => el.removeEventListener("mouseup", onMouseUp);
-  }, []);
+    const recheck = () => setTimeout(() => recheckDirtyRef.current?.(), 200);
+    el.addEventListener("mouseup", recheck);
+    el.addEventListener("keyup", recheck);
+    return () => {
+      el.removeEventListener("mouseup", recheck);
+      el.removeEventListener("keyup", recheck);
+    };
+  }, [sheets]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -442,7 +477,8 @@ export default function EstimateSheet() {
       const result = await res.json();
       if (result.success) {
         setModal({ title: "저장되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
-        captureNextAsBaseline.current = true;
+        savedSnapshotRef.current = makeSnapshot(sheetsRef.current);
+        captureNextAsBaseline.current = false;
         setIsDirty(false);
       } else {
         setModal({ title: result.message || "저장에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
