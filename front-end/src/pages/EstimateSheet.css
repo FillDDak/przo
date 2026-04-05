@@ -198,6 +198,7 @@
   border: 1px solid #e0e0e0;
   background: #fff;
   position: relative;
+  touch-action: none;
 }
 
 /* ── 반응형 ── */

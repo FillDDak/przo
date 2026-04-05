@@ -271,6 +271,7 @@ export default function EstimateSheet() {
     return () => el.removeEventListener("wheel", handleWheel, { capture: true });
   }, [handleWheel]);
 
+
   // 행 줄이기 핸들러를 ref에 항상 최신 상태로 유지
   decreaseHandlerRef.current = () => {
     const api = workbookApiRef.current;
