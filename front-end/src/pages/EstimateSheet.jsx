@@ -16,9 +16,8 @@ if (_enLocale?.fontarray) {
   _enLocale.fontarray[1] = "Times New Roman";
 }
 
-const TTL = { bl: 1, ht: 0, vt: 0, bg: "#4472C4", fc: "#FFFFFF", fs: 15, ff: 0 };
-const SUB = { ht: 0, vt: 0, bg: "#BDD7EE", fc: "#1F1F1F", fs: 11, ff: 0 };
-const HDR = { bl: 1, ht: 0, vt: 0, bg: "#4472C4", fc: "#FFFFFF", fs: 12, ff: 0 };
+const TTL = { bl: 1, ht: 0, vt: 0, bg: "#E8F5E9", fc: "#1A1A1A", fs: 16, ff: 0 };
+const HDR = { bl: 1, ht: 0, vt: 0, bg: "#4CAF50", fc: "#FFFFFF", fs: 12, ff: 0 };
 
 // ExcelJS Worksheet → Fortune Sheet 시트 객체로 변환
 function wsToFortuneSheet(ws, name, id, order) {
@@ -134,13 +133,13 @@ function wsToFortuneSheet(ws, name, id, order) {
   };
 }
 
-function buildSheet(name, id, order, active, title, subtitle, rows) {
+function buildSheet(name, id, order, active, title, rows, colHeaders) {
   const celldata = [];
   const merge = {};
 
-  const COLS = 15;
+  const COLS = 5;
 
-  // Row 0: 제목 (A~T 병합)
+  // Row 0: 제목 (표 넓이와 동일하게 5열 병합)
   celldata.push({
     r: 0, c: 0,
     v: { ...TTL, v: title, m: title, ct: { fa: "General", t: "s" }, mc: { r: 0, c: 0, rs: 1, cs: COLS } },
@@ -148,28 +147,21 @@ function buildSheet(name, id, order, active, title, subtitle, rows) {
   for (let c = 1; c < COLS; c++) celldata.push({ r: 0, c, v: { mc: { r: 0, c: 0 } } });
   merge["0_0"] = { r: 0, c: 0, rs: 1, cs: COLS };
 
-  // Row 1: 부제목 (A~T 병합)
-  celldata.push({
-    r: 1, c: 0,
-    v: { ...SUB, v: subtitle, m: subtitle, ct: { fa: "General", t: "s" }, mc: { r: 1, c: 0, rs: 1, cs: COLS } },
-  });
-  for (let c = 1; c < COLS; c++) celldata.push({ r: 1, c, v: { mc: { r: 1, c: 0 } } });
-  merge["1_0"] = { r: 1, c: 0, rs: 1, cs: COLS };
+  // Row 1: 좁은 구분 행
 
-  // Row 2: 빈 행
-
-  // Row 3: 컬럼 헤더
-  ["면적(평)", "면적(㎡)", "초기 2개월분", "매월 정기관리", "비고"].forEach((h, c) => {
-    celldata.push({ r: 3, c, v: { ...HDR, v: h, m: h, ct: { fa: "General", t: "s" } } });
+  // Row 2: 컬럼 헤더
+  (colHeaders || ["면적(평)", "면적(㎡)", "초기 2개월분", "매월 정기관리", "비고"]).forEach((h, c) => {
+    celldata.push({ r: 2, c, v: { ...HDR, v: h, m: h, ct: { fa: "General", t: "s" } } });
   });
 
-  // Row 4~: 데이터
+  // Row 3~: 데이터 (줄무늬 배경)
   rows.forEach((row, ri) => {
+    const rowBg = ri % 2 === 0 ? "#FFFFFF" : "#F2F2F2";
     row.forEach((val, ci) => {
       const isNum = typeof val === "number";
       celldata.push({
-        r: 4 + ri, c: ci,
-        v: { v: val, m: String(val), ct: { fa: "General", t: isNum ? "n" : "s" }, ht: 0, ff: 0 },
+        r: 3 + ri, c: ci,
+        v: { v: val, m: String(val), ct: { fa: "General", t: isNum ? "n" : "s" }, ht: 0, vt: 0, ff: 0, bg: rowBg },
       });
     });
   });
@@ -185,43 +177,46 @@ function buildSheet(name, id, order, active, title, subtitle, rows) {
     celldata,
     config: {
       merge,
-      rowlen: { 0: 44, 1: 34, 3: 36 },
-      columnlen: { 0: 130, 1: 85, 2: 140, 3: 140, 4: 120 },
+      rowlen: { 0: 44, 1: 8, 2: 36 },
+      columnlen: { 0: 130, 1: 100, 2: 160, 3: 160, 4: 120 },
     },
   };
 }
 
 const BIZ_ROWS = [
-  ["10평", 9.9, "100,000원", "15,000원", ""],
-  ["10평~20평", 66, "120,000원", "17,000원", ""],
-  ["20평~30평", 99, "140,000원", "18,000원", ""],
-  ["30평~40평", 132, "160,000원", "20,000원", ""],
-  ["40평~50평", 165, "180,000원", "22,000원", ""],
-  ["50평~70평", 231, "200,000원", "25,000원", ""],
-  ["70평~100평", 330, "250,000원", "40,000원", ""],
+  ["10평~25평", "약 82m²", "30,000원", "40,000원", ""],
+  ["25평~35평", "약 115m²", "30,000원", "45,000원", ""],
+  ["35평~45평", "약 148m²", "30,000원", "50,000원", ""],
+  ["45평~55평", "약 182m²", "30,000원", "60,000원", ""],
+  ["55평~65평", "약 215m²", "30,000원", "70,000원", ""],
+  ["65평~75평", "약 248m²", "30,000원", "80,000원", ""],
+  ["75평~85평", "약 281m²", "40,000원", "90,000원", ""],
+  ["85평~100평", "약 330m²", "40,000원", "100,000원", ""],
+  ["100평 이상", "약 330m²", "방문 상담 후 견적", "방문 상담 후 견적", ""],
 ];
 
 const HOME_ROWS = [
-  ["10평 이하", 33, "80,000원", "12,000원", ""],
-  ["10평~20평", 66, "100,000원", "14,000원", ""],
-  ["20평~30평", 99, "120,000원", "16,000원", ""],
-  ["30평~40평", 132, "140,000원", "18,000원", ""],
-  ["40평~50평", 165, "160,000원", "20,000원", ""],
+  ["10평~25평", "약 82m²", "140,000원", "40,000원", ""],
+  ["25평~35평", "약 115m²", "150,000원", "45,000원", ""],
+  ["35평~45평", "약 148m²", "160,000원", "50,000원", ""],
+  ["45평~55평", "약 182m²", "165,000원", "60,000원", ""],
+  ["55평~65평", "약 215m²", "170,000원", "70,000원", ""],
+  ["65평 이상", "약 215m²", "방문 상담 후 견적", "방문 상담 후 견적", ""],
 ];
 
 function initialSheets() {
   return [
     buildSheet(
-      "사업용", "biz", 0, true,
-      "PRZO 방역 서비스 가격표",
-      "초기관리 2개월 (2개월 선결제) / 정기관리 10개월",
-      BIZ_ROWS
+      "사업장", "biz", 0, true,
+      "PRZO (프르조) 사업장 가격표",
+      BIZ_ROWS,
+      ["면적(평)", "면적(㎡)", "초기 3개월(월별)", "매월 정기관리", "비고"]
     ),
     buildSheet(
-      "가정용", "home", 1, false,
-      "PRZO 방역 서비스 가격표 (가정용)",
-      "초기관리 2개월 (2개월 선결제) / 정기관리 10개월",
-      HOME_ROWS
+      "가정집", "home", 1, false,
+      "PRZO (프르조) 가정집 가격표",
+      HOME_ROWS,
+      ["면적(평)", "면적(㎡)", "초기 2개월(일시불)", "매월 정기관리", "비고"]
     ),
   ];
 }
