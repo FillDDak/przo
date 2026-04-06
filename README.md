@@ -113,19 +113,143 @@ npm run dev
 
 ```
 przo/
-├── back-end/                  # Spring Boot
-│   └── src/main/java/.../
-│       ├── controller/        # REST API
-│       ├── service/           # 비즈니스 로직
-│       ├── entity/            # JPA 엔티티
-│       ├── repository/        # DB 접근
-│       ├── config/            # Security, CORS 등 설정
-│       └── scheduler/         # 자동 삭제 스케줄러
-├── front-end/                 # React
+├── back-end/                              # Spring Boot 백엔드
+│   ├── gradle/wrapper/                    # Gradle Wrapper 설정
 │   ├── src/
-│   │   ├── pages/             # 페이지 컴포넌트
-│   │   ├── components/        # 공통 컴포넌트
-│   │   └── layouts/           # 레이아웃
-│   └── public/                # 정적 파일 (sitemap, robots.txt 등)
-└── .guide/                    # 배포 가이드 문서
+│   │   ├── main/
+│   │   │   ├── java/.../company_web/
+│   │   │   │   ├── config/               # Security, CORS, RateLimit 설정
+│   │   │   │   │   ├── DataInitializer.java       # 초기 관리자 계정 생성
+│   │   │   │   │   ├── RateLimitFilter.java       # 전역 요청 속도 제한 필터
+│   │   │   │   │   ├── SecurityConfig.java        # Spring Security 설정
+│   │   │   │   │   └── WebConfig.java             # CORS 등 Web MVC 설정
+│   │   │   │   ├── controller/           # REST API 컨트롤러
+│   │   │   │   │   ├── AdminController.java
+│   │   │   │   │   ├── EstimateSheetController.java
+│   │   │   │   │   ├── FaqController.java
+│   │   │   │   │   ├── InquiryController.java
+│   │   │   │   │   ├── PriceTableController.java
+│   │   │   │   │   ├── PublicConfigController.java
+│   │   │   │   │   └── ReviewController.java
+│   │   │   │   ├── dto/                  # 요청/응답 DTO
+│   │   │   │   │   ├── AdminLoginRequest/Response.java
+│   │   │   │   │   ├── GeoInfo.java               # IP 기반 위치 정보
+│   │   │   │   │   ├── InquiryCreateRequest.java
+│   │   │   │   │   ├── InquiryDetailResponse.java
+│   │   │   │   │   ├── InquiryListResponse.java
+│   │   │   │   │   ├── InquiryPublicResponse.java
+│   │   │   │   │   ├── LoginAttemptLogResponse.java
+│   │   │   │   │   └── ReviewListResponse.java
+│   │   │   │   ├── entity/               # JPA 엔티티
+│   │   │   │   │   ├── Admin.java
+│   │   │   │   │   ├── EstimateSheet.java
+│   │   │   │   │   ├── Faq.java
+│   │   │   │   │   ├── Inquiry.java
+│   │   │   │   │   ├── LoginAttemptLog.java
+│   │   │   │   │   └── Review.java
+│   │   │   │   ├── repository/           # Spring Data JPA Repository
+│   │   │   │   ├── scheduler/
+│   │   │   │   │   └── InquiryCleanupScheduler.java  # 오래된 문의 자동 삭제
+│   │   │   │   ├── service/              # 비즈니스 로직
+│   │   │   │   │   ├── AdminService.java
+│   │   │   │   │   ├── CaptchaService.java           # reCAPTCHA 검증
+│   │   │   │   │   ├── EstimateSheetService.java
+│   │   │   │   │   ├── FaqService.java
+│   │   │   │   │   ├── GeoLocationService.java       # IP → 위치 변환
+│   │   │   │   │   ├── InquiryService.java
+│   │   │   │   │   ├── InquiryVerifyRateLimiter.java # 문의 인증 속도 제한
+│   │   │   │   │   ├── LogCleanupService.java        # 로그 자동 정리
+│   │   │   │   │   ├── LoginRateLimiter.java         # 로그인 시도 속도 제한
+│   │   │   │   │   ├── NotificationService.java      # 알림 발송 (이메일 등)
+│   │   │   │   │   ├── PriceTableService.java
+│   │   │   │   │   └── ReviewService.java
+│   │   │   │   ├── util/
+│   │   │   │   │   └── PasswordGenerator.java        # 임시 비밀번호 생성
+│   │   │   │   └── CompanyWebApplication.java        # Spring Boot 진입점
+│   │   │   └── resources/META-INF/
+│   │   │       └── additional-spring-configuration-metadata.json
+│   │   └── test/                         # 단위/통합 테스트
+│   │       ├── AdminServiceTokenTest.java
+│   │       ├── CompanyWebApplicationTests.java
+│   │       ├── InquiryServiceTest.java
+│   │       ├── LoginRateLimiterTest.java
+│   │       └── RateLimitFilterTest.java
+│   ├── uploads/                          # 업로드 파일 저장소 (내용은 gitignore)
+│   │   ├── inquiries/.gitkeep
+│   │   └── reviews/.gitkeep
+│   ├── build.gradle
+│   ├── gradlew / gradlew.bat
+│   └── settings.gradle
+│
+├── database/
+│   ├── PRZO_ERD.png                      # ERD 다이어그램
+│   └── przo.sql                          # DB 스키마 및 초기 데이터
+│
+├── front-end/                             # React + Vite 프론트엔드
+│   ├── patches/
+│   │   └── @fortune-sheet+core+1.0.4.patch  # FortuneSheet 라이브러리 패치
+│   ├── public/                            # 빌드 시 그대로 복사되는 정적 파일
+│   │   ├── favicon/                       # 파비콘 (png, svg)
+│   │   ├── fonts/                         # Pretendard 폰트 (woff, woff2)
+│   │   ├── home_banner.webp
+│   │   ├── robots.txt
+│   │   └── sitemap.xml
+│   ├── scripts/
+│   │   └── convert-to-webp.mjs           # 이미지 → WebP 변환 스크립트
+│   ├── src/
+│   │   ├── assets/                        # 컴포넌트에서 import하는 정적 자산
+│   │   │   ├── floating-button/           # 플로팅 버튼 아이콘
+│   │   │   ├── footer-icon/               # 푸터 SNS 아이콘
+│   │   │   ├── image/                     # 배너 이미지
+│   │   │   ├── logo/                      # PRZO 로고 (색상별)
+│   │   │   ├── other-page-icon-image/     # 각 페이지 아이콘/이미지
+│   │   │   ├── section2-gallery/          # 홈 섹션2 갤러리 이미지
+│   │   │   ├── section3-icon/             # 홈 섹션3 업종별 아이콘
+│   │   │   ├── section4-gallery/          # 홈 섹션4 갤러리 이미지
+│   │   │   ├── section5-bugs/             # 홈 섹션5 해충 이미지
+│   │   │   ├── section6-banner/           # 홈 섹션6 배너 이미지
+│   │   │   └── section7-icon/             # 홈 섹션7 아이콘
+│   │   ├── components/                    # 공통 컴포넌트
+│   │   │   ├── ConfirmModal               # 확인/취소 모달
+│   │   │   ├── FloatingButtons            # 플로팅 버튼 (카카오, 전화, 상단이동)
+│   │   │   ├── Footer
+│   │   │   ├── Header
+│   │   │   └── PrivacyModal               # 개인정보처리방침 모달
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx            # 관리자 인증 상태 관리
+│   │   ├── layouts/
+│   │   │   ├── AdminLayout                # 관리자 전용 레이아웃
+│   │   │   └── MainLayout                 # 일반 사용자 레이아웃
+│   │   ├── pages/                         # 페이지 컴포넌트
+│   │   │   ├── About                      # 회사 소개
+│   │   │   ├── AdminInquiryRedirect       # 관리자 문의 상세 리다이렉트
+│   │   │   ├── AdminLogin                 # 관리자 로그인
+│   │   │   ├── AdminLogs                  # 관리자 로그인 시도 로그
+│   │   │   ├── CookiePolicy               # 쿠키 정책
+│   │   │   ├── EstimateSheet              # 가격 견적 시트 (FortuneSheet)
+│   │   │   ├── Faq                        # 자주 묻는 질문
+│   │   │   ├── Home                       # 메인 홈 (섹션 구성)
+│   │   │   ├── NotFound                   # 404 페이지
+│   │   │   ├── PriceTable                 # 가격표 관리 (관리자)
+│   │   │   ├── PrivacyPolicy              # 개인정보처리방침
+│   │   │   ├── Qna / QnaDetail / QnaWrite # 문의 목록 / 상세 / 작성
+│   │   │   ├── ReviewWrite / Reviews      # 후기 작성 / 목록
+│   │   │   ├── Service                    # 서비스 소개
+│   │   │   └── Terms                      # 이용약관
+│   │   ├── utils/
+│   │   │   ├── errorMessage.js            # API 에러 메시지 매핑
+│   │   │   ├── fortuneSheetKo.js          # FortuneSheet 한국어 로케일
+│   │   │   └── getCroppedImg.js           # 이미지 크롭 유틸 (후기 작성)
+│   │   ├── index.css                      # 전역 스타일
+│   │   └── main.jsx                       # React 진입점 + 라우터 설정
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── vercel.json                        # Vercel SPA 배포 설정
+│   └── vite.config.js
+│
+├── .gitattributes
+├── .gitignore
+└── README.md
+
 ```
