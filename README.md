@@ -113,56 +113,56 @@ npm run dev
 
 ```
 przo/
-├── back-end/                          # Spring Boot 백엔드
+├── back-end/                      # Spring Boot 백엔드
 │   ├── gradle/wrapper/
 │   ├── src/
 │   │   ├── main/java/.../company_web/
-│   │   │   ├── config/               # Security, CORS, RateLimit 설정
-│   │   │   ├── controller/           # REST API 엔드포인트
-│   │   │   ├── dto/                  # 요청/응답 DTO
-│   │   │   ├── entity/               # JPA 엔티티
-│   │   │   ├── repository/           # Spring Data JPA
-│   │   │   ├── scheduler/            # 오래된 문의 자동 삭제
-│   │   │   ├── service/              # 비즈니스 로직
-│   │   │   ├── util/                 # 유틸리티 (비밀번호 생성 등)
+│   │   │   ├── config/                   # Security, CORS, RateLimit 설정
+│   │   │   ├── controller/               # REST API 엔드포인트
+│   │   │   ├── dto/                      # 요청/응답 DTO
+│   │   │   ├── entity/                   # JPA 엔티티
+│   │   │   ├── repository/               # Spring Data JPA
+│   │   │   ├── scheduler/                # 오래된 문의 자동 삭제
+│   │   │   ├── service/                  # 비즈니스 로직
+│   │   │   ├── util/                     # 유틸리티 (비밀번호 생성 등)
 │   │   │   └── CompanyWebApplication.java
 │   │   ├── resources/META-INF/
 │   │   │   └── additional-spring-configuration-metadata.json
-│   │   └── test/                     # 단위/통합 테스트
-│   ├── uploads/                      # 업로드 파일 저장소 (내용은 gitignore)
+│   │   └── test/                         # 단위/통합 테스트
+│   ├── uploads/                          # 업로드 파일 저장소 (내용은 gitignore)
 │   │   ├── inquiries/
 │   │   └── reviews/
 │   ├── build.gradle
 │   └── settings.gradle
 │
-├── database/
-│   ├── PRZO_ERD.png                  # ERD 다이어그램
-│   └── przo.sql                      # DB 스키마 및 초기 데이터
+├── database/                     # Oracle 데이터베이스
+│   ├── PRZO_ERD.png                      # ERD 다이어그램
+│   └── przo.sql                          # DB 스키마 및 초기 데이터
 │
-├── front-end/                         # React + Vite 프론트엔드
-│   ├── patches/                       # 라이브러리 패치 (fortune-sheet)
-│   ├── public/                        # 정적 파일 (폰트, 파비콘, sitemap 등)
+├── front-end/                    # React + Vite 프론트엔드
+│   ├── patches/                          # 라이브러리 패치 (fortune-sheet)
+│   ├── public/                           # 정적 파일 (폰트, 파비콘, sitemap 등)
 │   ├── scripts/
-│   │   └── convert-to-webp.mjs       # 이미지 → WebP 변환 스크립트
+│   │   └── convert-to-webp.mjs           # 이미지 → WebP 변환 스크립트
 │   ├── src/
-│   │   ├── assets/                    # 이미지, 아이콘 등 정적 자산
-│   │   ├── components/               # 공통 컴포넌트 (Header, Footer, Modal 등)
+│   │   ├── assets/                       # 이미지, 아이콘 등 정적 자산
+│   │   ├── components/                   # 공통 컴포넌트 (Header, Footer, Modal 등)
 │   │   ├── context/
-│   │   │   └── AuthContext.jsx        # 관리자 인증 상태 관리
-│   │   ├── layouts/                  # AdminLayout / MainLayout
-│   │   ├── pages/                    # 페이지 컴포넌트
+│   │   │   └── AuthContext.jsx           # 관리자 인증 상태 관리
+│   │   ├── layouts/                      # AdminLayout / MainLayout
+│   │   ├── pages/                        # 페이지 컴포넌트
 │   │   │   ├── Home / About / Service / Faq       # 일반 페이지
 │   │   │   ├── Qna / QnaDetail / QnaWrite         # 문의 게시판
 │   │   │   ├── Reviews / ReviewWrite              # 후기 게시판
 │   │   │   ├── EstimateSheet / PriceTable         # 가격 견적/관리 (관리자)
 │   │   │   ├── AdminLogin / AdminLogs             # 관리자 인증/로그
 │   │   │   └── PrivacyPolicy / Terms / CookiePolicy / NotFound
-│   │   ├── utils/                    # 에러 메시지, FortuneSheet 한국어, 이미지 크롭
+│   │   ├── utils/                        # 에러 메시지, FortuneSheet 한국어, 이미지 크롭
 │   │   ├── index.css
-│   │   └── main.jsx                  # 진입점 + 라우터 설정
+│   │   └── main.jsx                      # 진입점 + 라우터 설정
 │   ├── index.html
 │   ├── package.json
-│   ├── vercel.json                   # Vercel SPA 배포 설정
+│   ├── vercel.json                       # Vercel SPA 배포 설정
 │   └── vite.config.js
 │
 ├── .gitignore
