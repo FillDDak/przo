@@ -69,6 +69,53 @@ Figma 디자인 시안을 기반으로 프론트엔드를 구현하고, 백엔�
 
 ---
 
+## 디자인 & 화면
+
+<details>
+<summary>🎨 UI 디자인 (Figma)</summary>
+
+<br>
+
+> GitHub은 Figma 임베드를 지원하지 않아, 아래 버튼으로 직접 열어볼 수 있습니다.
+
+[![Figma에서 보기](https://img.shields.io/badge/Figma-디자인_확인하기-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/design/S38zCYEqy6md5Z1mtS5Em2/PRZO-%EA%B3%B5%EC%9C%A0%EC%9A%A9?node-id=0-1&t=MipnivytSBZbvwZy-1)
+
+</details>
+
+<details>
+<summary>🖥️ 화면 캡처</summary>
+
+<br>
+
+| 메인 페이지 | 서비스 소개 |
+|---|---|
+| ![메인](screenshots/main.png) | ![서비스](screenshots/service.png) |
+
+| 상담 문의 | 관리자 대시보드 |
+|---|---|
+| ![문의](screenshots/inquiry.png) | ![관리자](screenshots/admin.png) |
+
+</details>
+
+---
+
+## 데이터베이스 구조 (ERD)
+
+![PRZO ERD](database/PRZO_ERD.png)
+
+총 6개의 독립 테이블로 구성되며, 서비스 도메인별로 명확히 분리되어 있습니다.
+
+| 테이블 | 설명 |
+|---|---|
+| `INQUIRIES` | 상담 문의 — 고객 연락처, 제목·내용, 첨부파일, 처리 상태, 관리자 메모 |
+| `REVIEWS` | 시공 후기 — 업체명, 별점, 썸네일, 지역 |
+| `FAQS` | FAQ — 질문·답변, 노출 순서 관리 |
+| `ADMINS` | 관리자 계정 — 로그인 자격증명 |
+| `LOGIN_ATTEMPT_LOG` | 로그인 시도 기록 — IP, 지역, 성공 여부 (보안 모니터링용) |
+| `ESTIMATE_SHEETS` | 견적서 — JSON 형태로 견적 데이터 저장, 공유 링크 키 기반 조회 |
+
+---
+
 ## 아키텍처
 
 ```
