@@ -76,9 +76,9 @@ Figma 디자인 시안을 기반으로 프론트엔드를 구현하고, 백엔�
 
 <br>
 
-> GitHub은 Figma 임베드를 지원하지 않아, 아래 버튼으로 직접 열어볼 수 있습니다.
+> GitHub은 Figma 임베드를 지원하지 않아, 아래 링크로 직접 열어볼 수 있습니다.
 
-[![Figma에서 보기](https://img.shields.io/badge/Figma-디자인_확인하기-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/design/S38zCYEqy6md5Z1mtS5Em2/PRZO-%EA%B3%B5%EC%9C%A0%EC%9A%A9?node-id=0-1&t=MipnivytSBZbvwZy-1)
+[Figma에서 보기](https://www.figma.com/design/S38zCYEqy6md5Z1mtS5Em2/PRZO-%EA%B3%B5%EC%9C%A0%EC%9A%A9?node-id=0-1&t=MipnivytSBZbvwZy-1)
 
 </details>
 
