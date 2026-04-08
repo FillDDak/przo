@@ -145,10 +145,6 @@ INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '대구시 zz카페 방역',
         '대구시 zz카페 정기 방역을 진행했습니다.', '/uploads/reviews/내시경-1.jpg', '대구시');
 
-INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
-VALUES (SEQ_REVIEW_ID.NEXTVAL, '수원시 ww마트 방역',
-        '수원시 ww마트 해충 퇴치 서비스를 완료했습니다.', NULL, '경기 수원시');
-
 -- FAQ 예시 데이터
 INSERT INTO FAQS (FAQ_ID, QUESTION, ANSWER, ORDER_INDEX)
 VALUES (SEQ_FAQ_ID.NEXTVAL, '상담 문의는 어떻게 하나요?',
