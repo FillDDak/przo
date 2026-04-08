@@ -115,13 +115,13 @@ CREATE SEQUENCE LOGIN_ATTEMPT_LOG_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
 -- ============================================
 
 -- 문의 예시 데이터 (비밀번호: 1234)
-INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, STATUS)
-VALUES (SEQ_INQUIRY_ID.NEXTVAL, '박고객', '맛있는식당', '010-1234-5678', 'customer1@email.com', '1234',
-        '해충 방제 서비스 문의드립니다 (비밀번호: 1234)', '안녕하세요. 저희 식당에 해충 방제 서비스를 받고 싶습니다. 견적 문의 부탁드립니다.', 'pending');
+INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, ATTACHMENT, STATUS)
+VALUES (SEQ_INQUIRY_ID.NEXTVAL, '박고객', '맛있는식당', '010-1234-1234', 'customer1@email.com', '$2a$10$c0Jgs.5wURsF6Y0JBhPq6eQJ35o66RB6okZOp5P4eH3KdIo9cQHoq',
+        '해충 방제 서비스 문의드립니다 (비밀번호: 1234)', '안녕하세요. 저희 식당에 해충 방제 서비스를 받고 싶습니다. 견적 문의 부탁드립니다.', '/uploads/inquiries/parasite1.jpg', 'pending');
 
-INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, STATUS, ADMIN_NOTE, RESPONDED_AT)
-VALUES (SEQ_INQUIRY_ID.NEXTVAL, '최사장', '카페베네', '010-9876-5432', 'customer2@email.com', '1234',
-        '정기 방역 서비스 계약 문의 (비밀번호: 1234)', '매월 정기적으로 방역 서비스를 받고 싶습니다. 가격과 일정 안내 부탁드립니다.', 'completed',
+INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, ATTACHMENT, STATUS, ADMIN_NOTE, RESPONDED_AT)
+VALUES (SEQ_INQUIRY_ID.NEXTVAL, '최사장', '카페베네', '010-5678-1234', 'customer2@email.com', '$2a$10$c0Jgs.5wURsF6Y0JBhPq6eQJ35o66RB6okZOp5P4eH3KdIo9cQHoq',
+        '정기 방역 서비스 계약 문의 (비밀번호: 1234)', '매월 정기적으로 방역 서비스를 받고 싶습니다. 가격과 일정 안내 부탁드립니다.', '/uploads/inquiries/parasite2.jpg', 'completed',
         '월 1회 정기 방역 계약 완료. 매월 첫째 주 월요일 오전 방문 예정.', SYSTIMESTAMP);
 
 -- 시공 사진 예시 데이터
@@ -135,15 +135,15 @@ VALUES (SEQ_REVIEW_ID.NEXTVAL, '서초구 음식점 정기 방역',
 
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '인천시 xx가게 방역',
-        '인천시 xx가게 방역을 실시하였습니다. 인천시 xx가게 방역을 실시하였습니다.', '/uploads/reviews/약국소독1.jpg', '인천시');
+        '인천시 xx가게 방역을 실시하였습니다. 인천시 xx가게 방역을 실시하였습니다.', '/uploads/reviews/약국소독.jpg', '인천시');
 
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '부산시 yy식당 방역',
-        '부산시 yy식당 해충 방제 서비스를 완료했습니다.', '/uploads/reviews/일신소독-1.jpg', '부산시');
+        '부산시 yy식당 해충 방제 서비스를 완료했습니다.', '/uploads/reviews/일신소독.jpg', '부산시');
 
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '대구시 zz카페 방역',
-        '대구시 zz카페 정기 방역을 진행했습니다.', '/uploads/reviews/내시경-1.jpg', '대구시');
+        '대구시 zz카페 정기 방역을 진행했습니다.', '/uploads/reviews/내시경.jpg', '대구시');
 
 -- FAQ 예시 데이터
 INSERT INTO FAQS (FAQ_ID, QUESTION, ANSWER, ORDER_INDEX)

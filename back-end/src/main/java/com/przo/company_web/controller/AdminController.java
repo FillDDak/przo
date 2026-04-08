@@ -48,11 +48,11 @@ public class AdminController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Map<String, String>> getMe(HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> getMe(HttpServletRequest request) {
         String token = extractTokenFromRequest(request);
         String adminName = adminService.getAdminNameByToken(token);
-        if (adminName == null) return ResponseEntity.status(401).build();
-        return ResponseEntity.ok(Map.of("adminName", adminName));
+        if (adminName == null) return ResponseEntity.ok(Map.of("isAdmin", false));
+        return ResponseEntity.ok(Map.of("isAdmin", true, "adminName", adminName));
     }
 
     @PostMapping("/logout")

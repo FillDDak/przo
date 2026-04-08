@@ -408,6 +408,13 @@
   text-align: center;
 }
 
+.qna-detail__captcha-notice {
+  font-size: 13px;
+  color: #f5a623;
+  text-align: center;
+  margin: 4px 0 0 0;
+}
+
 .qna-detail__captcha {
   display: flex;
   justify-content: center;

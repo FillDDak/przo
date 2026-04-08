@@ -287,6 +287,11 @@ const QnaDetail = () => {
                     className="qna-detail__password-input"
                   />
                   {error && <p className="qna-detail__password-error">{error}</p>}
+                  {captchaRequired && (
+                    <p className="qna-detail__captcha-notice">
+                      보안을 위해 아래 보안 확인을 완료해주세요.
+                    </p>
+                  )}
                   {captchaRequired && captchaSiteKey && (
                     <div className="qna-detail__captcha">
                       <Turnstile

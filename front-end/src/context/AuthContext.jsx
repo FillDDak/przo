@@ -18,8 +18,10 @@ export const AuthProvider = ({ children }) => {
         });
         if (response.ok) {
           const data = await response.json();
-          setIsAdmin(true);
-          setAdminName(data.adminName || "");
+          if (data.isAdmin) {
+            setIsAdmin(true);
+            setAdminName(data.adminName || "");
+          }
         }
       } catch {
         // 세션 없음 — 로그인 필요
