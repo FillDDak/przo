@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect, useCallback, Fragment } from "react";
+import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import imageCompression from "browser-image-compression";
 import ConfirmModal from "../components/ConfirmModal";
 import { getErrorMessage } from "../utils/errorMessage";
@@ -12,33 +12,38 @@ import getCroppedImg from "../utils/getCroppedImg";
 
 const API_BASE_URL = "/api";
 
+let _uidCounter = 0;
+const uid = () => `block-${Date.now()}-${++_uidCounter}`;
+
 const toRelativeUrl = (url) => {
   try { return new URL(url).pathname; } catch { return url; }
 };
 
-const extractImagesFromHtml = (html) => {
-  if (!html) return [];
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  return Array.from(div.querySelectorAll("img")).map((img) =>
-    toRelativeUrl(img.getAttribute("src") || img.src)
-  );
+const parseHtmlToBlocks = (html) => {
+  if (!html) return [{ id: uid(), type: "text", html: "" }];
+  const parts = html.split(/(<img\s[^>]*\/?>)/i);
+  const blocks = parts.reduce((acc, part) => {
+    if (/^<img\s/i.test(part)) {
+      const src = part.match(/src="([^"]+)"/i)?.[1];
+      if (src) acc.push({ id: uid(), type: "image", url: toRelativeUrl(src) });
+    } else {
+      const hasContent = part.replace(/<p>(\s|<br\s*\/?>)*<\/p>/gi, "").trim() !== "";
+      if (hasContent) acc.push({ id: uid(), type: "text", html: part });
+    }
+    return acc;
+  }, []);
+  return blocks.length > 0 ? blocks : [{ id: uid(), type: "text", html: "" }];
 };
 
-const stripImagesFromHtml = (html) => {
-  if (!html) return "";
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  div.querySelectorAll("img").forEach((img) => img.remove());
-  return div.innerHTML;
-};
+const blocksToHtml = (blocks) =>
+  blocks.map((b) => (b.type === "text" ? b.html : `<img src="${toRelativeUrl(b.url)}">`)).join("");
 
 const ReviewWrite = () => {
   const navigate = useNavigate();
   const routerLocation = useLocation();
   const dateInputRef = useRef(null);
-  const quillRef = useRef(null);
   const titleRef = useRef(null);
+  const blockErrorRef = useRef(null);
 
   const editData = routerLocation.state?.review || null;
   const isEdit = !!editData;
@@ -50,40 +55,48 @@ const ReviewWrite = () => {
     const day = String(d.getDate()).padStart(2, "0");
     return `${y}-${m}-${day}`;
   })();
+
   const [title, setTitle] = useState(editData?.title || "");
-  // const [location, setLocation] = useState(editData?.location || "");
   const [createdDate, setCreatedDate] = useState(
     editData?.createdAt ? editData.createdAt.replaceAll(".", "-") : today
   );
-  const [content, setContent] = useState(
-    isEdit ? stripImagesFromHtml(editData?.content) : ""
-  );
+  const [blocks, setBlocks] = useState(() => {
+    if (isEdit && editData?.content) return parseHtmlToBlocks(editData.content);
+    return [{ id: uid(), type: "text", html: "" }];
+  });
+  const [thumbnailId, setThumbnailId] = useState(() => {
+    if (isEdit && editData?.content && editData?.thumbnail) {
+      const parsed = parseHtmlToBlocks(editData.content);
+      const match = parsed.find(
+        (b) => b.type === "image" && toRelativeUrl(b.url) === toRelativeUrl(editData.thumbnail)
+      );
+      return match?.id || parsed.find((b) => b.type === "image")?.id || null;
+    }
+    return null;
+  });
+
   const [modal, setModal] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [titleError, setTitleError] = useState("");
-  const [imageError, setImageError] = useState("");
-  const imagesRef = useRef(null);
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [thumbnailIdx, setThumbnailIdx] = useState(0);
-  const [dragIdx, setDragIdx] = useState(null);
-  const [dropPosition, setDropPosition] = useState(null);
+  const [blockError, setBlockError] = useState("");
 
   // Crop modal state
-  const [cropQueue, setCropQueue] = useState([]);  // { file, objectUrl }[]
+  const [cropQueue, setCropQueue] = useState([]);
   const [cropQueueIndex, setCropQueueIndex] = useState(0);
   const [showCropModal, setShowCropModal] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isCropUploading, setIsCropUploading] = useState(false);
+  const insertAfterRef = useRef(null);
+  const successCountRef = useRef(0);
 
   const submittedRef = useRef(false);
 
   const isDirty =
     title.trim() !== "" ||
-    // location.trim() !== "" ||
-    content.replace(/<[^>]*>/g, "").trim() !== "" ||
-    uploadedImages.length > 0;
+    blocks.some((b) => b.type === "image") ||
+    blocks.some((b) => b.type === "text" && b.html.replace(/<[^>]*>/g, "").trim() !== "");
 
   const shouldBlock = useCallback(
     ({ currentLocation, nextLocation }) =>
@@ -110,26 +123,22 @@ const ReviewWrite = () => {
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  // Revoke object URLs on unmount
   useEffect(() => {
     return () => {
       cropQueue.forEach((item) => URL.revokeObjectURL(item.objectUrl));
     };
   }, [cropQueue]);
 
-  // 수정 모드일 때 기존 이미지 추출
+  // thumbnailId 유지: image 블록이 없어지면 초기화 또는 첫 이미지로
   useEffect(() => {
-    if (editData?.content) {
-      const images = extractImagesFromHtml(editData.content);
-      setUploadedImages(images);
-      if (editData.thumbnail) {
-        const idx = images.indexOf(editData.thumbnail);
-        if (idx >= 0) setThumbnailIdx(idx);
-      }
+    const imageBlocks = blocks.filter((b) => b.type === "image");
+    if (imageBlocks.length === 0) {
+      setThumbnailId(null);
+    } else if (!imageBlocks.find((b) => b.id === thumbnailId)) {
+      setThumbnailId(imageBlocks[0].id);
     }
-  }, [editData]);
+  }, [blocks, thumbnailId]);
 
-  // 에디터: 텍스트 전용
   const quillModules = useMemo(() => ({
     toolbar: {
       container: [
@@ -143,7 +152,6 @@ const ReviewWrite = () => {
     },
   }), []);
 
-  // GIF는 압축 제외, 나머지는 최대 1MB / 1920px / WebP 변환
   const compressImage = async (blobOrFile, filename) => {
     const isGif = filename.toLowerCase().endsWith(".gif");
     if (isGif) return blobOrFile;
@@ -159,7 +167,6 @@ const ReviewWrite = () => {
     }
   };
 
-  // Upload a single blob/file to server, return URL
   const uploadImageBlob = async (blobOrFile, filename) => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 30000);
@@ -183,14 +190,23 @@ const ReviewWrite = () => {
     }
   };
 
-  // Process next item in crop queue
+  const insertImageBlock = useCallback((afterIndex, url) => {
+    setBlocks((prev) => {
+      const next = [...prev];
+      const newBlock = { id: uid(), type: "image", url };
+      next.splice(afterIndex + 1, 0, newBlock);
+      return next;
+    });
+    setBlockError("");
+  }, []);
+
   const processCropQueue = useCallback((queue, index) => {
     if (index >= queue.length) {
-      // Clean up object URLs
       queue.forEach((item) => URL.revokeObjectURL(item.objectUrl));
       setCropQueue([]);
       setCropQueueIndex(0);
       setShowCropModal(false);
+      successCountRef.current = 0;
       return;
     }
     setCropQueueIndex(index);
@@ -200,8 +216,7 @@ const ReviewWrite = () => {
     setShowCropModal(true);
   }, []);
 
-  // 이미지 업로드 버튼 클릭
-  const handleImageUpload = () => {
+  const triggerImageUpload = (afterIndex) => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
@@ -225,6 +240,8 @@ const ReviewWrite = () => {
         setModal({ title: `"${oversized.name}" 파일 용량은 10MB를 초과할 수 없습니다.`, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         return;
       }
+      insertAfterRef.current = afterIndex;
+      successCountRef.current = 0;
       const queue = files.map((file) => ({
         file,
         objectUrl: URL.createObjectURL(file),
@@ -234,7 +251,6 @@ const ReviewWrite = () => {
     };
   };
 
-  // 적용: crop the current image and upload
   const handleCropApply = async () => {
     if (!croppedAreaPixels) return;
     setIsCropUploading(true);
@@ -243,8 +259,8 @@ const ReviewWrite = () => {
       const blob = await getCroppedImg(currentItem.objectUrl, croppedAreaPixels);
       const compressed = await compressImage(blob, currentItem.file.name);
       const url = await uploadImageBlob(compressed, currentItem.file.name);
-      setUploadedImages((prev) => [...prev, url]);
-      setImageError("");
+      insertImageBlock(insertAfterRef.current + successCountRef.current, url);
+      successCountRef.current++;
       processCropQueue(cropQueue, cropQueueIndex + 1);
     } catch (e) {
       setModal({ title: "이미지 처리에 실패했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
@@ -253,15 +269,14 @@ const ReviewWrite = () => {
     }
   };
 
-  // 건너뛰기: upload original file
   const handleCropSkip = async () => {
     setIsCropUploading(true);
     try {
       const currentItem = cropQueue[cropQueueIndex];
       const compressed = await compressImage(currentItem.file, currentItem.file.name);
       const url = await uploadImageBlob(compressed, currentItem.file.name);
-      setUploadedImages((prev) => [...prev, url]);
-      setImageError("");
+      insertImageBlock(insertAfterRef.current + successCountRef.current, url);
+      successCountRef.current++;
       processCropQueue(cropQueue, cropQueueIndex + 1);
     } catch (e) {
       setModal({ title: "이미지 업로드에 실패했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
@@ -270,89 +285,43 @@ const ReviewWrite = () => {
     }
   };
 
-  // 크롭 모달 닫기 (나머지 취소)
   const handleCropClose = () => {
     cropQueue.forEach((item) => URL.revokeObjectURL(item.objectUrl));
     setCropQueue([]);
     setCropQueueIndex(0);
     setShowCropModal(false);
+    successCountRef.current = 0;
   };
 
-  // 이미지 순서 변경 (모바일 버튼용)
-  const moveImage = (from, to) => {
-    if (to < 0 || to >= uploadedImages.length) return;
-    setUploadedImages((prev) => {
+  const addTextBlock = (afterIndex) => {
+    setBlocks((prev) => {
       const next = [...prev];
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
+      next.splice(afterIndex + 1, 0, { id: uid(), type: "text", html: "" });
       return next;
     });
-    setThumbnailIdx((prev) => {
-      if (prev === from) return to;
-      if (from < prev && to >= prev) return prev - 1;
-      if (from > prev && to <= prev) return prev + 1;
-      return prev;
+  };
+
+  const deleteBlock = (id) => {
+    setBlocks((prev) => {
+      if (prev.length <= 1) return prev;
+      return prev.filter((b) => b.id !== id);
     });
   };
 
-  // 이미지 삭제
-  const handleRemoveImage = (idx) => {
-    setUploadedImages((prev) => prev.filter((_, i) => i !== idx));
-    setThumbnailIdx((prev) => {
-      if (idx === prev) return 0;
-      if (idx < prev) return prev - 1;
-      return prev;
-    });
-  };
-
-  // 드래그 시작
-  const handleDragStart = (idx) => {
-    setDragIdx(idx);
-  };
-
-  // 드래그 오버 — 마우스가 이미지의 왼쪽/오른쪽 절반인지 판단해 삽입 위치 결정
-  const handleDragOver = (e, idx) => {
-    e.preventDefault();
-    const rect = e.currentTarget.getBoundingClientRect();
-    const isLeftHalf = e.clientX < rect.left + rect.width / 2;
-    setDropPosition(isLeftHalf ? idx : idx + 1);
-  };
-
-  // 드롭 → 순서 변경
-  const handleDrop = () => {
-    if (dragIdx === null || dropPosition === null) {
-      setDragIdx(null);
-      setDropPosition(null);
-      return;
-    }
-    const adjustedPos = dropPosition > dragIdx ? dropPosition - 1 : dropPosition;
-    if (adjustedPos === dragIdx) {
-      setDragIdx(null);
-      setDropPosition(null);
-      return;
-    }
-
-    setUploadedImages((prev) => {
+  const moveBlock = (id, direction) => {
+    setBlocks((prev) => {
+      const idx = prev.findIndex((b) => b.id === id);
+      if (idx === -1) return prev;
+      const newIdx = direction === "up" ? idx - 1 : idx + 1;
+      if (newIdx < 0 || newIdx >= prev.length) return prev;
       const next = [...prev];
-      const [moved] = next.splice(dragIdx, 1);
-      next.splice(adjustedPos, 0, moved);
+      [next[idx], next[newIdx]] = [next[newIdx], next[idx]];
       return next;
     });
-
-    setThumbnailIdx((prev) => {
-      if (prev === dragIdx) return adjustedPos;
-      if (dragIdx < prev && adjustedPos >= prev) return prev - 1;
-      if (dragIdx > prev && adjustedPos <= prev) return prev + 1;
-      return prev;
-    });
-
-    setDragIdx(null);
-    setDropPosition(null);
   };
 
-  const handleDragEnd = () => {
-    setDragIdx(null);
-    setDropPosition(null);
+  const updateTextBlock = (id, html) => {
+    setBlocks((prev) => prev.map((b) => (b.id === id ? { ...b, html } : b)));
   };
 
   const handleSubmit = async (e) => {
@@ -368,44 +337,28 @@ const ReviewWrite = () => {
       return;
     }
 
-    if (uploadedImages.length === 0) {
-      setImageError("사진을 최소 1장 이상 추가해주세요.");
-      if (imagesRef.current) {
-        imagesRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    const imageBlocks = blocks.filter((b) => b.type === "image");
+    if (imageBlocks.length === 0) {
+      setBlockError("사진을 최소 1장 이상 추가해주세요.");
+      if (blockErrorRef.current) {
+        blockErrorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
       }
       return;
     }
-    setImageError("");
+    setBlockError("");
 
     try {
       setIsSubmitting(true);
 
+      const finalContent = blocksToHtml(blocks);
+      const thumbnailBlock = imageBlocks.find((b) => b.id === thumbnailId) || imageBlocks[0];
+      const thumbnailUrl = toRelativeUrl(thumbnailBlock.url);
+
       const formData = new FormData();
       formData.append("title", title);
-      // if (location) formData.append("location", location);
-
-      const textOnly = content.replace(/<[^>]*>/g, "").trim();
-      const hasText = textOnly.length > 0;
-      const hasImages = uploadedImages.length > 0;
-
-      if (hasText || hasImages) {
-        let finalContent = hasText ? content : "";
-        if (hasImages) {
-          const imagesHtml = uploadedImages
-            .map((url) => `<img src="${toRelativeUrl(url)}">`)
-            .join("");
-          finalContent += imagesHtml;
-        }
-        formData.append("content", finalContent);
-      }
-
-      if (uploadedImages.length > 0) {
-        formData.append("thumbnailUrl", toRelativeUrl(uploadedImages[thumbnailIdx] || uploadedImages[0]));
-      }
-
-      if (createdDate) {
-        formData.append("createdDate", createdDate);
-      }
+      formData.append("content", finalContent);
+      formData.append("thumbnailUrl", thumbnailUrl);
+      if (createdDate) formData.append("createdDate", createdDate);
 
       const url = isEdit
         ? `${API_BASE_URL}/reviews/${editData.id}`
@@ -434,7 +387,7 @@ const ReviewWrite = () => {
         submittedRef.current = true;
         setModal({ title: isEdit ? "수정되었습니다." : "등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/reviews"); } }] });
       } else {
-        setModal({ title: data.message || (isEdit ? "시공 사진 수정에 실패했습니다." : "시공 사진 등록에 실패했습니다."), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({ title: data.message || (isEdit ? "이미지 모음 수정에 실패했습니다." : "이미지 모음 등록에 실패했습니다."), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (e) {
       setModal({ title: isEdit ? "수정 중 오류가 발생했습니다." : "등록 중 오류가 발생했습니다.", subtitle: getErrorMessage(e), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
@@ -444,6 +397,17 @@ const ReviewWrite = () => {
   };
 
   const currentCropItem = cropQueue[cropQueueIndex];
+
+  const BlockInsertBar = ({ afterIndex, alwaysVisible = false }) => (
+    <div className={`review-write__insert-bar${alwaysVisible ? " review-write__insert-bar--visible" : ""}`}>
+      <button type="button" className="review-write__insert-btn" onClick={() => addTextBlock(afterIndex)}>
+        + 텍스트
+      </button>
+      <button type="button" className="review-write__insert-btn" onClick={() => triggerImageUpload(afterIndex)}>
+        + 이미지
+      </button>
+    </div>
+  );
 
   return (
     <>
@@ -531,10 +495,10 @@ const ReviewWrite = () => {
               <img src={homeIcon} alt="홈" className="review-write__breadcrumb-icon" />
             </Link>
             <span className="review-write__breadcrumb-separator">&gt;</span>
-            <span className="review-write__breadcrumb-text">시공 사진</span>
+            <span className="review-write__breadcrumb-text">이미지 모음</span>
             <span className="review-write__breadcrumb-separator">&gt;</span>
             <span className="review-write__breadcrumb-current">
-              {isEdit ? "시공 사진 수정" : "시공 사진 등록"}
+              {isEdit ? "이미지 모음 수정" : "이미지 모음 등록"}
             </span>
           </div>
         </section>
@@ -543,7 +507,7 @@ const ReviewWrite = () => {
         <section className="review-write__main">
           <div className="review-write__content">
             <h1 className="review-write__title">
-              {isEdit ? "시공 사진 수정" : "시공 사진 등록"}
+              {isEdit ? "이미지 모음 수정" : "이미지 모음 등록"}
             </h1>
 
             <form className="review-write__form" onSubmit={handleSubmit}>
@@ -578,9 +542,7 @@ const ReviewWrite = () => {
                       onClick={() => { try { dateInputRef.current?.showPicker(); } catch { /* ignore */ } }}
                       className="review-write__date-hidden"
                     />
-                    <div
-                      className="review-write__input review-write__date-display"
-                    >
+                    <div className="review-write__input review-write__date-display">
                       <span>
                         {(() => {
                           const d = new Date(createdDate + "T00:00:00");
@@ -602,130 +564,66 @@ const ReviewWrite = () => {
                 </div>
               </div>
 
-              {/* 시공 장소 */}
-              {/* <div className="review-write__field">
-                <label className="review-write__label">시공 장소</label>
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="review-write__input"
-                  placeholder="시공 장소를 입력해주세요. (예: 인천광역시 계양구 효성동)"
-                  maxLength={50}
-                />
-              </div> */}
+              {/* 블록 에디터 */}
+              <div className="review-write__blocks" ref={blockErrorRef}>
+                <BlockInsertBar afterIndex={-1} alwaysVisible />
 
-              {/* 내용 (텍스트 전용) */}
-              <div className="review-write__field">
-                <label className="review-write__label">내용</label>
-                <div className="review-write__editor-wrapper">
-                  <ReactQuill
-                    ref={quillRef}
-                    theme="snow"
-                    value={content}
-                    onChange={setContent}
-                    modules={quillModules}
-                    placeholder="내용을 입력해주세요."
-                  />
-                </div>
-              </div>
+                {blocks.map((block, idx) => (
+                  <div key={block.id} className="review-write__block-wrapper">
+                    <div className="review-write__block-controls">
+                      <button
+                        type="button"
+                        className="review-write__block-ctrl-btn"
+                        onClick={() => moveBlock(block.id, "up")}
+                        disabled={idx === 0}
+                        title="위로"
+                      >▲</button>
+                      <button
+                        type="button"
+                        className="review-write__block-ctrl-btn"
+                        onClick={() => moveBlock(block.id, "down")}
+                        disabled={idx === blocks.length - 1}
+                        title="아래로"
+                      >▼</button>
+                      <button
+                        type="button"
+                        className="review-write__block-ctrl-btn review-write__block-ctrl-btn--delete"
+                        onClick={() => deleteBlock(block.id)}
+                        disabled={blocks.length <= 1}
+                        title="삭제"
+                      >✕</button>
+                    </div>
 
-              {/* 사진 관리 */}
-              <div className="review-write__field" ref={imagesRef}>
-                <div className="review-write__images-header">
-                  <label className="review-write__label">
-                    사진 {uploadedImages.length > 0 && `(${uploadedImages.length})`}
-                  </label>
-                  <button
-                    type="button"
-                    className="review-write__upload-btn"
-                    onClick={handleImageUpload}
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                      <circle cx="8.5" cy="8.5" r="1.5" />
-                      <polyline points="21 15 16 10 5 21" />
-                    </svg>
-                    사진 추가
-                  </button>
-                </div>
-
-                {uploadedImages.length > 0 ? (
-                  <div className="review-write__images">
-                    {uploadedImages.map((url, idx) => {
-                      const showIndicator = dragIdx !== null && dropPosition === idx
-                        && dropPosition !== dragIdx && dropPosition !== dragIdx + 1;
-                      return (
-                      <Fragment key={url + idx}>
-                        {showIndicator && <div className="review-write__drop-indicator" />}
-                        <div
-                        className={`review-write__image-item${idx === thumbnailIdx ? " review-write__image-item--selected" : ""}${idx === dragIdx ? " review-write__image-item--dragging" : ""}`}
-                        draggable
-                        onDragStart={() => handleDragStart(idx)}
-                        onDragOver={(e) => handleDragOver(e, idx)}
-                        onDrop={() => handleDrop()}
-                        onDragEnd={handleDragEnd}
-                        onClick={() => setThumbnailIdx(idx)}
-                        title="클릭하여 대표 이미지 선택 / 드래그하여 순서 변경"
+                    {block.type === "text" ? (
+                      <div className="review-write__block--text">
+                        <div className="review-write__editor-wrapper">
+                          <ReactQuill
+                            theme="snow"
+                            value={block.html}
+                            onChange={(html) => updateTextBlock(block.id, html)}
+                            modules={quillModules}
+                            placeholder="내용을 입력해주세요."
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className={`review-write__block--image${thumbnailId === block.id ? " review-write__block--image-selected" : ""}`}
+                        onClick={() => setThumbnailId(block.id)}
+                        title="클릭하여 대표 이미지 설정"
                       >
-                        <img
-                          src={url}
-                          alt={`사진 ${idx + 1}`}
-                          className="review-write__image-thumb"
-                        />
-                        <button
-                          type="button"
-                          className="review-write__image-move review-write__image-move--up"
-                          onClick={(e) => { e.stopPropagation(); moveImage(idx, idx - 1); }}
-                          disabled={idx === 0}
-                          title="위로"
-                        >▲</button>
-                        <button
-                          type="button"
-                          className="review-write__image-move review-write__image-move--down"
-                          onClick={(e) => { e.stopPropagation(); moveImage(idx, idx + 1); }}
-                          disabled={idx === uploadedImages.length - 1}
-                          title="아래로"
-                        >▼</button>
-                        <button
-                          type="button"
-                          className="review-write__image-remove"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveImage(idx);
-                          }}
-                          title="삭제"
-                        >
-                          &times;
-                        </button>
-                        {idx === thumbnailIdx && (
-                          <span className="review-write__image-badge">대표 이미지</span>
+                        <img src={block.url} alt="" className="review-write__block-img" />
+                        {thumbnailId === block.id && (
+                          <span className="review-write__block-badge">대표 이미지</span>
                         )}
                       </div>
-                      </Fragment>
-                      );
-                    })}
-                    {/* 마지막 위치 인디케이터 */}
-                    {dragIdx !== null && dropPosition === uploadedImages.length
-                      && dropPosition !== dragIdx && dropPosition !== dragIdx + 1 && (
-                      <div className="review-write__drop-indicator" />
                     )}
+
+                    <BlockInsertBar afterIndex={idx} />
                   </div>
-                ) : (
-                  <div
-                    className="review-write__images-empty"
-                    onClick={handleImageUpload}
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="32" height="32">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                      <circle cx="8.5" cy="8.5" r="1.5" />
-                      <polyline points="21 15 16 10 5 21" />
-                    </svg>
-                    <span>사진을 추가해주세요.</span>
-                  </div>
-                )}
-                {imageError && <p className="review-write__field-error">{imageError}</p>}
+                ))}
               </div>
+              {blockError && <p className="review-write__field-error review-write__field-error--block">{blockError}</p>}
 
               {/* 버튼 */}
               <div className="review-write__button-wrapper">

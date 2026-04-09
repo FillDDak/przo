@@ -58,7 +58,7 @@ CREATE SEQUENCE SEQ_INQUIRY_ID START WITH 1 INCREMENT BY 1 NOCACHE;
 -- 문의 인덱스
 CREATE INDEX IDX_INQUIRIES_CREATED_AT ON INQUIRIES (CREATED_AT);
 
--- 3. 시공 사진 테이블
+-- 3. 이미지 모음 테이블
 CREATE TABLE REVIEWS (
     REVIEW_ID       NUMBER          PRIMARY KEY,
     TITLE           VARCHAR2(200)   NOT NULL,
@@ -68,10 +68,10 @@ CREATE TABLE REVIEWS (
     CREATED_AT      TIMESTAMP       DEFAULT SYSTIMESTAMP
 );
 
--- 시공 사진 ID 시퀀스
+-- 이미지 모음 ID 시퀀스
 CREATE SEQUENCE SEQ_REVIEW_ID START WITH 1 INCREMENT BY 1 NOCACHE;
 
--- 시공 사진 인덱스
+-- 이미지 모음 인덱스
 CREATE INDEX IDX_REVIEWS_CREATED_AT ON REVIEWS (CREATED_AT);
 
 -- 4. FAQ 테이블
@@ -114,6 +114,18 @@ CREATE SEQUENCE LOGIN_ATTEMPT_LOG_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
 -- 예시 데이터
 -- ============================================
 
+-- 관리자 계정 생성 (로컬호스트 테스트용)
+-- 아이디: przo_admin
+-- 비밀번호: przo1234 (BCrypt 해시)
+INSERT INTO ADMINS (ADMIN_ID, USERNAME, PASSWORD, ADMIN_NAME, EMAIL)
+VALUES (
+        SEQ_ADMIN_ID.NEXTVAL,
+        'przo_admin',
+        '$2a$10$ltgLdpNwWG2N7w2ljyeF8OetO.PqahBWbCB4o7CNEzhgWRhzE1026',
+        '프르조 관리자',
+        'admin@przo.co.kr'
+    );
+
 -- 문의 예시 데이터 (비밀번호: 1234)
 INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, ATTACHMENT, STATUS)
 VALUES (SEQ_INQUIRY_ID.NEXTVAL, '박고객', '맛있는식당', '010-1234-1234', 'customer1@email.com', '$2a$10$c0Jgs.5wURsF6Y0JBhPq6eQJ35o66RB6okZOp5P4eH3KdIo9cQHoq',
@@ -124,26 +136,26 @@ VALUES (SEQ_INQUIRY_ID.NEXTVAL, '최사장', '카페베네', '010-5678-1234', 'c
         '정기 방역 서비스 계약 문의 (비밀번호: 1234)', '매월 정기적으로 방역 서비스를 받고 싶습니다. 가격과 일정 안내 부탁드립니다.', '/uploads/inquiries/parasite2.jpg', 'completed',
         '월 1회 정기 방역 계약 완료. 매월 첫째 주 월요일 오전 방문 예정.', SYSTIMESTAMP);
 
--- 시공 사진 예시 데이터
+-- 이미지 모음 예시 데이터
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '강남구 카페 해충 방제 완료',
-        '강남구 소재 카페에서 UV LED 해충 퇴치기 설치 및 방역 서비스를 완료했습니다. 고객님께서 매우 만족하셨습니다.', '/uploads/reviews/후레쉬.jpg', '서울 강남구');
+        '<p>강남구 소재 카페에서 UV LED 해충 퇴치기 설치 및 방역 서비스를 완료했습니다. 고객님께서 매우 만족하셨습니다.</p><img src="/uploads/reviews/후레쉬.jpg">', '/uploads/reviews/후레쉬.jpg', '서울 강남구');
 
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '서초구 음식점 정기 방역',
-        '서초구 음식점 정기 방역 서비스를 진행했습니다. 주방과 홀 전체에 대한 종합 방역을 실시했습니다.', '/uploads/reviews/바퀴작업.jpg', '서울 서초구');
+        '<p>서초구 음식점 정기 방역 서비스를 진행했습니다. 주방과 홀 전체에 대한 종합 방역을 실시했습니다.</p><img src="/uploads/reviews/바퀴작업.jpg">', '/uploads/reviews/바퀴작업.jpg', '서울 서초구');
 
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '인천시 xx가게 방역',
-        '인천시 xx가게 방역을 실시하였습니다. 인천시 xx가게 방역을 실시하였습니다.', '/uploads/reviews/약국소독.jpg', '인천시');
+        '<p>인천시 xx가게 방역을 실시하였습니다. 인천시 xx가게 방역을 실시하였습니다.</p><img src="/uploads/reviews/약국소독.jpg">', '/uploads/reviews/약국소독.jpg', '인천시');
 
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '부산시 yy식당 방역',
-        '부산시 yy식당 해충 방제 서비스를 완료했습니다.', '/uploads/reviews/일신소독.jpg', '부산시');
+        '<p>부산시 yy식당 해충 방제 서비스를 완료했습니다.</p><img src="/uploads/reviews/일신소독.jpg">', '/uploads/reviews/일신소독.jpg', '부산시');
 
 INSERT INTO REVIEWS (REVIEW_ID, TITLE, CONTENT, THUMBNAIL, LOCATION)
 VALUES (SEQ_REVIEW_ID.NEXTVAL, '대구시 zz카페 방역',
-        '대구시 zz카페 정기 방역을 진행했습니다.', '/uploads/reviews/내시경.jpg', '대구시');
+        '<p>대구시 zz카페 정기 방역을 진행했습니다.</p><img src="/uploads/reviews/내시경.jpg">', '/uploads/reviews/내시경.jpg', '대구시');
 
 -- FAQ 예시 데이터
 INSERT INTO FAQS (FAQ_ID, QUESTION, ANSWER, ORDER_INDEX)
@@ -190,7 +202,7 @@ SELECT * FROM ADMINS;
 -- 문의 테이블 전체 조회
 SELECT * FROM INQUIRIES ORDER BY INQUIRY_ID DESC;
 
--- 시공 사진 테이블 전체 조회
+-- 이미지 모음 테이블 전체 조회
 SELECT * FROM REVIEWS ORDER BY REVIEW_ID DESC;
 
 -- FAQ 조회

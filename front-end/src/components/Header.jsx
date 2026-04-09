@@ -107,7 +107,7 @@ const Header = ({ variant = "default" }) => {
             </div>
           </div>
           <Link to="/reviews" className="header__nav-link" onClick={() => handleNavClick("/reviews")}>
-            시공 사진
+            이미지 모음
           </Link>
         </nav>
       </div>

@@ -150,10 +150,6 @@
   margin-top: 4px;
 }
 
-.review-write__char-count--warn {
-  color: #e53e3e;
-}
-
 .review-write__input {
   width: 100%;
   padding: 14px 16px;
@@ -203,6 +199,163 @@
   color: #e53935;
 }
 
+.review-write__field-error--block {
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* ─── 블록 에디터 ─── */
+.review-write__blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 8px;
+}
+
+/* 블록 wrapper */
+.review-write__block-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.review-write__block-wrapper:hover .review-write__block-controls {
+  opacity: 1;
+}
+
+/* 블록 컨트롤 (▲▼✕) */
+.review-write__block-controls {
+  position: absolute;
+  top: 8px;
+  right: -48px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+
+.review-write__block-ctrl-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.08);
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+  line-height: 1;
+}
+
+.review-write__block-ctrl-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.18);
+  color: #1f1f1f;
+}
+
+.review-write__block-ctrl-btn--delete:hover:not(:disabled) {
+  background: rgba(231, 76, 60, 0.12);
+  color: #e74c3c;
+}
+
+.review-write__block-ctrl-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* 텍스트 블록 */
+.review-write__block--text {
+  padding: 4px 0;
+}
+
+/* 이미지 블록 */
+.review-write__block--image {
+  position: relative;
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 4px 0;
+  transition: border-color 0.2s;
+}
+
+.review-write__block--image:hover {
+  border-color: #b0b0b0;
+}
+
+.review-write__block--image-selected {
+  border-color: #51c488;
+  box-shadow: 0 0 0 2px rgba(81, 196, 136, 0.25);
+}
+
+.review-write__block-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  background-color: #f5f5f5;
+}
+
+.review-write__block-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(81, 196, 136, 0.85);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  padding: 4px 0;
+  pointer-events: none;
+}
+
+/* 삽입 바 */
+.review-write__insert-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.review-write__insert-bar--visible {
+  opacity: 1;
+}
+
+.review-write__block-wrapper:hover + .review-write__insert-bar,
+.review-write__insert-bar:hover {
+  opacity: 1;
+}
+
+.review-write__block-wrapper:hover .review-write__insert-bar {
+  opacity: 1;
+}
+
+.review-write__insert-btn {
+  padding: 5px 14px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #51c488;
+  background: #fff;
+  border: 1px solid #51c488;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.review-write__insert-btn:hover {
+  background: #51c488;
+  color: #fff;
+}
+
 /* 텍스트 에디터 (Quill) */
 .review-write__editor-wrapper .quill {
   border-radius: 15px;
@@ -224,7 +377,7 @@
 }
 
 .review-write__editor-wrapper .ql-editor {
-  min-height: 200px;
+  min-height: 140px;
   padding: 14px 16px;
   color: #1f1f1f;
   font-weight: 500;
@@ -235,205 +388,6 @@
   font-style: normal;
   font-weight: 500;
   color: #bcbcbc;
-}
-
-.review-write__editor-wrapper .ql-editor img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 12px 0;
-  border-radius: 8px;
-}
-
-/* 사진 관리 영역 */
-.review-write__images-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.review-write__images-header .review-write__label {
-  margin-bottom: 0;
-}
-
-.review-write__upload-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: #51c488;
-  background: #fff;
-  border: 1px solid #51c488;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.review-write__upload-btn:hover {
-  background: #51c488;
-  color: #fff;
-}
-
-.review-write__upload-btn svg {
-  flex-shrink: 0;
-}
-
-.review-write__images {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.review-write__image-item {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid #e8e8e8;
-  cursor: grab;
-  transition: border-color 0.2s, opacity 0.2s, transform 0.2s;
-}
-
-.review-write__image-item:hover {
-  border-color: #999;
-}
-
-.review-write__image-item--selected {
-  border-color: #51c488;
-  box-shadow: 0 0 0 2px rgba(81, 196, 136, 0.3);
-}
-
-.review-write__image-item--dragging {
-  opacity: 0.4;
-}
-
-.review-write__drop-indicator {
-  width: 3px;
-  height: 110px;
-  background-color: #51c488;
-  border-radius: 2px;
-  flex-shrink: 0;
-  align-self: center;
-}
-
-.review-write__image-thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  pointer-events: none;
-  background-color: #f5f5f5;
-}
-
-.review-write__image-remove {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.review-write__image-item:hover .review-write__image-remove {
-  opacity: 1;
-}
-
-/* 모바일 순서 변경 버튼 */
-.review-write__image-move {
-  display: none;
-  position: absolute;
-  left: 4px;
-  width: 22px;
-  height: 22px;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 11px;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-  z-index: 2;
-}
-
-.review-write__image-move--up {
-  top: 4px;
-}
-
-.review-write__image-move--down {
-  top: 30px;
-}
-
-.review-write__image-move:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-@media (hover: none) {
-  .review-write__image-move {
-    display: flex;
-  }
-
-  .review-write__image-remove {
-    opacity: 1;
-  }
-}
-
-.review-write__image-badge {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(81, 196, 136, 0.85);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-  padding: 2px 0;
-  pointer-events: none;
-}
-
-.review-write__images-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 40px;
-  background-color: #f8f8f8;
-  border-radius: 15px;
-  border: 2px dashed #ddd;
-  color: #bcbcbc;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.review-write__images-empty:hover {
-  border-color: #51c488;
-  color: #51c488;
-}
-
-.review-write__images-empty span {
-  font-size: 14px;
-  font-weight: 500;
 }
 
 /* 버튼 영역 */
@@ -508,6 +462,10 @@
   .review-write__form {
     padding: 32px 24px;
   }
+
+  .review-write__block-controls {
+    right: -40px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -559,6 +517,19 @@
   .review-write__submit-btn {
     padding: 10px 24px;
     font-size: 14px;
+  }
+
+  /* 모바일에서 블록 컨트롤 항상 표시 */
+  .review-write__block-controls {
+    position: static;
+    flex-direction: row;
+    justify-content: flex-end;
+    opacity: 1;
+    padding: 4px 0;
+  }
+
+  .review-write__insert-bar {
+    opacity: 1;
   }
 }
 
@@ -620,7 +591,6 @@
   color: #1f1f1f;
 }
 
-/* Crop area: 4:3 container */
 .crop-modal__crop-area {
   position: relative;
   width: 100%;

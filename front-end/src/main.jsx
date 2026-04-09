@@ -19,6 +19,7 @@ const QnaWrite = lazy(() => import("./pages/QnaWrite"));
 const QnaDetail = lazy(() => import("./pages/QnaDetail"));
 const Reviews = lazy(() => import("./pages/Reviews"));
 const ReviewWrite = lazy(() => import("./pages/ReviewWrite"));
+const ReviewDetail = lazy(() => import("./pages/ReviewDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminLogs = lazy(() => import("./pages/AdminLogs"));
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: "reviews/write",
         element: <Suspense fallback={null}><ReviewWrite /></Suspense>,
+      },
+      {
+        path: "reviews/:id",
+        element: <Suspense fallback={null}><ReviewDetail /></Suspense>,
       },
       {
         path: "faq",

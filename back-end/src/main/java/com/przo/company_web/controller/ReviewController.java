@@ -84,7 +84,7 @@ public class ReviewController {
         }
     }
 
-    // 관리자 전용: 시공 사진 등록
+    // 관리자 전용: 이미지 모음 등록
     @PostMapping
     public ResponseEntity<Map<String, Object>> createReview(
             @RequestParam String title,
@@ -106,7 +106,7 @@ public class ReviewController {
             Review review = reviewService.createReview(title, content, thumbnailUrl, createdDate, location);
 
             response.put("success", true);
-            response.put("message", "시공 사진이 등록되었습니다.");
+            response.put("message", "이미지 모음이 등록되었습니다.");
             response.put("reviewId", review.getId());
             return ResponseEntity.ok(response);
 
@@ -117,7 +117,7 @@ public class ReviewController {
         }
     }
 
-    // 관리자 전용: 시공 사진 수정
+    // 관리자 전용: 이미지 모음 수정
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateReview(
             @PathVariable Long id,
@@ -140,11 +140,11 @@ public class ReviewController {
             Review review = reviewService.updateReview(id, title, content, thumbnailUrl, createdDate, location);
             if (review != null) {
                 response.put("success", true);
-                response.put("message", "시공 사진이 수정되었습니다.");
+                response.put("message", "이미지 모음이 수정되었습니다.");
                 return ResponseEntity.ok(response);
             } else {
                 response.put("success", false);
-                response.put("message", "시공 사진을 찾을 수 없습니다.");
+                response.put("message", "이미지 모음을 찾을 수 없습니다.");
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
@@ -154,7 +154,7 @@ public class ReviewController {
         }
     }
 
-    // 관리자 전용: 시공 사진 삭제
+    // 관리자 전용: 이미지 모음 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deleteReview(
             @PathVariable Long id,
@@ -174,7 +174,7 @@ public class ReviewController {
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
-            response.put("message", "시공 사진을 찾을 수 없습니다.");
+            response.put("message", "이미지 모음을 찾을 수 없습니다.");
             return ResponseEntity.notFound().build();
         }
     }
