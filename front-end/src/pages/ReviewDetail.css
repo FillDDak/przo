@@ -159,10 +159,10 @@
 
 .review-detail__body img {
   display: block;
-  width: calc(100% - 120px);
+  width: 100%;
   height: auto;
   border-radius: 8px;
-  margin: 16px 60px;
+  margin: 16px 0;
 }
 
 .review-detail__body p {
