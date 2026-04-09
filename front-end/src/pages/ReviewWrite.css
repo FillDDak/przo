@@ -533,7 +533,7 @@
   }
 }
 
-/* ─── 크롭 모달 ─── */
+/* ─── 사진 편집 모달 ─── */
 .crop-modal__overlay {
   position: fixed;
   inset: 0;
@@ -550,9 +550,11 @@
   border-radius: 20px;
   width: 100%;
   max-width: 560px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   padding: 24px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
 }
@@ -591,15 +593,159 @@
   color: #1f1f1f;
 }
 
-.crop-modal__crop-area {
-  position: relative;
+/* 탭 */
+.crop-modal__tabs {
+  display: flex;
+  gap: 4px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.crop-modal__tab {
+  flex: 1;
+  padding: 8px 16px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #767676;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.crop-modal__tab--active {
+  background: #fff;
+  color: #1f1f1f;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* 자르기 영역 */
+.crop-modal__crop-outer {
   width: 100%;
-  aspect-ratio: 4 / 3;
   background-color: #111;
   border-radius: 12px;
   overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
+.crop-modal__crop-inner {
+  position: relative;
+  display: inline-block; /* 이미지 크기에 정확히 맞춤 */
+  line-height: 0;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.crop-modal__crop-img {
+  display: block;
+  max-width: 100%;
+  max-height: 460px;
+  width: auto;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* 자르기 오버레이 조각 */
+.crop-modal__overlay-piece {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 선택 영역 */
+.crop-modal__selection {
+  position: absolute;
+  z-index: 2;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-sizing: border-box;
+  cursor: move;
+}
+
+/* 3등분 그리드선 */
+.crop-modal__thirds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.25) 1px, transparent 1px);
+  background-size: 33.333% 33.333%;
+}
+
+/* L자형 코너 핸들 */
+.crop-modal__handle {
+  position: absolute;
+  z-index: 3;
+  touch-action: none;
+}
+
+.crop-modal__handle--nw,
+.crop-modal__handle--ne,
+.crop-modal__handle--se,
+.crop-modal__handle--sw {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+}
+
+.crop-modal__handle--nw { top: -2px; left: -2px; border-right: none; border-bottom: none; cursor: nw-resize; }
+.crop-modal__handle--ne { top: -2px; right: -2px; border-left: none; border-bottom: none; cursor: ne-resize; }
+.crop-modal__handle--se { bottom: -2px; right: -2px; border-left: none; border-top: none; cursor: se-resize; }
+.crop-modal__handle--sw { bottom: -2px; left: -2px; border-right: none; border-top: none; cursor: sw-resize; }
+
+/* 엣지 핸들 */
+.crop-modal__handle--n,
+.crop-modal__handle--s {
+  left: 50%;
+  width: 32px;
+  height: 4px;
+  background: #fff;
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+.crop-modal__handle--n { top: -2px; cursor: n-resize; }
+.crop-modal__handle--s { bottom: -2px; cursor: s-resize; }
+
+.crop-modal__handle--e,
+.crop-modal__handle--w {
+  top: 50%;
+  width: 4px;
+  height: 32px;
+  background: #fff;
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+.crop-modal__handle--e { right: -2px; cursor: e-resize; }
+.crop-modal__handle--w { left: -2px; cursor: w-resize; }
+
+/* 모자이크 영역 */
+.crop-modal__mosaic-area {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #111;
+  cursor: crosshair;
+  touch-action: none;
+  line-height: 0;
+}
+
+.crop-modal__mosaic-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 확대 컨트롤 */
 .crop-modal__zoom-wrapper {
   display: flex;
   align-items: center;
@@ -617,6 +763,38 @@
   height: 4px;
   accent-color: #51c488;
   cursor: pointer;
+}
+
+/* 모자이크 컨트롤 */
+.crop-modal__mosaic-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.crop-modal__mosaic-reset {
+  padding: 6px 14px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #767676;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  flex-shrink: 0;
+}
+
+.crop-modal__mosaic-reset:hover:not(:disabled) {
+  background: #e0e0e0;
+  color: #1f1f1f;
+}
+
+.crop-modal__mosaic-reset:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .crop-modal__buttons {
@@ -662,12 +840,17 @@
 @media (max-width: 480px) {
   .crop-modal {
     padding: 16px;
-    gap: 14px;
+    gap: 12px;
     border-radius: 16px;
   }
 
   .crop-modal__title {
     font-size: 16px;
+  }
+
+  .crop-modal__tab {
+    padding: 7px 10px;
+    font-size: 13px;
   }
 
   .crop-modal__btn {
