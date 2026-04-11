@@ -288,6 +288,11 @@ const Home = () => {
       return;
     }
 
+    if (captchaSiteKey && !captchaToken) {
+      setModal({ title: "보안 확인을 완료해주세요.", subtitle: "잠시 후 자동으로 완료됩니다. 완료 후 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      return;
+    }
+
     if (!privacyAgreed) {
       setModal({ title: "개인정보 수집 및 이용에 동의해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       return;
