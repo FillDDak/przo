@@ -929,7 +929,7 @@ const Home = () => {
                   <div className="home__section7-form-group">
                     <label>전화번호</label>
                     <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} ref={phoneRef} placeholder="010-1234-5678" maxLength={13} className={fieldErrors.phone ? "home__input--error" : undefined} />
-                    <p className="home__field-hint">전화번호 뒤 4자리 -&gt; 게시글 비밀번호</p>
+                    <p className="home__field-hint">전화번호 뒤 4자리가 게시글 비밀번호로 자동 설정 됩니다.</p>
                     {fieldErrors.phone && <p className="home__field-error">{fieldErrors.phone}</p>}
                   </div>
                 </div>
