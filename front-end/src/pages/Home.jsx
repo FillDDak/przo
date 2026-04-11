@@ -49,7 +49,7 @@ import telIcon from "../assets/section7-icon/section7-icon-tel.svg";
 import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
 import arrowIcon from "../assets/section7-icon/section7-icon-arrow.svg";
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL = "/api";
 
 /*
 const truncateFileName = (name, maxLength = 35) => {
