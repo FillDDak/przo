@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Turnstile } from "@marsidev/react-turnstile";
 import ConfirmModal from "../components/ConfirmModal";
 import PrivacyModal from "../components/PrivacyModal";
 import { getErrorMessage } from "../utils/errorMessage";
@@ -182,10 +183,20 @@ const Home = () => {
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", title: "", content: "" });
+  const [captchaSiteKey, setCaptchaSiteKey] = useState("");
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
   const nameRef = useRef(null);
   const phoneRef = useRef(null);
   const titleRef = useRef(null);
   const contentRef = useRef(null);
+
+  useEffect(() => {
+    fetch("/api/config/turnstile-site-key")
+      .then((r) => r.json())
+      .then((d) => setCaptchaSiteKey(d.siteKey || ""))
+      .catch(() => {});
+  }, []);
 
   const MAX_FILES = 5;
 
@@ -293,6 +304,7 @@ const Home = () => {
       submitData.append("title", formData.title);
       submitData.append("content", formData.content);
       attachments.forEach((file) => submitData.append("attachments", file));
+      if (captchaToken) submitData.append("captchaToken", captchaToken);
 
       const response = await fetch(`${API_BASE_URL}/inquiries`, {
         method: "POST",
@@ -302,8 +314,12 @@ const Home = () => {
       if (response.ok) {
         setFormData({ name: "", companyName: "", phone: "", title: "", content: "" });
         setAttachments([]);
+        setCaptchaToken(null);
+        captchaRef.current?.reset();
         setModal({ title: "문의가 성공적으로 등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
       } else {
+        setCaptchaToken(null);
+        captchaRef.current?.reset();
         setModal({ title: "문의 등록에 실패했습니다. 다시 시도해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
       }
     } catch (error) {
@@ -986,6 +1002,16 @@ const Home = () => {
                   )}
                   {fileError && <p className="home__field-error">{fileError}</p>}
                 </div>
+                {captchaSiteKey && (
+                  <div className="home__captcha">
+                    <Turnstile
+                      ref={captchaRef}
+                      siteKey={captchaSiteKey}
+                      onSuccess={(token) => setCaptchaToken(token)}
+                      onExpire={() => setCaptchaToken(null)}
+                    />
+                  </div>
+                )}
                 <button type="submit" className="home__section7-submit" disabled={isSubmitting}>
                   <span className="home__section7-submit-icon">
                     <img src={arrowIcon} alt="전송" />
