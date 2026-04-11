@@ -101,7 +101,7 @@ Figma 디자인 시안을 기반으로 프론트엔드를 구현하고, 백엔�
 
 ## 데이터베이스 구조 (ERD)
 
-![PRZO ERD](database/PRZO_ERD.png)
+![PRZO ERD](database/PRZO_ERD.png?v=2)
 
 총 6개의 독립 테이블로 구성되며, 서비스 도메인별로 명확히 분리되어 있습니다.
 
