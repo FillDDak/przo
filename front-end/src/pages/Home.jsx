@@ -173,7 +173,6 @@ const Home = () => {
     name: "",
     companyName: "",
     phone: "",
-    email: "",
     title: "",
     content: "",
   });
@@ -182,10 +181,9 @@ const Home = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", email: "", title: "", content: "" });
+  const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", title: "", content: "" });
   const nameRef = useRef(null);
   const phoneRef = useRef(null);
-  const emailRef = useRef(null);
   const titleRef = useRef(null);
   const contentRef = useRef(null);
 
@@ -265,14 +263,12 @@ const Home = () => {
     const errors = {};
     if (!formData.name.trim()) errors.name = "이름을 입력해주세요.";
     if (!formData.phone.trim()) errors.phone = "전화번호를 입력해주세요.";
-    if (!formData.email.trim()) errors.email = "이메일을 입력해주세요.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = "올바른 이메일 형식을 입력해주세요.";
     if (!formData.title.trim()) errors.title = "제목을 입력해주세요.";
     if (!formData.content.trim()) errors.content = "문의 내용을 입력해주세요.";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      const firstKey = ["name", "phone", "email", "title", "content"].find((k) => errors[k]);
-      const refMap = { name: nameRef, phone: phoneRef, email: emailRef, title: titleRef, content: contentRef };
+      const firstKey = ["name", "phone", "title", "content"].find((k) => errors[k]);
+      const refMap = { name: nameRef, phone: phoneRef, title: titleRef, content: contentRef };
       const firstRef = refMap[firstKey];
       if (firstRef?.current) {
         firstRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -293,7 +289,6 @@ const Home = () => {
       submitData.append("name", formData.name);
       submitData.append("companyName", formData.companyName);
       submitData.append("phone", formData.phone);
-      submitData.append("email", formData.email);
       submitData.append("password", formData.phone.replace(/\D/g, "").slice(-4));
       submitData.append("title", formData.title);
       submitData.append("content", formData.content);
@@ -305,7 +300,7 @@ const Home = () => {
       });
 
       if (response.ok) {
-        setFormData({ name: "", companyName: "", phone: "", email: "", title: "", content: "" });
+        setFormData({ name: "", companyName: "", phone: "", title: "", content: "" });
         setAttachments([]);
         setModal({ title: "문의가 성공적으로 등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
       } else {
@@ -936,11 +931,6 @@ const Home = () => {
                     <input type="tel" name="phone" value={formData.phone} onChange={handleFormChange} ref={phoneRef} placeholder="010-1234-5678" maxLength={13} className={fieldErrors.phone ? "home__input--error" : undefined} />
                     <p className="home__field-hint">전화번호 뒤 4자리 -&gt; 게시글 비밀번호</p>
                     {fieldErrors.phone && <p className="home__field-error">{fieldErrors.phone}</p>}
-                  </div>
-                  <div className="home__section7-form-group">
-                    <label>이메일</label>
-                    <input type="text" name="email" value={formData.email} onChange={handleFormChange} ref={emailRef} placeholder="przo@naver.com" maxLength={100} className={fieldErrors.email ? "home__input--error" : undefined} />
-                    {fieldErrors.email && <p className="home__field-error">{fieldErrors.email}</p>}
                   </div>
                 </div>
                 <div className="home__privacy-agree">

@@ -56,7 +56,6 @@ public class InquiryService {
         inquiry.setName(request.getName());
         inquiry.setCompanyName(request.getCompanyName());
         inquiry.setPhone(request.getPhone());
-        inquiry.setEmail(request.getEmail());
         inquiry.setPassword(passwordEncoder.encode(request.getPassword()));
         inquiry.setTitle(request.getTitle());
         inquiry.setContent(request.getContent());
@@ -79,7 +78,6 @@ public class InquiryService {
                     inquiry.setName(request.getName());
                     inquiry.setCompanyName(request.getCompanyName());
                     inquiry.setPhone(request.getPhone());
-                    inquiry.setEmail(request.getEmail());
                     inquiry.setPassword(passwordEncoder.encode(request.getPassword()));
                     inquiry.setTitle(request.getTitle());
                     inquiry.setContent(request.getContent());

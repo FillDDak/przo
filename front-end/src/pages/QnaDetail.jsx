@@ -372,15 +372,11 @@ const QnaDetail = () => {
               </div>
             </div>
 
-            {/* 전화번호 & 이메일 */}
+            {/* 전화번호 */}
             <div className="qna-detail__row">
               <div className="qna-detail__field">
                 <label className="qna-detail__label">전화번호</label>
                 <div className="qna-detail__value">{inquiry.phone}</div>
-              </div>
-              <div className="qna-detail__field">
-                <label className="qna-detail__label">이메일</label>
-                <div className="qna-detail__value">{inquiry.email}</div>
               </div>
             </div>
 

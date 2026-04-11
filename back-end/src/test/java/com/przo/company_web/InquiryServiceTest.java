@@ -61,7 +61,6 @@ class InquiryServiceTest {
         InquiryCreateRequest request = new InquiryCreateRequest();
         request.setName("홍길동");
         request.setPhone("010-1234-5678");
-        request.setEmail("test@test.com");
         request.setPassword("5678");
         request.setTitle("테스트 문의");
         request.setContent("문의 내용입니다.");
@@ -81,7 +80,6 @@ class InquiryServiceTest {
         Inquiry inquiry = new Inquiry();
         inquiry.setName("홍길동");
         inquiry.setPhone("010-1234-5678");
-        inquiry.setEmail("test@test.com");
         inquiry.setTitle("테스트 제목");
         inquiry.setStatus("pending");
         when(inquiryRepository.findById(1L)).thenReturn(Optional.of(inquiry));

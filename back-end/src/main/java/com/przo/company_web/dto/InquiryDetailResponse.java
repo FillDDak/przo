@@ -13,7 +13,6 @@ public class InquiryDetailResponse {
     private String name;
     private String companyName;
     private String phone;
-    private String email;
     private String title;
     private String content;
     private String attachment;
@@ -31,7 +30,6 @@ public class InquiryDetailResponse {
         this.name = inquiry.getName();
         this.companyName = inquiry.getCompanyName();
         this.phone = inquiry.getPhone();
-        this.email = inquiry.getEmail();
         this.title = inquiry.getTitle();
         this.content = inquiry.getContent();
         this.attachment = inquiry.getAttachment();

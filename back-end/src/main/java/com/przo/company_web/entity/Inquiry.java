@@ -32,9 +32,6 @@ public class Inquiry {
     @Column(name = "PHONE", nullable = false, length = 20)
     private String phone;
 
-    @Column(name = "EMAIL", nullable = false, length = 100)
-    private String email;
-
     @Column(name = "PASSWORD", nullable = false, length = 100)
     private String password;
 

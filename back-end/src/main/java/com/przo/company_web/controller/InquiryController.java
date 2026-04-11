@@ -161,7 +161,6 @@ public class InquiryController {
             @RequestParam String name,
             @RequestParam(required = false) String companyName,
             @RequestParam String phone,
-            @RequestParam String email,
             @RequestParam String password,
             @RequestParam String title,
             @RequestParam String content,
@@ -171,7 +170,7 @@ public class InquiryController {
         Map<String, Object> response = new HashMap<>();
 
         // 서버사이드 입력 검증
-        String validationError = validateInquiryFields(name, phone, email, title, content);
+        String validationError = validateInquiryFields(name, phone, title, content);
         if (validationError != null) {
             response.put("success", false);
             response.put("message", validationError);
@@ -193,7 +192,6 @@ public class InquiryController {
             request.setName(name);
             request.setCompanyName(companyName);
             request.setPhone(phone);
-            request.setEmail(email);
             request.setPassword(password);
             request.setTitle(title);
             request.setContent(content);
@@ -223,7 +221,6 @@ public class InquiryController {
             @RequestParam String name,
             @RequestParam(required = false) String companyName,
             @RequestParam String phone,
-            @RequestParam String email,
             @RequestParam String password,
             @RequestParam(required = false) String newPassword,
             @RequestParam String title,
@@ -234,7 +231,7 @@ public class InquiryController {
         Map<String, Object> response = new HashMap<>();
 
         // 서버사이드 입력 검증
-        String validationError = validateInquiryFields(name, phone, email, title, content);
+        String validationError = validateInquiryFields(name, phone, title, content);
         if (validationError != null) {
             response.put("success", false);
             response.put("message", validationError);
@@ -280,7 +277,6 @@ public class InquiryController {
             request.setName(name);
             request.setCompanyName(companyName);
             request.setPhone(phone);
-            request.setEmail(email);
             request.setPassword(newPassword != null && !newPassword.isEmpty() ? newPassword : password);
             request.setTitle(title);
             request.setContent(content);
@@ -399,13 +395,10 @@ public class InquiryController {
         return null;
     }
 
-    private String validateInquiryFields(String name, String phone, String email, String title, String content) {
+    private String validateInquiryFields(String name, String phone, String title, String content) {
         if (name == null || name.isBlank()) return "이름을 입력해주세요.";
         if (name.length() > 20) return "이름은 20자 이내로 입력해주세요.";
         if (phone == null || phone.isBlank()) return "전화번호를 입력해주세요.";
-        if (email == null || email.isBlank()) return "이메일을 입력해주세요.";
-        if (email.length() > 100) return "이메일은 100자 이내로 입력해주세요.";
-        if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) return "올바른 이메일 형식을 입력해주세요.";
         if (title == null || title.isBlank()) return "제목을 입력해주세요.";
         if (title.length() > 100) return "제목은 100자 이내로 입력해주세요.";
         if (content == null || content.isBlank()) return "문의 내용을 입력해주세요.";

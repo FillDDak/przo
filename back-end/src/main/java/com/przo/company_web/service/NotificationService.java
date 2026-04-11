@@ -133,10 +133,6 @@ public class NotificationService {
                         <td style="padding:10px 0;color:#999;">연락처</td>
                         <td style="padding:10px 0;">%s</td>
                       </tr>
-                      <tr style="border-bottom:1px solid #f0f0f0;">
-                        <td style="padding:10px 0;color:#999;">이메일</td>
-                        <td style="padding:10px 0;">%s</td>
-                      </tr>
                       <tr>
                         <td style="padding:10px 0;color:#999;">제목</td>
                         <td style="padding:10px 0;font-weight:600;">%s</td>
@@ -154,7 +150,7 @@ public class NotificationService {
                 </div>
                 """.formatted(
                 inquiry.getName(), companyName,
-                inquiry.getPhone(), inquiry.getEmail(),
+                inquiry.getPhone(),
                 inquiry.getTitle(), content, imagesHtml, inquiry.getId()
         );
     }

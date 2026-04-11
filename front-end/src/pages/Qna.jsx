@@ -28,7 +28,7 @@ const Qna = () => {
         if (searchQuery) params.append("title", searchQuery);
         const response = await fetch(`${API_BASE_URL}/inquiries?${params}`);
         const data = await response.json();
-        setInquiries(data.content);
+        setInquiries(data.content || []);
         setTotalPages(data.totalPages);
         setTotalElements(data.totalElements);
       } catch (error) {

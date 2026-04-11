@@ -22,7 +22,6 @@ const QnaWrite = () => {
     name: "",
     companyName: "",
     phone: "",
-    email: "",
     title: "",
     content: "",
   });
@@ -34,14 +33,13 @@ const QnaWrite = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(isEdit);
   const [modal, setModal] = useState(null);
-  const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", email: "", title: "", content: "" });
+  const [fieldErrors, setFieldErrors] = useState({ name: "", phone: "", title: "", content: "" });
   const [captchaSiteKey, setCaptchaSiteKey] = useState("");
   const [captchaToken, setCaptchaToken] = useState(null);
   const captchaRef = useRef(null);
   const submittedRef = useRef(false);
   const nameRef = useRef(null);
   const phoneRef = useRef(null);
-  const emailRef = useRef(null);
   const titleRef = useRef(null);
   const contentRef = useRef(null);
 
@@ -49,7 +47,6 @@ const QnaWrite = () => {
     formData.name.trim() !== "" ||
     formData.companyName.trim() !== "" ||
     formData.phone.trim() !== "" ||
-    formData.email.trim() !== "" ||
     formData.title.trim() !== "" ||
     formData.content.trim() !== "" ||
     attachments.length > 0;
@@ -90,7 +87,6 @@ const QnaWrite = () => {
         name: passedInquiry.name || "",
         companyName: passedInquiry.companyName || "",
         phone: passedInquiry.phone || "",
-        email: passedInquiry.email || "",
         title: passedInquiry.title || "",
         content: passedInquiry.content || "",
       });
@@ -177,14 +173,12 @@ const QnaWrite = () => {
     const phoneDigits = formData.phone.replace(/\D/g, "");
     if (!formData.phone.trim()) errors.phone = "전화번호를 입력해주세요.";
     else if (!isEdit && phoneDigits.length < 4) errors.phone = "올바른 전화번호를 입력해주세요.";
-    if (!formData.email.trim()) errors.email = "이메일을 입력해주세요.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = "올바른 이메일 형식을 입력해주세요.";
     if (!formData.title.trim()) errors.title = "제목을 입력해주세요.";
     if (!formData.content.trim()) errors.content = "문의 내용을 입력해주세요.";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      const firstKey = ["name", "phone", "email", "title", "content"].find((k) => errors[k]);
-      const refMap = { name: nameRef, phone: phoneRef, email: emailRef, title: titleRef, content: contentRef };
+      const firstKey = ["name", "phone", "title", "content"].find((k) => errors[k]);
+      const refMap = { name: nameRef, phone: phoneRef, title: titleRef, content: contentRef };
       const firstRef = refMap[firstKey];
       if (firstRef?.current) {
         firstRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -203,7 +197,6 @@ const QnaWrite = () => {
       submitData.append("name", formData.name);
       submitData.append("companyName", formData.companyName);
       submitData.append("phone", formData.phone);
-      submitData.append("email", formData.email);
       submitData.append("title", formData.title);
       submitData.append("content", formData.content);
       attachments.forEach((file) => submitData.append("attachments", file));
@@ -246,7 +239,7 @@ const QnaWrite = () => {
         if (response.ok) {
           const data = await response.json();
           submittedRef.current = true;
-          setFormData({ name: "", companyName: "", phone: "", email: "", title: "", content: "" });
+          setFormData({ name: "", companyName: "", phone: "", title: "", content: "" });
           setAttachments([]);
           navigate(`/qna/${data.inquiryId}`, { state: { autoVerified: true, autoPassword } });
         } else if (response.status === 429) {
@@ -347,13 +340,6 @@ const QnaWrite = () => {
                     : "전화번호 뒷자리 4자리가 게시글 비밀번호로 자동 설정됩니다."}
                 </p>
                 {fieldErrors.phone && <p className="qna-write__field-error">{fieldErrors.phone}</p>}
-              </div>
-              <div className="qna-write__field">
-                <label className="qna-write__label">이메일</label>
-                <input type="text" name="email" value={formData.email} onChange={handleChange}
-                  ref={emailRef} className={`qna-write__input${fieldErrors.email ? " qna-write__input--error" : ""}`}
-                  placeholder="przo@naver.com" maxLength={100} />
-                {fieldErrors.email && <p className="qna-write__field-error">{fieldErrors.email}</p>}
               </div>
             </div>
 

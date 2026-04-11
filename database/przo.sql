@@ -41,7 +41,6 @@ CREATE TABLE INQUIRIES (
     NAME            VARCHAR2(20)    NOT NULL,
     COMPANY_NAME    VARCHAR2(100),
     PHONE           VARCHAR2(20)    NOT NULL,
-    EMAIL           VARCHAR2(100)   NOT NULL,
     PASSWORD        VARCHAR2(100)   NOT NULL,
     TITLE           VARCHAR2(100)   NOT NULL,
     CONTENT         CLOB            NOT NULL,
@@ -127,12 +126,12 @@ VALUES (
     );
 
 -- 문의 예시 데이터 (비밀번호: 1234)
-INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, ATTACHMENT, STATUS)
-VALUES (SEQ_INQUIRY_ID.NEXTVAL, '박고객', '맛있는식당', '010-1234-1234', 'customer1@email.com', '$2a$10$c0Jgs.5wURsF6Y0JBhPq6eQJ35o66RB6okZOp5P4eH3KdIo9cQHoq',
+INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, PASSWORD, TITLE, CONTENT, ATTACHMENT, STATUS)
+VALUES (SEQ_INQUIRY_ID.NEXTVAL, '박고객', '맛있는식당', '010-1234-1234', '$2a$10$c0Jgs.5wURsF6Y0JBhPq6eQJ35o66RB6okZOp5P4eH3KdIo9cQHoq',
         '해충 방제 서비스 문의드립니다 (비밀번호: 1234)', '안녕하세요. 저희 식당에 해충 방제 서비스를 받고 싶습니다. 견적 문의 부탁드립니다.', '/uploads/inquiries/parasite1.jpg', 'pending');
 
-INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, EMAIL, PASSWORD, TITLE, CONTENT, ATTACHMENT, STATUS, ADMIN_NOTE, RESPONDED_AT)
-VALUES (SEQ_INQUIRY_ID.NEXTVAL, '최사장', '카페베네', '010-5678-1234', 'customer2@email.com', '$2a$10$c0Jgs.5wURsF6Y0JBhPq6eQJ35o66RB6okZOp5P4eH3KdIo9cQHoq',
+INSERT INTO INQUIRIES (INQUIRY_ID, NAME, COMPANY_NAME, PHONE, PASSWORD, TITLE, CONTENT, ATTACHMENT, STATUS, ADMIN_NOTE, RESPONDED_AT)
+VALUES (SEQ_INQUIRY_ID.NEXTVAL, '최사장', '카페베네', '010-5678-1234', '$2a$10$c0Jgs.5wURsF6Y0JBhPq6eQJ35o66RB6okZOp5P4eH3KdIo9cQHoq',
         '정기 방역 서비스 계약 문의 (비밀번호: 1234)', '매월 정기적으로 방역 서비스를 받고 싶습니다. 가격과 일정 안내 부탁드립니다.', '/uploads/inquiries/parasite2.jpg', 'completed',
         '월 1회 정기 방역 계약 완료. 매월 첫째 주 월요일 오전 방문 예정.', SYSTIMESTAMP);
 
