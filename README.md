@@ -91,27 +91,31 @@ Figma 디자인 시안을 기반으로 프론트엔드를 구현하고, 백엔�
 
 | 메인 페이지 | 회사 소개 |
 |---|---|
-| ![메인](screenshots/main.png) | ![회사소개](screenshots/about.png) |
+| <img src="docs/screenshots/홈.png" width="800"> | <img src="docs/screenshots/회사 소개.png" width="800"> |
 
 | 상담 문의 | 많이 묻는 질문 (FAQ) |
 |---|---|
-| ![상담문의](screenshots/inquiry.png) | ![FAQ](screenshots/faq.png) |
+| <img src="docs/screenshots/상담 문의.png" width="800"> | <img src="docs/screenshots/많이 묻는 질문.png" width="800"> |
 
 | 이미지 모음 |  |
 |---|---|
-| ![이미지모음](screenshots/reviews.png) |  |
+| <img src="docs/screenshots/이미지 모음.png" width="800"> |  |
 
 ---
 
 ### 관리자 페이지
 
-| 관리자 로그인 | 가격 견적 시트 |
+| 관리자 로그인 | 관리자 로그인 성공 |
 |---|---|
-| ![관리자로그인](screenshots/admin-login.png) | ![견적시트](screenshots/admin-estimate.png) |
+| <img src="docs/screenshots/관리자 로그인.png" width="800"> | <img src="docs/screenshots/관리자 로그인 성공.png" width="800"> |
 
-| 가격표 관리 | 로그인 기록 |
+| 가격 견적 시트 | 가격표 관리 |
 |---|---|
-| ![가격표관리](screenshots/admin-pricetable.png) | ![로그인기록](screenshots/admin-logs.png) |
+| <img src="docs/screenshots/관리자 가격 견적 시트.png" width="800"> | <img src="docs/screenshots/관리자 가격표 관리.png" width="800"> |
+
+| 로그인 시도 기록 |  |
+|---|---|
+| <img src="docs/screenshots/관리자 로그인 시도 기록.png" width="800"> |  |
 
 </details>
 
