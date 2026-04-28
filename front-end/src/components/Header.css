@@ -48,6 +48,23 @@
   opacity: 1;
 }
 
+.header__admin-badge--guest {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+}
+
+.header__admin-badge--guest:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.header--subpage .header__admin-badge--guest {
+  color: #bbbbbb;
+}
+
+.header--subpage .header__admin-badge--guest:hover {
+  color: #888888 !important;
+}
+
 .header--subpage .header__admin-badge {
   color: #51c488;
 }

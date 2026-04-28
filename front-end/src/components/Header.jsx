@@ -55,8 +55,10 @@ const Header = ({ variant = "default" }) => {
           }}>
             <img src={isAdmin ? logoGreenGradation : isSubPage ? logoGreen : logoWhite} alt="PRZO" />
           </Link>
-          {isAdminLoggedIn && (
+          {isAdminLoggedIn ? (
             <Link to="/admin" className="header__admin-badge"><strong>{adminName} 님</strong></Link>
+          ) : (
+            <Link to="/admin" className="header__admin-badge header__admin-badge--guest">관리자 로그인 페이지</Link>
           )}
         </div>
 
