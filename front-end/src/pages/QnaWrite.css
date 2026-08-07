@@ -66,6 +66,10 @@
   font-weight: 800;
   letter-spacing: 0;
   font-variant-numeric: tabular-nums;
+  /* 숫자에는 디센더가 없는데 줄 상자는 폰트의 하강 공간(3px)까지 잡는다.
+     그래서 가운데 정렬을 해도 글자가 1px 남짓 위로 떠 보인다.
+     box-sizing 이 border-box 라 padding-top 2px 은 정렬 기준을 1px 내린다. */
+  padding-top: 2px;
 }
 
 /* 직계 자식만 대상으로 한다. 자손 선택자를 쓰면 .qna-write__row 안에서
@@ -83,9 +87,10 @@
   gap: var(--sp-5);
 }
 
-/* 전화번호처럼 짧은 입력은 폼 폭 전체를 쓰지 않는다 */
+/* 한 칸짜리 입력은 폼 폭 전체를 쓰지 않는다.
+   윗줄 그리드(1fr 1fr / gap --sp-5)의 한 칸과 폭을 정확히 맞춘다. */
 .qna-write__field--half {
-  max-width: calc(50% - var(--sp-3));
+  max-width: calc(50% - var(--sp-5) / 2);
 }
 
 .qna-write__hint-icon {

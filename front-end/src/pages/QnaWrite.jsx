@@ -378,63 +378,65 @@ const QnaWrite = () => {
                       </div>
                     </div>
 
+                    {/* 필수 입력인 전화번호를 윗줄에 두고, 선택 항목인
+                        업체명 / 주소를 아래로 내렸다 */}
                     <div className="field">
-                      <label className="field__label" htmlFor="qw-company">
-                        업체명 / 주소{" "}
-                        <span className="field__optional">(선택)</span>
+                      <label className="field__label" htmlFor="qw-phone">
+                        전화번호 <span className="field__required">*</span>
                       </label>
                       <input
-                        id="qw-company"
-                        type="text"
-                        name="companyName"
-                        value={formData.companyName}
+                        id="qw-phone"
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
                         onChange={handleChange}
-                        className="input"
-                        placeholder="프르조"
-                        maxLength={100}
+                        ref={phoneRef}
+                        className={`input${fieldErrors.phone ? " input--error" : ""}`}
+                        placeholder="010-1234-5678"
+                        maxLength={13}
+                        autoComplete="tel"
                       />
                       <div className="field__foot">
-                        <p className="field__hint">
-                          방문이 필요한 경우 대략적인 위치를 알려주세요.
-                        </p>
+                        {fieldErrors.phone ? (
+                          <p className="field__error">
+                            <Icon name="alert" size={14} />
+                            {fieldErrors.phone}
+                          </p>
+                        ) : (
+                          <p className="field__hint">
+                            <Icon name="lock" size={13} className="qna-write__hint-icon" />
+                            전화번호 뒤 4자리가 게시글 비밀번호로 자동 설정됩니다.
+                            {phoneDigits.length >= 4 && (
+                              <strong className="qna-write__hint-pw">
+                                {" "}
+                                현재: {phoneDigits.slice(-4)}
+                              </strong>
+                            )}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
 
                   <div className="field qna-write__field--half">
-                    <label className="field__label" htmlFor="qw-phone">
-                      전화번호 <span className="field__required">*</span>
+                    <label className="field__label" htmlFor="qw-company">
+                      업체명 / 주소{" "}
+                      <span className="field__optional">(선택)</span>
                     </label>
                     <input
-                      id="qw-phone"
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
+                      id="qw-company"
+                      type="text"
+                      name="companyName"
+                      value={formData.companyName}
                       onChange={handleChange}
-                      ref={phoneRef}
-                      className={`input${fieldErrors.phone ? " input--error" : ""}`}
-                      placeholder="010-1234-5678"
-                      maxLength={13}
-                      autoComplete="tel"
+                      className="input"
+                      placeholder="프르조"
+                      maxLength={100}
                     />
                     <div className="field__foot">
-                      {fieldErrors.phone ? (
-                        <p className="field__error">
-                          <Icon name="alert" size={14} />
-                          {fieldErrors.phone}
-                        </p>
-                      ) : (
-                        <p className="field__hint">
-                          <Icon name="lock" size={13} className="qna-write__hint-icon" />
-                          전화번호 뒤 4자리가 게시글 비밀번호로 자동 설정됩니다.
-                          {phoneDigits.length >= 4 && (
-                            <strong className="qna-write__hint-pw">
-                              {" "}
-                              현재: {phoneDigits.slice(-4)}
-                            </strong>
-                          )}
-                        </p>
-                      )}
+                      <p className="field__hint">
+                        방문이 필요한 경우 대략적인 위치를 알려주세요.
+                      </p>
                     </div>
                   </div>
                 </fieldset>
@@ -622,7 +624,7 @@ const QnaWrite = () => {
                     <button
                       type="button"
                       onClick={() => navigate(isEdit ? `/qna/${id}` : "/qna")}
-                      className="btn btn--secondary"
+                      className="btn btn--secondary btn--lg"
                     >
                       취소
                     </button>
