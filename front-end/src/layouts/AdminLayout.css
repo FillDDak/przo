@@ -3,7 +3,7 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background-color: var(--ink-900);
+  background-color: #0e1a28;
   background-image: url('../assets/image/admin_banner.webp');
   background-size: cover;
   background-position: center;
@@ -11,25 +11,11 @@
   background-attachment: fixed;
 }
 
-/* 배경 사진 위에 잉크 레이어를 덮어 폼·표의 가독성을 확보한다 */
-.admin-layout::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  background: linear-gradient(
-    160deg,
-    rgba(13, 31, 24, 0.72) 0%,
-    rgba(13, 31, 24, 0.55) 45%,
-    rgba(13, 31, 24, 0.78) 100%
-  );
-  pointer-events: none;
-}
-
-.admin-layout > * {
-  position: relative;
-  z-index: 1;
-}
+/*
+ * 배경 사진 위에 별도 오버레이를 두지 않는다.
+ * 각 패널이 이미 반투명 검정(rgba(0,0,0,.6)) + blur 로 가독성을 확보하고 있어
+ * 전면 필터를 겹치면 화면 전체에 색이 낀 것처럼 보인다.
+ */
 
 .admin-content {
   flex: 1;

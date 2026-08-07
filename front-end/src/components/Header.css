@@ -40,9 +40,10 @@
   box-shadow: 0 1px 3px rgba(13, 31, 24, 0.05);
 }
 
-/* 관리자 화면은 배경이 어두운 사진이라 다크 글래스로 굳힌다 */
+/* 관리자 화면은 배경 사진 위라 다크 글래스로 굳힌다.
+   배경에 색이 끼지 않도록 그린 틴트 없이 중성 검정을 쓴다. */
 .header--admin.header--solid {
-  background-color: rgba(13, 31, 24, 0.78);
+  background-color: rgba(0, 0, 0, 0.68);
   border-bottom-color: rgba(255, 255, 255, 0.12);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
@@ -265,7 +266,7 @@
 
 /* 관리자 화면 드롭다운은 다크 글래스 */
 .header--admin .header__dropdown-panel {
-  background-color: rgba(18, 40, 31, 0.92);
+  background-color: rgba(20, 20, 20, 0.92);
   border-color: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);

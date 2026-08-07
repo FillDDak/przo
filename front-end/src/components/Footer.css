@@ -388,8 +388,10 @@
    Admin variant — 배경 사진이 비치도록 투명 처리
    ========================================================================= */
 
+/* 관리자 화면은 배경 사진에 색이 끼지 않도록 중성 다크를 쓴다.
+   패널(.admin-logs__panel 등)과 같은 rgba(0,0,0,.6) 계열로 맞췄다. */
 .footer--admin {
-  background-color: rgba(13, 31, 24, 0.72);
+  background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
