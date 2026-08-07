@@ -1,214 +1,183 @@
 .confirm-modal__overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 9999;
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: var(--sp-5);
+  background-color: rgba(13, 31, 24, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: confirm-modal-fade var(--dur) var(--ease-out);
+}
+
+@keyframes confirm-modal-fade {
+  from {
+    opacity: 0;
+  }
 }
 
 .confirm-modal {
   position: relative;
-  background: #fff;
-  border-radius: 15px;
-  padding: 20px;
-  width: fit-content;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 420px;
+  padding: var(--sp-9) var(--sp-8) var(--sp-7);
+  background-color: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+  animation: confirm-modal-rise var(--dur) var(--ease-spring);
 }
 
-/* X 닫기 버튼 */
+@keyframes confirm-modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+}
+
+/* --- 닫기 --------------------------------------------------------------- */
+
 .confirm-modal__close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 7px;
-  display: flex;
-  align-items: flex-start;
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.confirm-modal__close svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* 아이콘 + 콘텐츠 행 */
-.confirm-modal__header {
-  display: flex;
-  align-items: flex-start;
-  gap: 30px;
-}
-
-/* 50×50 원형 아이콘 배경 */
-.confirm-modal__icon {
-  width: 50px;
-  height: 50px;
-  flex-shrink: 0;
-  background-color: #f8f8f8;
-  border-radius: 50%;
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  color: var(--text-subtle);
+  transition: background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
-.confirm-modal__icon img {
-  width: 30px;
-  height: 30px;
+.confirm-modal__close:hover {
+  background-color: var(--surface-muted);
+  color: var(--text-strong);
 }
 
-/* 텍스트 + 버튼을 담는 오른쪽 영역 */
-.confirm-modal__body {
-  width: fit-content;
-}
+/* --- 아이콘 ------------------------------------------------------------- */
 
-.confirm-modal__text {
+.confirm-modal__icon {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--sp-5);
+  border-radius: var(--r-full);
 }
+
+.confirm-modal__icon--info {
+  background-color: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.confirm-modal__icon--danger {
+  background-color: var(--c-danger-soft);
+  color: var(--c-danger);
+}
+
+.confirm-modal__icon--success {
+  background-color: var(--c-success-soft);
+  color: var(--brand-600);
+}
+
+/* --- 텍스트 ------------------------------------------------------------- */
 
 .confirm-modal__title {
-  font-size: 28px;
-  font-weight: 500;
-  color: #1f1f1f;
   margin: 0;
-  line-height: 1.4;
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  line-height: var(--lh-snug);
+  color: var(--text-strong);
+  word-break: keep-all;
 }
 
 .confirm-modal__subtitle {
-  font-size: 18px;
-  font-weight: 400;
-  color: #999;
-  margin: 0;
+  margin: var(--sp-3) 0 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text-muted);
+  word-break: keep-all;
 }
 
-/* 버튼 영역 — 오른쪽 끝이 title 오른쪽과 동일 선 */
+/* --- 버튼 --------------------------------------------------------------- */
+
 .confirm-modal__buttons {
   display: flex;
-  gap: 24px;
-  margin-top: 50px;
-  justify-content: flex-end;
+  gap: var(--sp-2);
+  margin-top: var(--sp-8);
 }
 
 .confirm-modal__btn {
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  font-family: inherit;
-  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 46px;
+  padding-inline: var(--sp-5);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
-/* 확인/나가기 — 항상 왼쪽 */
 .confirm-modal__btn--confirm {
-  background: #111111;
-  border: none;
-  color: #ffffff;
-  order: -1;
+  background-color: var(--brand-600);
+  color: #fff;
 }
 
 .confirm-modal__btn--confirm:hover {
-  background: #333333;
+  background-color: var(--brand-700);
 }
 
-/* 취소/닫기 — 항상 오른쪽 */
 .confirm-modal__btn--cancel {
-  background: #ffffff;
-  border: 2px solid #dddddd;
-  color: #111111;
-  order: 0;
+  background-color: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text-muted);
 }
 
 .confirm-modal__btn--cancel:hover {
-  background: #cccccc;
-  border-color: #cccccc;
+  border-color: var(--n-400);
+  background-color: var(--surface-sunken);
+  color: var(--text-strong);
 }
 
-@media (max-width: 768px) {
-  .confirm-modal {
-    max-width: calc(100vw - 40px);
-    border-radius: 14px;
-  }
-
-  .confirm-modal__header {
-    gap: 20px;
-  }
-
-  .confirm-modal__icon {
-    width: 42px;
-    height: 42px;
-  }
-
-  .confirm-modal__icon img {
-    width: 26px;
-    height: 26px;
-  }
-
-  .confirm-modal__title {
-    font-size: 22px;
-  }
-
-  .confirm-modal__subtitle {
-    font-size: 15px;
-  }
-
-  .confirm-modal__buttons {
-    margin-top: 36px;
-    gap: 16px;
-  }
-
-  .confirm-modal__btn {
-    padding: 10px 20px;
-    font-size: 15px;
-  }
+.confirm-modal__btn--danger {
+  background-color: var(--c-danger);
+  color: #fff;
 }
+
+.confirm-modal__btn--danger:hover {
+  background-color: var(--c-danger-strong);
+}
+
+/* --- 반응형 -------------------------------------------------------------- */
 
 @media (max-width: 480px) {
   .confirm-modal {
-    border-radius: 12px;
-    padding: 16px;
-  }
-
-  .confirm-modal__header {
-    gap: 14px;
+    padding: var(--sp-8) var(--sp-6) var(--sp-6);
   }
 
   .confirm-modal__icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .confirm-modal__icon img {
-    width: 22px;
-    height: 22px;
-  }
-
-  .confirm-modal__close svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .confirm-modal__title {
-    font-size: 17px;
-  }
-
-  .confirm-modal__subtitle {
-    font-size: 13px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--sp-4);
   }
 
   .confirm-modal__buttons {
-    margin-top: 24px;
-    gap: 10px;
+    flex-direction: column-reverse;
+    margin-top: var(--sp-7);
   }
 
   .confirm-modal__btn {
-    padding: 9px 16px;
-    font-size: 13px;
-    border-radius: 8px;
+    width: 100%;
   }
 }

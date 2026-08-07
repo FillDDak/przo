@@ -1,8 +1,9 @@
 .admin-layout {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background-color: #0e1a28;
+  background-color: var(--ink-900);
   background-image: url('../assets/image/admin_banner.webp');
   background-size: cover;
   background-position: center;
@@ -10,22 +11,31 @@
   background-attachment: fixed;
 }
 
+/* 배경 사진 위에 잉크 레이어를 덮어 폼·표의 가독성을 확보한다 */
+.admin-layout::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(13, 31, 24, 0.72) 0%,
+    rgba(13, 31, 24, 0.55) 45%,
+    rgba(13, 31, 24, 0.78) 100%
+  );
+  pointer-events: none;
+}
+
+.admin-layout > * {
+  position: relative;
+  z-index: 1;
+}
+
 .admin-content {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 90px;
-}
-
-@media (max-width: 1024px) {
-  .admin-content {
-    padding-top: 70px;
-  }
-}
-
-@media (max-width: 768px) {
-  .admin-content {
-    padding-top: 60px;
-  }
+  /* 헤더가 fixed 이므로 그만큼 상단을 비워둔다 */
+  padding-top: var(--header-h);
 }

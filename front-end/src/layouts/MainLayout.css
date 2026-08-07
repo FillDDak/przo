@@ -3,9 +3,18 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .main-content {
   flex: 1;
   width: 100%;
+}
+
+/*
+ * 헤더가 fixed 이므로, 히어로(PageHero)가 없는 페이지는 이 클래스로
+ * 헤더 높이만큼 상단을 확보한다. PageHero 를 쓰는 페이지에는 붙이지 않는다.
+ */
+.has-fixed-header-offset {
+  padding-top: var(--header-h);
 }

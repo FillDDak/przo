@@ -15,6 +15,7 @@ const FloatingButtons = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth <= 768);
+  const [showTop, setShowTop] = useState(false);
   const tooltipRef = useRef(null);
   const phoneButtonRef = useRef(null);
 
@@ -28,6 +29,14 @@ const FloatingButtons = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  // 맨 위로 버튼은 실제로 스크롤을 내렸을 때만 노출한다
+  useEffect(() => {
+    const handleScroll = () => setShowTop(window.scrollY > 400);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleKakaoClick = () => {
@@ -136,10 +145,11 @@ const FloatingButtons = () => {
           )}
         </div>
         <button
-          className="floating-btn floating-btn--top"
+          className={`floating-btn floating-btn--top ${showTop ? "floating-btn--visible" : ""}`}
           onClick={handleScrollTop}
           aria-label="맨 위로"
           title="맨 위로"
+          tabIndex={showTop ? 0 : -1}
         >
           <img src={isMobileScreen ? topIconMobile : topIcon} alt="맨 위로" className="floating-btn__icon" />
         </button>

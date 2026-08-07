@@ -1,46 +1,50 @@
+/* =========================================================================
+   플로팅 상담 버튼
+   -------------------------------------------------------------------------
+   모든 페이지에 노출되므로 본문을 가리지 않도록 크기를 줄이고
+   우측 하단으로 모았다. "맨 위로"는 스크롤을 내렸을 때만 나타난다.
+   ========================================================================= */
+
 .floating-buttons {
   position: fixed;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: var(--sp-6);
+  bottom: var(--sp-7);
+  z-index: var(--z-floating);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
-  /* 유리 효과 */
-  background: rgba(56, 176, 120, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  border-radius: var(--r-xl);
+  background: rgba(45, 140, 95, 0.55);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 10px 30px -8px rgba(13, 31, 24, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35);
 }
 
 .floating-btn {
-  width: 90px;
-  height: 90px;
-  border: none;
-  cursor: pointer;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  width: 62px;
+  height: 62px;
   padding: 0;
+  border: none;
   background: transparent;
-  position: relative;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .floating-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.18);
 }
 
-.floating-btn--kakao {
-  border-radius: 32px 32px 0 0;
+.floating-btn:first-child {
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
 }
 
 .floating-btn--top {
-  border-radius: 0 0 32px 32px;
+  border-radius: 0 0 var(--r-xl) var(--r-xl);
 }
 
 /* 버튼 사이 구분선 */
@@ -50,14 +54,14 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 70%;
   height: 1px;
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.3) 30%,
-    rgba(255, 255, 255, 0.3) 70%,
-    transparent 100%
+    transparent,
+    rgba(255, 255, 255, 0.35) 30%,
+    rgba(255, 255, 255, 0.35) 70%,
+    transparent
   );
 }
 
@@ -66,122 +70,180 @@
 }
 
 .floating-btn__icon {
-  width: 56px;
-  height: 56px;
+  width: 38px;
+  height: 38px;
 }
 
-/* 전화 버튼 wrapper */
+/* -- 맨 위로 : 스크롤 위치에 따라 접힌다 -- */
+
+.floating-btn--top {
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: height var(--dur) var(--ease-out),
+    opacity var(--dur) var(--ease-out);
+}
+
+.floating-btn--top.floating-btn--visible {
+  height: 62px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 맨 위로가 숨겨진 동안에는 전화 버튼이 하단 모서리를 담당한다 */
 .floating-btn-wrapper {
   position: relative;
 }
 
-/* 전화 툴팁 */
-.phone-tooltip {
-  position: absolute;
-  right: calc(100% + 12px);
-  top: 50%;
-  transform: translateY(-50%);
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  white-space: nowrap;
-  z-index: 1001;
+.floating-btn-wrapper .floating-btn {
+  border-radius: 0;
 }
 
+.floating-buttons:not(:has(.floating-btn--visible))
+  .floating-btn-wrapper
+  .floating-btn {
+  border-radius: 0 0 var(--r-xl) var(--r-xl);
+}
+
+.floating-buttons:not(:has(.floating-btn--visible))
+  .floating-btn-wrapper
+  .floating-btn::after {
+  display: none;
+}
+
+/* =========================================================================
+   전화 툴팁
+   ========================================================================= */
+
+.phone-tooltip {
+  position: absolute;
+  right: calc(100% + var(--sp-3));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: calc(var(--z-floating) + 1);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+  animation: phone-tooltip-in var(--dur) var(--ease-spring);
+}
+
+@keyframes phone-tooltip-in {
+  from {
+    opacity: 0;
+    transform: translate(6px, -50%);
+  }
+}
+
+/* 말풍선 꼬리 */
 .phone-tooltip::after {
   content: "";
   position: absolute;
   right: -6px;
   top: 50%;
-  transform: translateY(-50%);
-  border: 6px solid transparent;
-  border-left-color: #fff;
+  transform: translateY(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background-color: var(--surface);
+  border-right: 1px solid var(--border);
+  border-top: 1px solid var(--border);
 }
 
 .phone-tooltip__close {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 20px;
-  height: 20px;
-  background: #999;
-  border: none;
-  border-radius: 50%;
+  top: -9px;
+  right: -9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  background-color: var(--surface);
+  color: var(--text-subtle);
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
 .phone-tooltip__close:hover {
-  background: #666;
+  background-color: var(--n-800);
+  border-color: var(--n-800);
+  color: #fff;
 }
 
 .phone-tooltip__icon-wrapper {
-  width: 40px;
-  height: 40px;
-  background-color: #F8F8F8;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-full);
+  background-color: var(--brand-50);
 }
 
+/* 원본 아이콘이 회색이라 브랜드 그린으로 보정한다 */
 .phone-tooltip__icon {
-  width: 22px;
-  height: 22px;
-  filter: invert(58%) sepia(65%) saturate(432%) hue-rotate(103deg) brightness(92%) contrast(87%);
+  width: 20px;
+  height: 20px;
+  filter: invert(58%) sepia(65%) saturate(432%) hue-rotate(103deg)
+    brightness(92%) contrast(87%);
 }
 
 .phone-tooltip__number {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111111;
   margin: 0;
-  letter-spacing: 0.5px;
+  font-size: var(--fs-h4);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
 }
 
 .phone-tooltip__copy-btn {
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
   flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .phone-tooltip__copy-btn:hover {
-  opacity: 0.7;
+  background-color: var(--surface-muted);
 }
 
 .phone-tooltip__copy-icon {
-  width: 24px;
-  height: 24px;
-  filter: invert(58%) sepia(65%) saturate(432%) hue-rotate(103deg) brightness(92%) contrast(87%);
+  width: 20px;
+  height: 20px;
+  filter: invert(58%) sepia(65%) saturate(432%) hue-rotate(103deg)
+    brightness(92%) contrast(87%);
 }
 
 .phone-tooltip__copied {
   position: absolute;
-  bottom: -28px;
+  bottom: -30px;
   right: 0;
-  background: #51C488;
-  color: #fff;
   padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: var(--r-xs);
+  background-color: var(--ink-900);
+  color: #fff;
+  font-size: var(--fs-2xs);
   font-weight: 600;
   white-space: nowrap;
   animation: fadeInOut 1.5s ease;
@@ -192,10 +254,7 @@
     opacity: 0;
     transform: translateY(4px);
   }
-  15% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  15%,
   85% {
     opacity: 1;
     transform: translateY(0);
@@ -206,84 +265,70 @@
   }
 }
 
-/* 반응형 */
-@media (max-width: 1400px) {
-  .floating-buttons {
-    right: 26px;
-  }
-
-  .floating-btn {
-    width: 84px;
-    height: 84px;
-  }
-
-  .floating-btn__icon {
-    width: 52px;
-    height: 52px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .floating-buttons {
-    right: 22px;
-  }
-
-  .floating-btn {
-    width: 76px;
-    height: 76px;
-  }
-
-  .floating-btn__icon {
-    width: 48px;
-    height: 48px;
-  }
-}
+/* =========================================================================
+   반응형
+   ========================================================================= */
 
 @media (max-width: 1024px) {
   .floating-buttons {
-    right: 18px;
+    right: var(--sp-4);
+    bottom: var(--sp-5);
   }
 
   .floating-btn {
-    width: 68px;
-    height: 68px;
+    width: 56px;
+    height: 56px;
+  }
+
+  .floating-btn--top.floating-btn--visible {
+    height: 56px;
   }
 
   .floating-btn__icon {
-    width: 44px;
-    height: 44px;
+    width: 34px;
+    height: 34px;
   }
 }
 
 @media (max-width: 768px) {
   .floating-buttons {
-    right: 16px;
-    top: auto;
-    bottom: 24px;
-    transform: none;
-    border-radius: 28px;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border: none;
-    box-shadow: none;
+    right: var(--sp-4);
+    bottom: var(--sp-4);
   }
 
   .floating-btn {
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
   }
 
-  .floating-btn--kakao {
-    border-radius: 28px 28px 0 0;
-  }
-
-  .floating-btn--top {
-    border-radius: 0 0 28px 28px;
+  .floating-btn--top.floating-btn--visible {
+    height: 52px;
   }
 
   .floating-btn__icon {
-    width: 50px;
-    height: 50px;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* 화면이 좁아 왼쪽에 툴팁을 띄우면 잘리므로 위로 올린다 */
+  .phone-tooltip {
+    right: 0;
+    top: auto;
+    bottom: calc(100% + var(--sp-3));
+    transform: none;
+  }
+
+  .phone-tooltip::after {
+    right: 18px;
+    top: auto;
+    bottom: -6px;
+    transform: rotate(135deg);
+  }
+
+  @keyframes phone-tooltip-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
   }
 }

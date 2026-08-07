@@ -7,7 +7,6 @@ import "./MainLayout.css";
 
 const MainLayout = () => {
   const location = useLocation();
-  const isHome = location.pathname === "/";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -15,12 +14,16 @@ const MainLayout = () => {
 
   return (
     <div className="main-layout">
+      <a href="#main" className="skip-link">
+        본문 바로가기
+      </a>
       <Header />
-      <main className="main-content">
+      <main id="main" className="main-content">
         <Outlet />
       </main>
       <Footer />
-      {isHome && <FloatingButtons />}
+      {/* 전화·카카오 상담은 모든 페이지에서 한 번에 닿을 수 있어야 한다 */}
+      <FloatingButtons />
     </div>
   );
 };
