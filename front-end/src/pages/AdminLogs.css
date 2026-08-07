@@ -33,11 +33,26 @@
     line-height: 1.6;
 }
 
+/* 견적 시트·가격표 관리 페이지의 제목 영역과 같은 구성 */
+.admin-logs__title-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.admin-logs__title-icon {
+    color: #51c488;
+    flex-shrink: 0;
+}
+
 .admin-logs__title {
     font-size: 22px;
     font-weight: 700;
     margin: 0;
     letter-spacing: -0.3px;
+    /* 전역 h1 색상(어두운 잉크)을 덮어써 어두운 패널 위에서 보이게 한다 */
+    color: #ffffff;
 }
 
 .admin-logs__back {
