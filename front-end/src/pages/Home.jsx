@@ -652,9 +652,16 @@ const Home = () => {
               공간에 맞는 방법으로 원인을 잡습니다.
             </p>
 
-            <div className="home__section1-actions fade-up fade-up-delay-2">
+            {/*
+              fade-up 을 이 줄(컨테이너)이 아니라 버튼 각각에 건다.
+              opacity < 1 인 조상은 backdrop-filter 의 backdrop root 가 되어
+              자식의 블러를 무력화하므로, 컨테이너를 페이드시키면 전화 버튼의
+              간유리 배경이 페이드가 끝날 때까지 사라진다.
+            */}
+            <div className="home__section1-actions">
               <button
-                className="home__section1-btn"
+                className="home__section1-btn fade-up"
+                style={{ "--fade-delay": "0.3s" }}
                 onClick={() =>
                   document
                     .querySelector('.home__section--7')
@@ -667,7 +674,11 @@ const Home = () => {
                   <path d="M13 6l6 6-6 6" />
                 </svg>
               </button>
-              <a href="tel:16702335" className="home__section1-tel">
+              <a
+                href="tel:16702335"
+                className="home__section1-tel fade-up"
+                style={{ "--fade-delay": "0.3s" }}
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M6.5 4h3l1.5 4-2 1.4a11 11 0 005.6 5.6L16 13l4 1.5v3a1.8 1.8 0 01-2 1.8C11 18.7 5.3 13 4.7 6a1.8 1.8 0 011.8-2z" />
                 </svg>

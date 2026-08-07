@@ -2424,21 +2424,48 @@
     transform: translateY(0);
   }
 
+  /* transition-delay 를 직접 주지 않고 변수로 넘긴다.
+     직접 주면, 요소가 자기 transition 단축 속성을 선언하는 순간 딜레이가
+     0 으로 리셋되어 조용히 무시된다. 위 .fade-up 이 var(--fade-delay) 를
+     읽어가므로 변수로 주면 그런 요소에서도 딜레이가 살아 있다. */
   .fade-up-delay-1 {
-    transition-delay: 0.15s;
+    --fade-delay: 0.15s;
   }
 
   .fade-up-delay-2 {
-    transition-delay: 0.3s;
+    --fade-delay: 0.3s;
   }
 
   .fade-up-delay-3 {
-    transition-delay: 0.45s;
+    --fade-delay: 0.45s;
   }
 
   /* 섹션 2 갤러리 아이템: hover flex 트랜지션 보존 (flex에는 딜레이 없음) */
   .home__section2-gallery-item.fade-up {
     transition: opacity 0.7s ease var(--fade-delay, 0s), transform 0.7s ease var(--fade-delay, 0s), flex 0.4s ease 0s;
+  }
+
+  /* 섹션 1 히어로 버튼: 두 버튼 모두 자체 transition 선언이 이 규칙보다 뒤에
+     있어서 위 .fade-up 의 transition 을 통째로 덮어쓴다. 그대로 두면 상담 버튼은
+     hover 용 짧은 시간(--dur-fast)으로 튀어 오르고, 전화 버튼은 opacity·transform
+     이 목록에 없어 아예 움직이지 않는다. hover 용과 페이드업용을 합쳐서 다시 선언한다. */
+  .home__section1-btn.fade-up {
+    transition: opacity 0.7s ease var(--fade-delay, 0s),
+      transform 0.7s ease var(--fade-delay, 0s),
+      background-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .home__section1-tel.fade-up {
+    transition: opacity 0.7s ease var(--fade-delay, 0s),
+      transform 0.7s ease var(--fade-delay, 0s),
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  /* 페이드업이 끝난 뒤 누를 때까지 0.3s 를 기다리면 안 되므로 되돌린다 */
+  .home__section1-btn.fade-up[data-visible]:active {
+    transition: transform var(--dur-fast) var(--ease-out);
   }
 
   /* 섹션 4 bottom 아이템: 기존 translateY(80px) 합성 */
