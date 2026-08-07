@@ -1,7 +1,7 @@
 .review-write {
   width: 100%;
-  padding-top: 90px;
-  background-color: #ffffff;
+  /* 상단 여백은 PageHero 가 담당하므로 여기서는 두지 않는다 */
+  background-color: var(--surface);
 }
 
 .review-write__content {
@@ -12,51 +12,13 @@
 }
 
 /* 배너 섹션 */
-.review-write__banner {
-  position: relative;
-  width: 100%;
-  height: 80px;
-  background-color: #ffffff;
-}
 
 /* 브레드크럼 */
-.review-write__breadcrumb {
-  position: absolute;
-  top: 16px;
-  left: 120px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 10;
-}
 
-.review-write__breadcrumb-link {
-  text-decoration: none;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
 
-.review-write__breadcrumb-icon {
-  width: 12px;
-  height: 12px;
-}
 
-.review-write__breadcrumb-separator {
-  color: #767676;
-  font-size: 12px;
-}
 
-.review-write__breadcrumb-text {
-  color: #767676;
-  font-size: 14px;
-}
 
-.review-write__breadcrumb-current {
-  color: #51c488;
-  font-size: 14px;
-  font-weight: 500;
-}
 
 /* 메인 컨텐츠 섹션 */
 .review-write__main {
@@ -447,17 +409,10 @@
 
 /* 반응형 */
 @media (max-width: 1024px) {
-  .review-write {
-    padding-top: 70px;
-  }
-
   .review-write__content {
     padding: 0 24px;
   }
 
-  .review-write__breadcrumb {
-    left: 24px;
-  }
 
   .review-write__form {
     padding: 32px 24px;
@@ -469,17 +424,10 @@
 }
 
 @media (max-width: 768px) {
-  .review-write {
-    padding-top: 60px;
-  }
-
   .review-write__content {
     padding: 0 20px;
   }
 
-  .review-write__breadcrumb {
-    left: 20px;
-  }
 
   .review-write__title {
     font-size: 24px;
@@ -675,4 +623,113 @@
     font-size: 14px;
     border-radius: 10px;
   }
+}
+
+/* =========================================================================
+   디자인 시스템 정렬 레이어
+   기존 폼 구조는 유지하고, 색·라운딩·포커스만 전역 토큰에 맞춘다.
+   ========================================================================= */
+
+.review-write__form {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.review-write__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.review-write__input {
+  border-radius: var(--r-sm);
+  border-color: var(--border-strong);
+  transition: border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.review-write__input:focus {
+  outline: none;
+  border-color: var(--brand-500);
+  box-shadow: var(--focus-ring);
+}
+
+.review-write__input--error {
+  border-color: var(--c-danger);
+  background-color: var(--c-danger-soft);
+}
+
+.review-write__cancel-btn,
+.review-write__submit-btn {
+  height: 48px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.review-write__cancel-btn {
+  border: 1px solid var(--border-strong);
+  background-color: var(--surface);
+  color: var(--text-muted);
+}
+
+.review-write__cancel-btn:hover {
+  border-color: var(--n-400);
+  background-color: var(--surface-sunken);
+  color: var(--text-strong);
+}
+
+.review-write__submit-btn {
+  border: 1px solid transparent;
+  background-color: var(--brand-600);
+  color: #fff;
+}
+
+.review-write__submit-btn:hover:not(:disabled) {
+  background-color: var(--brand-700);
+  box-shadow: var(--shadow-brand);
+}
+
+.review-write__submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Quill 에디터 — 툴바/본문 테두리를 폼 입력과 같은 톤으로 */
+.review-write__form .ql-toolbar.ql-snow,
+.review-write__form .ql-container.ql-snow {
+  border-color: var(--border-strong);
+}
+
+.review-write__form .ql-toolbar.ql-snow {
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  background-color: var(--surface-sunken);
+}
+
+.review-write__form .ql-container.ql-snow {
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+}
+
+.review-write__form .ql-snow .ql-stroke {
+  stroke: var(--text-muted);
+}
+
+.review-write__form .ql-snow .ql-fill {
+  fill: var(--text-muted);
+}
+
+.review-write__form .ql-snow .ql-active .ql-stroke,
+.review-write__form .ql-snow button:hover .ql-stroke {
+  stroke: var(--brand-700);
+}
+
+.review-write__form .ql-snow .ql-active .ql-fill,
+.review-write__form .ql-snow button:hover .ql-fill {
+  fill: var(--brand-700);
 }

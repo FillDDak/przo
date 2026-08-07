@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ConfirmModal from "../components/ConfirmModal";
+import PageHero from "../components/PageHero";
+import Icon from "../components/Icon";
 import { getErrorMessage } from "../utils/errorMessage";
 import "./Qna.css";
-import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
-import messageIcon from "../assets/other-page-icon-image/message-icon.svg";
-import searchIcon from "../assets/other-page-icon-image/qna-search-icon.svg";
 
 const API_BASE_URL = "/api";
+const PAGE_SIZE = 10;
 
 const Qna = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -18,13 +18,12 @@ const Qna = () => {
   const [modal, setModal] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const pageSize = 10;
 
   useEffect(() => {
     const fetchInquiries = async () => {
       try {
         setLoading(true);
-        const params = new URLSearchParams({ page: currentPage, size: 10 });
+        const params = new URLSearchParams({ page: currentPage, size: PAGE_SIZE });
         if (searchQuery) params.append("title", searchQuery);
         const response = await fetch(`${API_BASE_URL}/inquiries?${params}`);
         const data = await response.json();
@@ -33,7 +32,13 @@ const Qna = () => {
         setTotalElements(data.totalElements);
       } catch (error) {
         console.error("문의 목록을 불러오는데 실패했습니다:", error);
-        setModal({ title: "문의 목록을 불러오지 못했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({
+          title: "문의 목록을 불러오지 못했습니다.",
+          subtitle: getErrorMessage(error),
+          buttons: [
+            { label: "확인", variant: "confirm", onClick: () => setModal(null) },
+          ],
+        });
       } finally {
         setLoading(false);
       }
@@ -45,6 +50,9 @@ const Qna = () => {
   const handlePageChange = (page) => {
     if (page >= 0 && page < totalPages) {
       setCurrentPage(page);
+      document
+        .querySelector(".qna__board")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -54,7 +62,13 @@ const Qna = () => {
     setSearchQuery(searchInput.trim());
   };
 
-  // 페이지네이션 번호 생성 (최대 5개)
+  const clearSearch = () => {
+    setSearchInput("");
+    setSearchQuery("");
+    setCurrentPage(0);
+  };
+
+  /* 게시판은 공개되므로 작성자 이름은 첫 글자만 남긴다 */
   const maskName = (name) => {
     if (!name || name.length === 0) return "";
     if (name.length === 1) return name;
@@ -65,164 +79,250 @@ const Qna = () => {
     const pages = [];
     const maxVisible = 5;
     let start = Math.max(0, currentPage - Math.floor(maxVisible / 2));
-    let end = Math.min(totalPages, start + maxVisible);
-
-    if (end - start < maxVisible) {
-      start = Math.max(0, end - maxVisible);
-    }
-
-    for (let i = start; i < end; i++) {
-      pages.push(i);
-    }
+    const end = Math.min(totalPages, start + maxVisible);
+    if (end - start < maxVisible) start = Math.max(0, end - maxVisible);
+    for (let i = start; i < end; i++) pages.push(i);
     return pages;
   };
 
   return (
     <>
-    {modal && (
-      <ConfirmModal
-        title={modal.title}
-        subtitle={modal.subtitle}
-        onClose={() => setModal(null)}
-        buttons={modal.buttons}
-      />
-    )}
-    <div className="qna">
-      {/* 배너 섹션 */}
-      <section className="qna__banner">
-        {/* 브레드크럼 */}
-        <div className="qna__breadcrumb">
-          <Link to="/" className="qna__breadcrumb-link">
-            <img src={homeIcon} alt="홈" className="qna__breadcrumb-icon" />
+      {modal && (
+        <ConfirmModal
+          title={modal.title}
+          subtitle={modal.subtitle}
+          onClose={() => setModal(null)}
+          buttons={modal.buttons}
+        />
+      )}
+
+      <div className="qna">
+        <PageHero
+          eyebrow="Support"
+          title="상담 문의"
+          description="남겨주신 문의는 담당자가 확인 후 순차적으로 답변드립니다. 작성한 글은 전화번호 뒤 4자리로 확인할 수 있습니다."
+          breadcrumb={[
+            { label: "상담 서비스", to: "/qna" },
+            { label: "상담 문의" },
+          ]}
+        >
+          <Link to="/qna/write" className="btn btn--primary btn--arrow">
+            문의 작성하기
+            <span className="btn__icon">
+              <Icon name="arrow-right" size={18} />
+            </span>
           </Link>
-          <span className="qna__breadcrumb-separator">&gt;</span>
-          <span className="qna__breadcrumb-text">문의</span>
-          <span className="qna__breadcrumb-separator">&gt;</span>
-          <span className="qna__breadcrumb-current">상담 문의</span>
-        </div>
-      </section>
+          <a href="tel:16702335" className="btn btn--inverse">
+            <span className="btn__icon">
+              <Icon name="phone" size={17} />
+            </span>
+            전화 상담
+          </a>
+        </PageHero>
 
-      {/* 메인 컨텐츠 */}
-      <section className="qna__main">
-        <div className="qna__content">
-          <h1 className="qna__title">상담 문의</h1>
-
-          {/* 문의 목록 테이블 */}
-          <div className="qna__table-wrapper">
-            <table className="qna__table">
-              <thead>
-                <tr>
-                  <th className="qna__th qna__th--number">번호</th>
-                  <th className="qna__th qna__th--title">제목</th>
-                  <th className="qna__th qna__th--author">작성자</th>
-                  <th className="qna__th qna__th--date">등록일</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="4" className="qna__td qna__td--loading">
-                      로딩 중...
-                    </td>
-                  </tr>
-                ) : inquiries.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="qna__td qna__td--empty">
-                      등록된 문의가 없습니다.
-                    </td>
-                  </tr>
-                ) : (
-                  inquiries.map((item, index) => (
-                    <tr key={item.id} className="qna__row">
-                      <td className="qna__td qna__td--number">
-                        {totalElements - (currentPage * pageSize) - index}
-                      </td>
-                      <td className="qna__td qna__td--title">
-                        <Link to={`/qna/${item.id}`} className="qna__link">
-                          <svg className="qna__lock-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 11H5C3.89543 11 3 11.8954 3 13V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V13C21 11.8954 20.1046 11 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                          <span className="qna__title-text">{item.title}</span>
-                          {item.hasReply && (
-                            <img src={messageIcon} alt="답변완료" className="qna__message-icon" />
-                          )}
-                        </Link>
-                      </td>
-                      <td className="qna__td qna__td--author">{maskName(item.name)}</td>
-                      <td className="qna__td qna__td--date">{item.createdAt}</td>
-                    </tr>
-                  ))
+        <section className="qna__main u-section u-page-tail">
+          <div className="u-container">
+            {/* -- 목록 상단 : 건수 + 검색 -- */}
+            <div className="qna__toolbar">
+              <p className="qna__count">
+                전체 <strong>{totalElements.toLocaleString()}</strong>건
+                {searchQuery && (
+                  <span className="qna__count-filter">
+                    · &lsquo;{searchQuery}&rsquo; 검색 결과
+                    <button
+                      type="button"
+                      className="qna__count-reset"
+                      onClick={clearSearch}
+                    >
+                      전체 보기
+                    </button>
+                  </span>
                 )}
-              </tbody>
-            </table>
-          </div>
+              </p>
 
-          {/* 검색 바 + 문의하기 버튼 */}
-          <div className="qna__button-wrapper">
-            <form className="qna__search-form" onSubmit={handleSearch}>
-              <div className="qna__search-input-wrapper">
+              <form className="qna__search" onSubmit={handleSearch} role="search">
+                <Icon name="search" size={18} className="qna__search-icon" />
                 <input
                   type="text"
                   className="qna__search-input"
-                  placeholder="제목을 검색하세요."
+                  placeholder="제목으로 검색"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
+                  aria-label="문의 제목 검색"
                 />
                 {searchInput && (
                   <button
                     type="button"
                     className="qna__search-clear"
-                    onClick={() => {
-                      setSearchInput("");
-                      setSearchQuery("");
-                      setCurrentPage(0);
-                    }}
+                    onClick={clearSearch}
+                    aria-label="검색어 지우기"
                   >
-                    ×
+                    <Icon name="close" size={16} />
                   </button>
                 )}
-                <button type="submit" className="qna__search-btn">
-                  <img src={searchIcon} alt="검색" />
+                <button type="submit" className="qna__search-submit">
+                  검색
                 </button>
-              </div>
-            </form>
-            <Link to="/qna/write" className="qna__write-btn" onClick={() => window.scrollTo(0, 0)}>
-              문의하기
-            </Link>
-          </div>
-
-          {/* 페이지네이션 */}
-          {totalPages > 0 && (
-            <div className="qna__pagination">
-              <button
-                className="qna__page-btn qna__page-btn--prev"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
-              >
-                &lt;
-              </button>
-              {getPageNumbers().map((pageNum) => (
-                <button
-                  key={pageNum}
-                  className={`qna__page-btn ${currentPage === pageNum ? "qna__page-btn--active" : ""}`}
-                  onClick={() => handlePageChange(pageNum)}
-                >
-                  {pageNum + 1}
-                </button>
-              ))}
-              <button
-                className="qna__page-btn qna__page-btn--next"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
-              >
-                &gt;
-              </button>
+              </form>
             </div>
-          )}
-        </div>
-      </section>
-    </div>
+
+            {/* -- 게시판 -- */}
+            <div className="qna__board">
+              <div className="qna__board-head" aria-hidden="true">
+                <span className="qna__col qna__col--no">번호</span>
+                <span className="qna__col qna__col--title">제목</span>
+                <span className="qna__col qna__col--author">작성자</span>
+                <span className="qna__col qna__col--date">등록일</span>
+              </div>
+
+              {loading ? (
+                <ul className="qna__list">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <li key={i} className="qna__item qna__item--skeleton">
+                      <span className="skeleton qna__skeleton-no" />
+                      <span className="skeleton qna__skeleton-title" />
+                      <span className="skeleton qna__skeleton-author" />
+                      <span className="skeleton qna__skeleton-date" />
+                    </li>
+                  ))}
+                </ul>
+              ) : inquiries.length === 0 ? (
+                <div className="empty-state">
+                  <span className="empty-state__icon">
+                    <Icon name="chat" size={28} />
+                  </span>
+                  <p className="empty-state__title">
+                    {searchQuery
+                      ? "검색 결과가 없습니다"
+                      : "등록된 문의가 없습니다"}
+                  </p>
+                  <p className="empty-state__desc">
+                    {searchQuery
+                      ? "다른 검색어로 다시 시도해 보세요."
+                      : "첫 문의를 남겨주시면 담당자가 빠르게 확인하겠습니다."}
+                  </p>
+                  <Link
+                    to="/qna/write"
+                    className="btn btn--primary u-mt-4"
+                    onClick={() => window.scrollTo(0, 0)}
+                  >
+                    문의 작성하기
+                  </Link>
+                </div>
+              ) : (
+                <ul className="qna__list">
+                  {inquiries.map((item, index) => (
+                    <li key={item.id} className="qna__item">
+                      <Link to={`/qna/${item.id}`} className="qna__item-link">
+                        <span className="qna__col qna__col--no">
+                          {totalElements - currentPage * PAGE_SIZE - index}
+                        </span>
+
+                        <span className="qna__col qna__col--title">
+                          <Icon
+                            name="lock"
+                            size={15}
+                            className="qna__lock"
+                            aria-label="비밀글"
+                          />
+                          <span className="qna__item-title">{item.title}</span>
+                          {item.hasReply ? (
+                            <span className="badge badge--success qna__status">
+                              답변완료
+                            </span>
+                          ) : (
+                            <span className="badge badge--neutral qna__status">
+                              접수됨
+                            </span>
+                          )}
+                        </span>
+
+                        <span className="qna__col qna__col--author">
+                          {maskName(item.name)}
+                        </span>
+                        <span className="qna__col qna__col--date">
+                          {item.createdAt}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* -- 하단 : 페이지네이션 + 작성 버튼 -- */}
+            <div className="qna__foot">
+              {totalPages > 1 ? (
+                <nav className="pagination qna__pagination" aria-label="페이지 이동">
+                  <button
+                    className="pagination__btn"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 0}
+                    aria-label="이전 페이지"
+                  >
+                    <Icon name="chevron-left" size={16} />
+                  </button>
+                  {getPageNumbers().map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      className={`pagination__btn ${
+                        currentPage === pageNum ? "pagination__btn--active" : ""
+                      }`}
+                      onClick={() => handlePageChange(pageNum)}
+                      aria-current={currentPage === pageNum ? "page" : undefined}
+                    >
+                      {pageNum + 1}
+                    </button>
+                  ))}
+                  <button
+                    className="pagination__btn"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages - 1}
+                    aria-label="다음 페이지"
+                  >
+                    <Icon name="chevron-right" size={16} />
+                  </button>
+                </nav>
+              ) : (
+                <span />
+              )}
+
+              <Link
+                to="/qna/write"
+                className="btn btn--primary qna__write-btn"
+                onClick={() => window.scrollTo(0, 0)}
+              >
+                <span className="btn__icon">
+                  <Icon name="pencil" size={17} />
+                </span>
+                문의하기
+              </Link>
+            </div>
+
+            {/* -- 안내 -- */}
+            <aside className="qna__notice">
+              <Icon name="info" size={18} />
+              <div>
+                <p className="qna__notice-title">문의 전 확인해 주세요</p>
+                <ul className="qna__notice-list">
+                  <li>
+                    작성한 문의의 비밀번호는 <strong>전화번호 뒤 4자리</strong>로
+                    자동 설정됩니다.
+                  </li>
+                  <li>
+                    답변은 영업일 기준 순차적으로 등록되며, 급한 건은 전화(
+                    <a href="tel:16702335">1670-2335</a>)로 문의해 주세요.
+                  </li>
+                  <li>
+                    자주 묻는 내용은 <Link to="/faq">많이 묻는 질문</Link>에서
+                    먼저 확인하실 수 있습니다.
+                  </li>
+                </ul>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

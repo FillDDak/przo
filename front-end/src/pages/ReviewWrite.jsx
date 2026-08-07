@@ -2,12 +2,12 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import imageCompression from "browser-image-compression";
 import ConfirmModal from "../components/ConfirmModal";
 import { getErrorMessage } from "../utils/errorMessage";
-import { Link, useNavigate, useLocation, useBlocker } from "react-router-dom";
+import { useNavigate, useLocation, useBlocker } from "react-router-dom";
 import ReactQuill from "react-quill-new";
 import Cropper from "react-easy-crop";
 import "react-quill-new/dist/quill.snow.css";
 import "./ReviewWrite.css";
-import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
+import PageHero from "../components/PageHero";
 import getCroppedImg from "../utils/getCroppedImg";
 
 const API_BASE_URL = "/api";
@@ -488,28 +488,19 @@ const ReviewWrite = () => {
       )}
 
       <div className="review-write">
-        {/* 배너 섹션 */}
-        <section className="review-write__banner">
-          <div className="review-write__breadcrumb">
-            <Link to="/" className="review-write__breadcrumb-link">
-              <img src={homeIcon} alt="홈" className="review-write__breadcrumb-icon" />
-            </Link>
-            <span className="review-write__breadcrumb-separator">&gt;</span>
-            <span className="review-write__breadcrumb-text">이미지 모음</span>
-            <span className="review-write__breadcrumb-separator">&gt;</span>
-            <span className="review-write__breadcrumb-current">
-              {isEdit ? "이미지 모음 수정" : "이미지 모음 등록"}
-            </span>
-          </div>
-        </section>
+        <PageHero
+          eyebrow="Admin"
+          title={isEdit ? "이미지 모음 수정" : "이미지 모음 등록"}
+          breadcrumb={[
+            { label: "이미지 모음", to: "/reviews" },
+            { label: isEdit ? "수정" : "등록" },
+          ]}
+          size="sm"
+        />
 
         {/* 메인 컨텐츠 */}
-        <section className="review-write__main">
-          <div className="review-write__content">
-            <h1 className="review-write__title">
-              {isEdit ? "이미지 모음 수정" : "이미지 모음 등록"}
-            </h1>
-
+        <section className="review-write__main u-section u-page-tail">
+          <div className="u-container">
             <form className="review-write__form" onSubmit={handleSubmit}>
               {/* 제목 + 날짜 */}
               <div className="review-write__row">
