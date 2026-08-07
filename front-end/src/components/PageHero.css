@@ -1,0 +1,229 @@
+.page-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--ink-900);
+  /* 투명 헤더가 위에 겹쳐지므로 헤더 높이만큼 상단을 비워둔다 */
+  padding-top: calc(var(--header-h) + var(--sp-8));
+  padding-bottom: var(--sp-11);
+}
+
+.page-hero--sm {
+  padding-top: calc(var(--header-h) + var(--sp-7));
+  padding-bottom: var(--sp-8);
+}
+
+.page-hero--lg {
+  padding-top: calc(var(--header-h) + var(--sp-12));
+  padding-bottom: var(--sp-13);
+}
+
+/* 하단에 브랜드 헤어라인 — 흰 본문과의 경계를 또렷하게 */
+.page-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--brand-500),
+    var(--brand-300) 35%,
+    rgba(120, 255, 181, 0) 75%
+  );
+  z-index: 3;
+}
+
+/* --- 배경 레이어 ---------------------------------------------------------
+   1) image : 실제 사진 (선택)
+   2) grid  : 미세한 격자 — 구역을 나눠 점검한다는 인상
+   3) glow  : 브랜드 그린 라디얼 글로우
+   ------------------------------------------------------------------------- */
+
+.page-hero__image {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background-size: cover;
+  background-position: center;
+}
+
+/*
+ * 왼쪽(텍스트가 놓이는 쪽)은 잉크로 덮어 가독성을 지키고,
+ * 오른쪽으로 갈수록 걷어내 사진이 실제로 보이게 한다.
+ * 좌우 균일하게 덮으면 사진을 넣은 의미가 사라진다.
+ */
+.page-hero__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(13, 31, 24, 0.96) 0%,
+    rgba(13, 31, 24, 0.88) 32%,
+    rgba(13, 31, 24, 0.62) 62%,
+    rgba(13, 31, 24, 0.45) 100%
+  );
+}
+
+.page-hero__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  /* 오른쪽 위로 갈수록 옅어지게 마스킹 */
+  -webkit-mask-image: radial-gradient(
+    120% 100% at 8% 100%,
+    #000 10%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(120% 100% at 8% 100%, #000 10%, transparent 72%);
+}
+
+.page-hero__glow {
+  position: absolute;
+  z-index: -1;
+  top: -30%;
+  right: -8%;
+  width: min(720px, 62vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(81, 196, 136, 0.22) 0%,
+    rgba(81, 196, 136, 0.08) 42%,
+    transparent 68%
+  );
+  pointer-events: none;
+}
+
+/* --- 내용 ---------------------------------------------------------------- */
+
+.page-hero__inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* -- 브레드크럼 -- */
+
+.page-hero__breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-7);
+  font-size: var(--fs-xs);
+}
+
+.page-hero__crumb-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.page-hero__crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px 4px;
+  border-radius: var(--r-xs);
+  color: rgba(255, 255, 255, 0.55);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+a.page-hero__crumb:hover {
+  color: #fff;
+}
+
+.page-hero__crumb--current {
+  color: var(--brand-glow);
+  font-weight: 600;
+}
+
+.page-hero__crumb-sep {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* -- 본문 -- */
+
+.page-hero__body {
+  max-width: 46rem;
+}
+
+.page-hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--brand-glow);
+}
+
+.page-hero__eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  border-radius: var(--r-full);
+  background-color: var(--brand-glow);
+  flex-shrink: 0;
+}
+
+.page-hero__title {
+  margin: 0;
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: var(--tracking-display);
+  color: #fff;
+}
+
+.page-hero__desc {
+  margin: var(--sp-5) 0 0;
+  max-width: 54ch;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-relaxed);
+  color: var(--text-on-inverse-muted);
+}
+
+.page-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-7);
+}
+
+/* --- 반응형 -------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding-bottom: var(--sp-9);
+  }
+
+  .page-hero__breadcrumb {
+    margin-bottom: var(--sp-5);
+  }
+
+  .page-hero__grid {
+    background-size: 40px 40px;
+  }
+
+  .page-hero__actions .btn {
+    flex: 1 1 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-hero__desc {
+    font-size: var(--fs-body);
+  }
+}
