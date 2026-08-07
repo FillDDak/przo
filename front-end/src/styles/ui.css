@@ -767,23 +767,44 @@ input[type='radio'] {
  * useReveal 훅이 이 클래스를 붙이므로, JS 가 실패하거나 로드되지 않으면
  * 콘텐츠가 영영 보이지 않는 상태에 빠지지 않는다 (fail-open).
  */
-:root.reveal-ready .reveal {
+/*
+ * 등장 효과는 transition 이 아니라 animation 으로 준다.
+ *
+ * transition 으로 주면 두 가지가 동시에 깨진다.
+ *   1) 요소가 자기 hover 용 transition 을 선언하면 둘 중 하나가 통째로 사라진다.
+ *      (transition 은 단축 속성이라 목록 전체를 덮어쓴다)
+ *   2) 보이는 상태에 transform: none 을 박아야 하는데, 이 셀렉터가 0-4-0 이라
+ *      요소의 .card:hover(0-2-0) 가 주는 transform 을 눌러 버린다.
+ * 실제로 About 카드에서 hover 시 카드가 떠오르는 효과가 통째로 죽어 있었다.
+ *
+ * animation 은 transition 과 별개 채널이라 서로 간섭하지 않는다.
+ * fill-mode 는 backwards 여야 한다. forwards/both 로 두면 애니메이션이 끝난 뒤
+ * 채워진 값이 캐스케이드보다 우선해 같은 문제가 그대로 재현된다.
+ */
+:root.reveal-ready .reveal:not([data-visible]) {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
-  transition-delay: var(--reveal-delay, 0s);
 }
 
 :root.reveal-ready .reveal[data-visible] {
-  opacity: 1;
-  transform: none;
+  animation: reveal-in 0.7s var(--ease-out) var(--reveal-delay, 0s) backwards;
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root.reveal-ready .reveal {
+  :root.reveal-ready .reveal:not([data-visible]) {
     opacity: 1;
     transform: none;
-    transition: none;
+  }
+
+  :root.reveal-ready .reveal[data-visible] {
+    animation: none;
   }
 }
 
