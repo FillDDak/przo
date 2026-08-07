@@ -275,7 +275,17 @@ const paths = {
 
 const Icon = ({ name, size = 24, strokeWidth = 1.6, className, ...rest }) => {
   const shape = paths[name];
-  if (!shape) return null;
+  if (!shape) {
+    // 이름이 틀리면 아무것도 그리지 않고 끝나 원인을 찾기 어렵다.
+    // 개발 중에만 알려주고, 배포 빌드에서는 조용히 넘어간다.
+    if (import.meta.env.DEV) {
+      console.warn(
+        `[Icon] "${name}" 은(는) 정의되지 않은 아이콘 이름입니다. ` +
+          `Icon.jsx 의 paths 를 확인하세요.`,
+      );
+    }
+    return null;
+  }
 
   return (
     <svg
