@@ -1,35 +1,15 @@
 import { useState, useEffect, useRef } from "react";
+import Icon from "./Icon";
 import "./FloatingButtons.css";
-import kakaoIcon from "../assets/floating-button/kakao-icon-floating.svg";
-import telIcon from "../assets/floating-button/tel-icon-floating.svg";
-import topIcon from "../assets/floating-button/top-icon-floating.svg";
-import kakaoIconMobile from "../assets/floating-button/kakao-icon-floating-mobile.svg";
-import telIconMobile from "../assets/floating-button/tel-icon-floating-mobile.svg";
-import topIconMobile from "../assets/floating-button/top-icon-floating-mobile.svg";
-import telInfoIcon from "../assets/floating-button/telinfo-icon.svg";
-import telCopyIcon from "../assets/floating-button/telcopy-icon.svg";
 
 const PHONE_NUMBER = "1670-2335";
 
 const FloatingButtons = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth <= 768);
   const [showTop, setShowTop] = useState(false);
   const tooltipRef = useRef(null);
   const phoneButtonRef = useRef(null);
-
-  // 화면 크기 감지
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobileScreen(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   // 맨 위로 버튼은 실제로 스크롤을 내렸을 때만 노출한다
   useEffect(() => {
@@ -94,67 +74,74 @@ const FloatingButtons = () => {
   };
 
   return (
-    <>
-      <div className="floating-buttons">
+    <div className="floating-buttons">
+      <button
+        className="floating-btn floating-btn--kakao"
+        onClick={handleKakaoClick}
+        aria-label="카카오톡 상담"
+      >
+        <Icon name="kakao" />
+        <span className="floating-btn__label">카카오톡 상담</span>
+      </button>
+
+      <div className="floating-btn-wrapper">
         <button
-          className="floating-btn floating-btn--kakao"
-          onClick={handleKakaoClick}
-          aria-label="카카오톡 상담"
-          title="카카오톡 상담"
+          ref={phoneButtonRef}
+          className="floating-btn floating-btn--phone"
+          onClick={handlePhoneClick}
+          aria-label="전화 상담"
+          aria-expanded={isModalOpen}
         >
-          <img src={isMobileScreen ? kakaoIconMobile : kakaoIcon} alt="카카오톡" className="floating-btn__icon" />
+          <Icon name="phone" strokeWidth={1.8} />
+          {/* 툴팁이 열리면 같은 자리에 겹치므로 라벨은 숨긴다 */}
+          {!isModalOpen && <span className="floating-btn__label">전화 상담</span>}
         </button>
-        <div className="floating-btn-wrapper">
-          <button
-            ref={phoneButtonRef}
-            className="floating-btn floating-btn--phone"
-            onClick={handlePhoneClick}
-            aria-label="전화 상담"
-            title="전화 상담"
-          >
-            <img src={isMobileScreen ? telIconMobile : telIcon} alt="전화" className="floating-btn__icon" />
-          </button>
-          {isModalOpen && (
-            <div ref={tooltipRef} className="phone-tooltip">
-              <button
-                className="phone-tooltip__close"
-                onClick={handleModalClose}
-              >
-                ×
-              </button>
-              <div className="phone-tooltip__icon-wrapper">
-                <img
-                  src={telInfoIcon}
-                  alt="전화"
-                  className="phone-tooltip__icon"
-                />
-              </div>
-              <p className="phone-tooltip__number">{PHONE_NUMBER}</p>
-              <button
-                className="phone-tooltip__copy-btn"
-                onClick={handleCopyNumber}
-              >
-                <img
-                  src={telCopyIcon}
-                  alt="복사"
-                  className="phone-tooltip__copy-icon"
-                />
-              </button>
-              {isCopied && <span className="phone-tooltip__copied">복사됨!</span>}
-            </div>
-          )}
-        </div>
+
+        {isModalOpen && (
+          <div ref={tooltipRef} className="phone-tooltip">
+            <button
+              className="phone-tooltip__close"
+              onClick={handleModalClose}
+              aria-label="닫기"
+            >
+              <Icon name="close" size={12} strokeWidth={2.2} />
+            </button>
+            <span className="phone-tooltip__icon-wrapper">
+              <Icon name="phone" size={18} strokeWidth={1.8} />
+            </span>
+            <p className="phone-tooltip__number">{PHONE_NUMBER}</p>
+            <button
+              className="phone-tooltip__copy-btn"
+              onClick={handleCopyNumber}
+              aria-label="전화번호 복사"
+            >
+              <Icon name="clipboard" size={18} />
+            </button>
+            {isCopied && <span className="phone-tooltip__copied">복사됨!</span>}
+          </div>
+        )}
+      </div>
+
+      {/*
+        높이를 담당하는 슬롯을 버튼과 분리했다.
+        버튼에 직접 height 를 걸면 브레이크포인트별 크기 규칙과 우선순위가 부딪혀
+        숨겨진 상태에서도 자리를 차지하는 문제가 생긴다.
+      */}
+      <div
+        className={`floating-buttons__top-slot ${showTop ? "floating-buttons__top-slot--visible" : ""}`}
+        aria-hidden={!showTop}
+      >
         <button
-          className={`floating-btn floating-btn--top ${showTop ? "floating-btn--visible" : ""}`}
+          className="floating-btn floating-btn--top"
           onClick={handleScrollTop}
           aria-label="맨 위로"
-          title="맨 위로"
           tabIndex={showTop ? 0 : -1}
         >
-          <img src={isMobileScreen ? topIconMobile : topIcon} alt="맨 위로" className="floating-btn__icon" />
+          <Icon name="chevron-up" strokeWidth={2.2} />
+          <span className="floating-btn__label">맨 위로</span>
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
