@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ConfirmModal from "../components/ConfirmModal";
@@ -7,18 +7,18 @@ const AdminInquiryRedirect = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAdmin, loading } = useAuth();
-  const [ready, setReady] = useState(false);
 
+  // 관리자면 문의 상세로 바로 넘긴다.
+  // 라우터 이동은 외부 시스템 조작이므로 effect 가 맞다.
   useEffect(() => {
-    if (loading) return;
-    if (isAdmin) {
+    if (!loading && isAdmin) {
       navigate(`/qna/${id}`, { replace: true });
-    } else {
-      setReady(true);
     }
   }, [isAdmin, loading, id, navigate]);
 
-  if (!ready) return <div style={{ minHeight: "60vh" }} />;
+  // 안내 모달을 띄울지 여부는 loading·isAdmin 에서 그대로 유도된다.
+  // 별도 state 로 두면 effect 안에서 setState 를 해야 해 렌더가 한 번 더 돈다.
+  if (loading || isAdmin) return <div style={{ minHeight: "60vh" }} />;
 
   return (
     <ConfirmModal

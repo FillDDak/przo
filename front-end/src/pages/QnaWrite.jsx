@@ -227,7 +227,9 @@ const QnaWrite = () => {
             } else if (data.message) {
               msg = data.message;
             }
-          } catch {}
+          } catch {
+            // 응답 본문이 JSON 이 아니면 위에서 정한 기본 문구를 그대로 쓴다
+          }
           setModal({ title: msg, buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
         } else if (response.status === 401) {
           setModal({ title: "비밀번호가 일치하지 않습니다.", subtitle: "문의 목록에서 비밀번호를 다시 확인해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); navigate("/qna"); } }] });
