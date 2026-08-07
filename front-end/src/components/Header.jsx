@@ -194,21 +194,24 @@ const Header = ({ variant = "default" }) => {
             )}
           </nav>
 
-          {/* -- 우측 액션 -- */}
-          <div className="header__actions">
-            <a
-              href={`tel:${TEL.replace(/-/g, "")}`}
-              className="header__tel"
-              aria-label={`전화 상담 ${TEL}`}
-            >
-              <Icon name="phone" size={17} />
-              <span className="header__tel-number">{TEL}</span>
-            </a>
-            <Link to="/qna/write" className="header__cta">
-              무료 상담 신청
-              <Icon name="arrow-right" size={16} />
-            </Link>
-          </div>
+          {/* -- 우측 액션 --
+              고객 전환용 요소이므로 관리자 화면에서는 노출하지 않는다 */}
+          {!isAdmin && (
+            <div className="header__actions">
+              <a
+                href={`tel:${TEL.replace(/-/g, "")}`}
+                className="header__tel"
+                aria-label={`전화 상담 ${TEL}`}
+              >
+                <Icon name="phone" size={17} />
+                <span className="header__tel-number">{TEL}</span>
+              </a>
+              <Link to="/qna/write" className="header__cta">
+                무료 상담 신청
+                <Icon name="arrow-right" size={16} />
+              </Link>
+            </div>
+          )}
 
           {/* -- 모바일 토글 -- */}
           <button

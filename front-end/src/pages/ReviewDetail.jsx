@@ -219,7 +219,7 @@ const ReviewDetail = () => {
                 목록으로
               </Link>
               <Link to="/qna/write" className="btn btn--primary btn--arrow">
-                이런 작업이 필요하신가요?
+                무료 상담 신청
                 <span className="btn__icon">
                   <Icon name="arrow-right" size={17} />
                 </span>
