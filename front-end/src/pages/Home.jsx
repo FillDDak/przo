@@ -639,14 +639,48 @@ const Home = () => {
         <div className="home__content">
           <div className="home__section1-wrapper">
             <p className="home__section1-subtitle fade-up">
-              방역 전문가들의 맞춤 솔루션
+              인천·경기 방역 · 해충 방제 전문
             </p>
             <h1 className="home__section1-title fade-up fade-up-delay-1">
               당신의 소중한 공간을
               <br />
               안전하게 지켜드립니다
             </h1>
-            <button className="home__section1-btn fade-up fade-up-delay-2" onClick={() => document.querySelector('.home__section--7').scrollIntoView({ behavior: 'smooth', block: 'center' })}>무료 상담 문의</button>
+            <p className="home__section1-lead fade-up fade-up-delay-2">
+              현장 진단부터 시공, 사후 관리까지.{" "}
+              <br className="home__section1-lead-br" />
+              공간에 맞는 방법으로 원인을 잡습니다.
+            </p>
+
+            <div className="home__section1-actions fade-up fade-up-delay-2">
+              <button
+                className="home__section1-btn"
+                onClick={() =>
+                  document
+                    .querySelector('.home__section--7')
+                    .scrollIntoView({ behavior: 'smooth', block: 'center' })
+                }
+              >
+                무료 상담 문의
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14" />
+                  <path d="M13 6l6 6-6 6" />
+                </svg>
+              </button>
+              <a href="tel:16702335" className="home__section1-tel">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M6.5 4h3l1.5 4-2 1.4a11 11 0 005.6 5.6L16 13l4 1.5v3a1.8 1.8 0 01-2 1.8C11 18.7 5.3 13 4.7 6a1.8 1.8 0 011.8-2z" />
+                </svg>
+                1670-2335
+              </a>
+            </div>
+
+            {/* 상담 전 고객이 가장 궁금해하는 3가지를 미리 못박아 둔다 */}
+            <ul className="home__section1-trust fade-up fade-up-delay-3">
+              <li>무료 방문 점검</li>
+              <li>안전 인증 약품</li>
+              <li>사후 관리 · 보증</li>
+            </ul>
           </div>
           <div className="home__section1-scroll-hint">
             <svg className="home__section1-scroll-hint__icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
