@@ -4,36 +4,11 @@
   background-color: var(--surface);
 }
 
-.review-write__content {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 40px;
-}
-
-/* 배너 섹션 */
-
-/* 브레드크럼 */
-
-
-
-
-
-
-/* 메인 컨텐츠 섹션 */
-.review-write__main {
-  padding: 0 0 120px;
-}
-
-.review-write__title {
-  font-size: 32px;
-  font-weight: 700;
-  color: #1f1f1f;
-  text-align: center;
-  margin: 0 0 40px 0;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #dddddd;
-}
+/*
+ * 상하 여백은 JSX 의 `u-section u-page-tail` 이 담당한다.
+ * 여기서 padding 을 다시 선언하면 나중에 로드되는 이 파일이 이겨
+ * 히어로와 폼 카드가 맞붙어 버린다.
+ */
 
 /* 폼 */
 .review-write__form {
@@ -409,11 +384,6 @@
 
 /* 반응형 */
 @media (max-width: 1024px) {
-  .review-write__content {
-    padding: 0 24px;
-  }
-
-
   .review-write__form {
     padding: 32px 24px;
   }
@@ -424,20 +394,6 @@
 }
 
 @media (max-width: 768px) {
-  .review-write__content {
-    padding: 0 20px;
-  }
-
-
-  .review-write__title {
-    font-size: 24px;
-    margin-bottom: 40px;
-  }
-
-  .review-write__main {
-    padding: 20px 0 80px;
-  }
-
   .review-write__form {
     padding: 24px 20px;
     border-radius: 16px;
@@ -643,17 +599,47 @@
   color: var(--text-strong);
 }
 
+/* 공개 페이지 폼(.input)과 같은 흰 배경 + 테두리로 맞춘다.
+   원래는 테두리 없는 회색 채움이라 사이트 안에서 혼자 튀었다. */
 .review-write__input {
+  background-color: var(--surface);
+  border: 1px solid var(--border-strong);
   border-radius: var(--r-sm);
-  border-color: var(--border-strong);
+  font-size: var(--fs-body);
+  color: var(--text);
   transition: border-color var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-fast) var(--ease-out);
 }
 
+.review-write__input:hover {
+  border-color: var(--n-400);
+}
+
 .review-write__input:focus {
   outline: none;
+  background-color: var(--surface);
   border-color: var(--brand-500);
   box-shadow: var(--focus-ring);
+}
+
+.review-write__input::placeholder {
+  color: var(--n-400);
+}
+
+/* Quill 래퍼도 같은 테두리 규칙을 따르게 한다 */
+.review-write__editor-wrapper .quill {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background-color: var(--surface);
+}
+
+.review-write__editor-wrapper .ql-toolbar.ql-snow {
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface-sunken);
+}
+
+.review-write__editor-wrapper .ql-editor.ql-blank::before {
+  color: var(--n-400);
 }
 
 .review-write__input--error {
@@ -732,4 +718,38 @@
 .review-write__form .ql-snow .ql-active .ql-fill,
 .review-write__form .ql-snow button:hover .ql-fill {
   fill: var(--brand-700);
+}
+
+/* -------------------------------------------------------------------------
+   모바일 블록 컨트롤
+   -------------------------------------------------------------------------
+   데스크탑에서는 컨트롤을 본문 바깥(right: -48px)에 두고 hover 로 노출하지만,
+   좁은 화면에서는 카드 밖으로 밀려나 잘리고 터치 기기에는 hover 가 없어
+   아예 조작할 수 없었다. 블록 안쪽으로 넣고 항상 보이게 한다.
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .review-write__block-controls {
+    top: 6px;
+    right: 6px;
+    flex-direction: row;
+    opacity: 1;
+    padding: 3px;
+    border-radius: var(--r-sm);
+    background-color: rgba(255, 255, 255, 0.92);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .review-write__block-ctrl-btn {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+  }
+
+  /* 삽입 바도 터치에서는 상시 노출 */
+  .review-write__insert-bar {
+    opacity: 1;
+  }
 }
