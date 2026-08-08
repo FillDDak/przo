@@ -7,14 +7,37 @@ import Icon from "../components/Icon";
 import "./PestLab.css";
 
 /*
- * 홈 섹션 6 의 해충 그림을 눌러야만 닿는 이스터 에그 페이지.
+ * 홈 섹션 6 의 해충 그림을 눌러야만 닿는 이스터 에그 페이지 (/pest).
+ * 내비게이션·푸터 어디에도 링크가 없다.
  *
- * 그림 자체는 평면 이미지라 3D 정보가 없어서, 같은 형태를 기본 도형
- * (구·원뿔·도넛·원기둥)으로 다시 조립했다. 모델 파일이 없으니 내려받을
- * 것도 없고, 색은 디자인 토큰과 같은 값을 그대로 쓴다.
+ * 그림 자체는 평면 이미지라 3D 정보가 없어서, 같은 형태를 기본 도형으로
+ * 다시 조립했다. 모델 파일이 없으니 내려받을 것도 없다.
+ *   몸통 SphereGeometry · 가시 LatheGeometry(피보나치 분포, 앞면은 얼굴이라 비움)
+ *   팔 TubeGeometry(armCurve 로 좌우 대칭) · 금지 표시 Torus + Cylinder
  *
- * three.js 는 이 파일이 lazy 로 나뉘면서 함께 별도 청크로 빠진다.
- * 즉 이 페이지에 들어온 사람만 내려받는다.
+ * ── 손댈 때 지킬 것 ──────────────────────────────────────────────────
+ *
+ * 1. main.jsx 의 lazy() 를 유지한다.
+ *    three.js 는 gzip 137KB 다. static import 로 바꾸면 홈 첫 진입 번들에
+ *    섞인다. 지금은 이 페이지에 들어온 사람만 내려받는다.
+ *
+ * 2. 환경맵은 RoomEnvironment 로 "생성"한다. HDRI 파일을 받지 않으므로
+ *    네트워크 요청이 늘지 않는다. 링의 광택은 조명이 아니라 이 반사에서
+ *    나오므로 빼면 재질이 밋밋해진다.
+ *
+ * 3. 언마운트 시 dispose() 를 빠뜨리지 않는다. WebGL 자원은 GC 가 회수하지
+ *    않는다. 뒤로가기 후 document.querySelectorAll('canvas').length 가 0
+ *    인지로 확인할 수 있다.
+ *
+ * 4. PestLab.css 의 touch-action: pan-y 를 none 으로 바꾸지 않는다.
+ *    무대가 화면을 거의 채우므로 none 이면 그 위에서 페이지 스크롤이 막힌다.
+ *
+ * 5. 카메라는 화면비에 따라 position.z 를 물린다. 세로 화각이 고정이라
+ *    폭이 좁아지면 좌우가 잘리기 때문이다 (resize 참고).
+ *
+ * 6. prefers-reduced-motion 이면 자동 회전을 하지 않는다.
+ *
+ * 7. <canvas> 에는 대체 텍스트가 없으므로 role="img" + aria-label 을 유지한다.
  */
 
 const RING_LIGHT = new THREE.Color("#ef97c0");

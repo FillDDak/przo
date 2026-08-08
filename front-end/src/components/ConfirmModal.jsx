@@ -4,12 +4,25 @@ import "./ConfirmModal.css";
 
 /**
  * 프로젝트 전용 알림·확인 모달.
- * window.alert / window.confirm 대신 항상 이 컴포넌트를 사용한다.
+ * 고객·관리자에게 보이는 모든 alert / confirm 은 항상 이 컴포넌트를 쓴다.
+ * window.alert, window.confirm 사용 금지.
+ *
+ * 예외: 새로고침·탭 닫기 시 뜨는 다이얼로그는 브라우저의 beforeunload 가
+ * 자체적으로 띄우는 것이라 커스텀 UI 로 대체할 수 없다. 반면 React Router
+ * useBlocker() 로 막는 페이지 내 이동(링크 클릭·뒤로가기)은 이 모달로 처리한다.
+ *
+ * ESC 닫기 · 배경 스크롤 잠금 · 첫 버튼 포커스 · 버튼 정렬을 모두 이 컴포넌트가
+ * 처리한다. 호출부에서 다시 넣지 말 것.
+ *
+ * 페이지에서 쓰는 패턴:
+ *   const [modal, setModal] = useState(null);
+ *   {modal && <ConfirmModal {...modal} />}
  *
  * @param {string} title    본문 제목
  * @param {string} subtitle 보조 설명 (선택)
  * @param {func}   onClose  오버레이 클릭 · ESC · 닫기 버튼
  * @param {Array}  buttons  [{ label, variant: "confirm"|"cancel"|"danger", onClick }]
+ *                          배열 순서는 화면 배치와 무관하다 (아래 정렬 참고)
  * @param {"info"|"danger"|"success"} tone 아이콘 색상 톤
  */
 const ConfirmModal = ({ title, subtitle, onClose, buttons = [], tone = "info" }) => {
