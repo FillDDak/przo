@@ -1,0 +1,96 @@
+/* =========================================================================
+   PestLab — 홈 섹션 6 의 해충 그림을 눌러야 닿는 이스터 에그 페이지
+   ========================================================================= */
+
+/* 무대는 화면 폭을 꽉 채운다. 섹션 6 과 같은 파란 배경을 써서
+   "그 그림이 여기로 왔다"는 연결을 준다. */
+.pest-lab__scene {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(100deg, #2b3560 0%, #3a4a8f 55%, #4a63b8 100%);
+  overflow: hidden;
+}
+
+/* 후처리 블룸 대신 뒤에 깔아 둔 발광. 비용이 없고 원본의 번짐과 비슷하다.
+   무대가 가로로 길어졌으므로 높이를 기준으로 원형을 유지한다. */
+.pest-lab__scene::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80vmin;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(226, 120, 190, 0.34) 0%,
+    rgba(120, 90, 220, 0.16) 42%,
+    transparent 68%
+  );
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.pest-lab__stage {
+  position: relative;
+  width: 100%;
+  height: clamp(360px, 72vh, 780px);
+  cursor: grab;
+  /* 세로 스와이프는 브라우저에 넘겨 페이지 스크롤을 막지 않는다.
+     무대가 화면을 거의 채우므로, none 으로 두면 여기서 스크롤이 멈춘다. */
+  touch-action: pan-y;
+}
+
+.pest-lab__stage:active {
+  cursor: grabbing;
+}
+
+.pest-lab__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pest-lab__hint {
+  position: absolute;
+  left: 50%;
+  bottom: var(--sp-6);
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: var(--sp-2) var(--sp-5);
+  border-radius: var(--r-full);
+  background-color: rgba(13, 31, 24, 0.42);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------
+   무대 아래 설명
+   ------------------------------------------------------------------------- */
+
+.pest-lab__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-5);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .pest-lab__hint {
+    font-size: var(--fs-2xs);
+    padding: var(--sp-2) var(--sp-4);
+  }
+
+  .pest-lab__hint-more {
+    display: none;
+  }
+}

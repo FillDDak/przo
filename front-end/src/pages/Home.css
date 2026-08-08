@@ -814,6 +814,10 @@
   margin: 0;
 }
 
+/* 이스터 에그 진입점이라 링크(a)로 감싸져 있다. 겉보기는 그림 그대로 두고,
+   마우스를 올렸을 때만 옅게 빛나 눌러볼 만하다는 신호를 준다.
+   hover 에 transform 을 쓰지 않는 이유: 아래 fade-up 이 이 요소의 transform 을
+   등장 애니메이션에 이미 쓰고 있어서, 같이 건드리면 둘 중 하나가 죽는다. */
 .home__section6-pest {
   position: absolute;
   right: 0;
@@ -821,6 +825,19 @@
   transform: translateY(-50%);
   height: 420px;
   z-index: 3;
+  display: block;
+  transition: filter var(--dur) var(--ease-out);
+}
+
+.home__section6-pest img {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+.home__section6-pest:hover,
+.home__section6-pest:focus-visible {
+  filter: drop-shadow(0 10px 26px rgba(226, 120, 190, 0.55));
 }
 
 .home__section--7 {
@@ -2486,10 +2503,15 @@
     transform: none;
   }
 
-  /* 섹션 6 해충 이미지: 기존 translateY(-50%) 합성 */
+  /* 섹션 6 해충 이미지: 기존 translateY(-50%) 합성.
+     transition 을 다시 선언하지 않으면 위 .fade-up 규칙이 filter 를 목록에서
+     지워, hover 시 빛이 트랜지션 없이 툭 켜진다. */
   .home__section6-pest.fade-up {
     opacity: 0;
     transform: translateY(calc(-50% + 50px));
+    transition: opacity 0.7s ease var(--fade-delay, 0s),
+      transform 0.7s ease var(--fade-delay, 0s),
+      filter var(--dur) var(--ease-out);
   }
 
   .home__section6-pest.fade-up[data-visible] {

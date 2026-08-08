@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Turnstile } from "@marsidev/react-turnstile";
 import ConfirmModal from "../components/ConfirmModal";
 import PrivacyModal from "../components/PrivacyModal";
@@ -931,13 +931,16 @@ const Home = () => {
                 작은 공간까지 세심하게 지켜드립니다.
               </p>
             </div>
-            <img
-              src={section6Pest}
-              alt="해충 방제"
+            {/* 이스터 에그 진입점. 내비게이션에는 없는 /pest 로만 이어진다.
+                겉보기는 그림 그대로이고, 마우스를 올리면 옅게 빛난다. */}
+            <Link
+              to="/pest"
               className="home__section6-pest fade-up"
               style={{ '--fade-delay': '0.3s' }}
-              loading="lazy"
-            />
+              aria-label="해충 방제 캐릭터를 3D로 살펴보기"
+            >
+              <img src={section6Pest} alt="해충 방제" loading="lazy" />
+            </Link>
           </div>
         </div>
       </section>

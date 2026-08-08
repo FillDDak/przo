@@ -30,6 +30,8 @@ const Faq = lazy(() => import("./pages/Faq"));
 const Terms = lazy(() => import("./pages/Terms"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+// 이스터 에그. three.js 를 쓰므로 반드시 lazy 로 둬서 별도 청크로 뺀다.
+const PestLab = lazy(() => import("./pages/PestLab"));
 
 const router = createBrowserRouter([
   {
@@ -96,6 +98,11 @@ const router = createBrowserRouter([
       {
         path: "admin/inquiry/:id",
         element: <Suspense fallback={null}><AdminInquiryRedirect /></Suspense>,
+      },
+      // 내비게이션에 노출하지 않는다. 홈 섹션 6 의 해충 그림으로만 들어온다.
+      {
+        path: "pest",
+        element: <Suspense fallback={null}><PestLab /></Suspense>,
       },
     ],
   },
