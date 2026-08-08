@@ -51,6 +51,7 @@
   height: 100%;
 }
 
+/* 조작 안내. 글자 없이 아이콘만 둔다. */
 .pest-lab__hint {
   position: absolute;
   left: 50%;
@@ -58,18 +59,43 @@
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
-  gap: var(--sp-2);
+  gap: var(--sp-1);
   margin: 0;
-  padding: var(--sp-2) var(--sp-5);
+  padding: var(--sp-2) var(--sp-4);
   border-radius: var(--r-full);
   background-color: rgba(13, 31, 24, 0.42);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: rgba(255, 255, 255, 0.86);
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  white-space: nowrap;
   pointer-events: none;
+}
+
+/* 좌우로 살짝 오가며 끄는 동작을 암시한다 */
+.pest-lab__hint-arrow {
+  animation: pest-hint-nudge 1.8s var(--ease-out) infinite;
+}
+
+.pest-lab__hint-arrow:last-of-type {
+  animation-direction: reverse;
+}
+
+@keyframes pest-hint-nudge {
+  0%,
+  100% {
+    transform: translateX(2px);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateX(-2px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pest-lab__hint-arrow {
+    animation: none;
+    opacity: 0.8;
+  }
 }
 
 /* -------------------------------------------------------------------------
@@ -86,11 +112,6 @@
 
 @media (max-width: 480px) {
   .pest-lab__hint {
-    font-size: var(--fs-2xs);
-    padding: var(--sp-2) var(--sp-4);
-  }
-
-  .pest-lab__hint-more {
-    display: none;
+    padding: var(--sp-2) var(--sp-3);
   }
 }

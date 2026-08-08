@@ -376,13 +376,15 @@ const PestLab = () => {
           role="img"
           aria-label="프르조 방제 캐릭터를 3D로 표현한 그림. 파란 해충이 분홍색 금지 표시 안에 들어 있습니다."
         />
+        {/* 글 대신 아이콘으로만 조작을 알린다. 좌우 화살표 사이에 그립을 둬
+            "옆으로 끌어라"를 나타낸다. 화면에 안 보이는 설명은 .sr-only 로
+            남겨 스크린리더에는 그대로 전달된다. */}
         <p className="pest-lab__hint">
-          <Icon name="grip-vertical" size={16} />
-          드래그해서 돌려보세요.
-          {/* 좁은 화면에서는 플로팅 상담 버튼과 겹쳐서 뒷문장을 접는다 */}
-          <span className="pest-lab__hint-more">
-            {" "}
-            손을 떼면 천천히 회전합니다.
+          <Icon name="chevron-left" size={18} className="pest-lab__hint-arrow" />
+          <Icon name="grip-vertical" size={18} />
+          <Icon name="chevron-right" size={18} className="pest-lab__hint-arrow" />
+          <span className="sr-only">
+            드래그해서 돌려보세요. 손을 떼면 천천히 회전합니다.
           </span>
         </p>
       </div>
