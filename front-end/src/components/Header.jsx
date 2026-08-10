@@ -95,7 +95,12 @@ const Header = ({ variant = "default" }) => {
             <Link
               to="/"
               className="header__logo"
-              onClick={() => window.scrollTo(0, 0)}
+              /* 이미 홈이면 Link 가 이동하지 않으므로 직접 올려 준다.
+                 다른 페이지에서는 건드리지 않는다 — 여기서 스크롤을 0 으로
+                 만들면 그 페이지의 '돌아올 위치'가 0 으로 저장돼 버린다. */
+              onClick={() => {
+                if (location.pathname === "/") window.scrollTo(0, 0);
+              }}
               aria-label="프르조 홈"
             >
               <img

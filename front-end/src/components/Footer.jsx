@@ -61,11 +61,7 @@ const Footer = ({ variant = "default" }) => {
       <div className="footer__main u-container">
         {/* -- 브랜드 -- */}
         <div className="footer__brand">
-          <Link
-            to="/"
-            className="footer__logo-link"
-            onClick={() => window.scrollTo(0, 0)}
-          >
+          <Link to="/" className="footer__logo-link">
             <img src={logoWhite} alt="PRZO" className="footer__logo" />
           </Link>
           <p className="footer__tagline">
@@ -95,12 +91,12 @@ const Footer = ({ variant = "default" }) => {
           <h3 className="footer__col-title">서비스 안내</h3>
           <ul className="footer__links">
             <li>
-              <Link to="/about" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/about">
                 회사 소개
               </Link>
             </li>
             <li>
-              <Link to="/reviews" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/reviews">
                 시공 이미지 모음
               </Link>
             </li>
@@ -116,17 +112,17 @@ const Footer = ({ variant = "default" }) => {
           <h3 className="footer__col-title">고객 지원</h3>
           <ul className="footer__links">
             <li>
-              <Link to="/qna" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/qna">
                 상담 문의
               </Link>
             </li>
             <li>
-              <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/faq">
                 많이 묻는 질문
               </Link>
             </li>
             <li>
-              <Link to="/qna/write" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/qna/write">
                 문의 작성하기
               </Link>
             </li>
@@ -170,13 +166,13 @@ const Footer = ({ variant = "default" }) => {
 
           <div className="footer__legal">
             <nav className="footer__legal-links" aria-label="약관 및 정책">
-              <Link to="/terms" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/terms">
                 이용약관
               </Link>
-              <Link to="/privacy-policy" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/privacy-policy">
                 개인정보처리방침
               </Link>
-              <Link to="/cookie-policy" onClick={() => window.scrollTo(0, 0)}>
+              <Link to="/cookie-policy">
                 쿠키 정책
               </Link>
             </nav>

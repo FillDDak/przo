@@ -204,7 +204,6 @@ const Qna = () => {
                   <Link
                     to="/qna/write"
                     className="btn btn--primary u-mt-4"
-                    onClick={() => window.scrollTo(0, 0)}
                   >
                     문의 작성하기
                   </Link>
@@ -290,7 +289,6 @@ const Qna = () => {
               <Link
                 to="/qna/write"
                 className="btn btn--primary qna__write-btn"
-                onClick={() => window.scrollTo(0, 0)}
               >
                 <span className="btn__icon">
                   <Icon name="pencil" size={17} />

@@ -160,7 +160,6 @@ const Reviews = () => {
                 <Link
                   to="/reviews/write"
                   className="btn btn--primary btn--sm"
-                  onClick={() => window.scrollTo(0, 0)}
                 >
                   <span className="btn__icon">
                     <Icon name="pencil" size={16} />

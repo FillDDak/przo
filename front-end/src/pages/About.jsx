@@ -58,7 +58,8 @@ const About = () => {
   useReveal();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // 맨 위로 올리는 건 useScrollRestoration 이 처리한다. 여기서 또 부르면
+    // 뒤로가기로 돌아왔을 때 복원된 위치를 덮어써 버린다.
     if (state?.scrollTo === "location") {
       const el = document.getElementById("location");
       if (el) {

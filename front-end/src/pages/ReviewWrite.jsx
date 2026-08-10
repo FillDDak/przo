@@ -121,8 +121,6 @@ const ReviewWrite = () => {
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
-  useEffect(() => { window.scrollTo(0, 0); }, []);
-
   useEffect(() => {
     return () => {
       cropQueue.forEach((item) => URL.revokeObjectURL(item.objectUrl));

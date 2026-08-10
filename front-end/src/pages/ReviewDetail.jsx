@@ -18,10 +18,6 @@ const ReviewDetail = () => {
   const [modal, setModal] = useState(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
     const fetchReview = async () => {
       try {
         setLoading(true);

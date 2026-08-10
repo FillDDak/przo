@@ -1,16 +1,13 @@
-import { Outlet, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FloatingButtons from "../components/FloatingButtons";
+import useScrollRestoration from "../hooks/useScrollRestoration";
 import "./MainLayout.css";
 
 const MainLayout = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+  /* 새 페이지는 맨 위로, 뒤로가기는 떠날 때의 위치로 되돌린다 */
+  useScrollRestoration();
 
   return (
     <div className="main-layout">

@@ -65,8 +65,6 @@ const QnaWrite = () => {
 
   const blocker = useBlocker(shouldBlock);
 
-  useEffect(() => { window.scrollTo(0, 0); }, []);
-
   useEffect(() => {
     fetch("/api/config/turnstile-site-key")
       .then((r) => r.json())
