@@ -11,6 +11,9 @@ import AdminLayout from "./layouts/AdminLayout";
 // 홈은 즉시 로드 (첫 진입 페이지)
 import Home from "./pages/Home";
 
+// /pest 의 Suspense fallback. fallback 은 먼저 떠 있어야 하므로 lazy 로 못 만든다.
+import PestLabLoading from "./components/PestLabLoading";
+
 // 나머지 페이지 (lazy 로드)
 const About = lazy(() => import("./pages/About"));
 // const Service = lazy(() => import("./pages/Service"));
@@ -100,9 +103,10 @@ const router = createBrowserRouter([
         element: <Suspense fallback={null}><AdminInquiryRedirect /></Suspense>,
       },
       // 내비게이션에 노출하지 않는다. 홈 섹션 6 의 해충 그림으로만 들어온다.
+      // three.js 청크가 커서 fallback 을 비워 두면 흰 화면이 1초쯤 보인다.
       {
         path: "pest",
-        element: <Suspense fallback={null}><PestLab /></Suspense>,
+        element: <Suspense fallback={<PestLabLoading />}><PestLab /></Suspense>,
       },
     ],
   },

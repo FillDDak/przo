@@ -1,0 +1,166 @@
+/* =========================================================================
+   PestLab 로딩 화면
+   -------------------------------------------------------------------------
+   /pest 의 three.js 청크를 받는 동안 뜬다. Suspense fallback 이라 메인
+   번들에 포함되므로, 무겁지 않게 순수 CSS 로만 그린다.
+   ========================================================================= */
+
+.pest-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-6);
+  min-height: 100dvh;
+  /* 헤더가 fixed 라 그만큼 비워야 가운데 정렬이 실제 가운데로 보인다 */
+  padding: calc(var(--header-h) + var(--sp-8)) var(--gutter) var(--sp-12);
+
+  /* .pest-lab__scene 과 같은 배경 — 로딩이 끝나도 색이 튀지 않는다 */
+  background: linear-gradient(100deg, #2b3560 0%, #3a4a8f 55%, #4a63b8 100%);
+
+  /*
+   * 캐시가 더워 청크가 순식간에 오면 로딩 화면이 한 프레임 번쩍이고 사라진다.
+   * 0.12s 늦게 나타나게 해서, 빠른 진입에서는 아예 보이지 않게 한다.
+   */
+  opacity: 0;
+  animation: pest-loading-in 0.3s var(--ease-out) 0.12s forwards;
+}
+
+@keyframes pest-loading-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   금지 표시 + 해충
+   ------------------------------------------------------------------------- */
+
+.pest-loading__badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  /* 실제 무대에 깔린 발광과 같은 색 */
+  filter: drop-shadow(0 0 34px rgba(226, 120, 190, 0.45));
+}
+
+.pest-loading__ring {
+  position: absolute;
+  inset: 0;
+  border: 9px solid #e278be;
+  border-radius: 50%;
+  animation: pest-loading-spin 2.4s linear infinite;
+}
+
+/* 금지 표시의 사선 */
+.pest-loading__slash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% + 18px);
+  height: 9px;
+  border-radius: var(--r-full);
+  background-color: #e278be;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.pest-loading__bug {
+  width: 52px;
+  height: 52px;
+  border-radius: 45% 45% 42% 42%;
+  background: radial-gradient(circle at 34% 30%, #6f74ff 0%, #3b3fd8 58%, #2a2ea8 100%);
+  animation: pest-loading-bob 1.5s var(--ease-in-out) infinite;
+}
+
+@keyframes pest-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pest-loading-bob {
+  0%,
+  100% {
+    transform: translateY(-4px) scale(0.96);
+  }
+  50% {
+    transform: translateY(4px) scale(1);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   문구 · 진행 바
+   ------------------------------------------------------------------------- */
+
+.pest-loading__text {
+  margin: 0;
+  font-size: var(--fs-lead);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+  color: #fff;
+}
+
+/*
+ * 진행률을 알 수 없으므로(청크 다운로드 진행을 신뢰성 있게 못 읽는다)
+ * 가짜 퍼센트 대신 좌우로 오가는 막대만 둔다.
+ */
+.pest-loading__bar {
+  position: relative;
+  overflow: hidden;
+  width: min(220px, 60vw);
+  height: 4px;
+  border-radius: var(--r-full);
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.pest-loading__bar i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 42%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, #e278be, transparent);
+  animation: pest-loading-sweep 1.3s var(--ease-in-out) infinite;
+}
+
+@keyframes pest-loading-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(340%);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   모션 최소화 — 움직임을 빼되 '진행 중'은 계속 알린다
+   ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .pest-loading {
+    opacity: 1;
+    animation: none;
+  }
+
+  .pest-loading__ring,
+  .pest-loading__bug {
+    animation: none;
+  }
+
+  .pest-loading__bar i {
+    width: 100%;
+    animation: pest-loading-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pest-loading-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
