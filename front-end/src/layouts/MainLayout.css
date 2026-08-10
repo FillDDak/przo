@@ -6,9 +6,16 @@
   min-height: 100dvh;
 }
 
+/*
+ * 흰 본문 배경은 body 가 아니라 여기서 준다.
+ * body 는 iOS Safari 가 상태 표시줄·하단 툴바 색으로 읽어가므로 잉크색을
+ * 유지해야 한다 (base.css 주석 참고). 자체 배경을 선언하지 않은 페이지도
+ * 있어서, 그 페이지들이 기대는 흰 바닥을 이 요소가 대신 깔아 준다.
+ */
 .main-content {
   flex: 1;
   width: 100%;
+  background-color: var(--surface);
 }
 
 /*

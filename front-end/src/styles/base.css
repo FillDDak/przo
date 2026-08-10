@@ -28,7 +28,24 @@ body {
   line-height: var(--lh-normal);
   letter-spacing: var(--tracking-body);
   color: var(--text);
-  background-color: var(--surface);
+  /*
+   * 페이지 기본 배경 — 흰색이 아니라 잉크색이다.
+   *
+   * iOS Safari 는 상단 상태 표시줄과 하단 툴바를 '이 요소의 배경색'으로 칠한다.
+   * 여기가 흰색이면 다크 히어로 위아래에 흰 띠가 남는다.
+   * theme-color 메타로는 안 된다 — 실제로 빨간색으로 바꿔 테스트했지만 상태
+   * 표시줄은 흰색 그대로였다. html(캔버스) 배경도 다른 레이어라 효과가 없다.
+   * 사파리가 읽는 건 오직 body 다.
+   *
+   * 눈에 보이는 흰 본문은 MainLayout 의 .main-content 가 대신 깐다.
+   * 둘은 한 쌍이므로 한쪽만 바꾸면 페이지가 통째로 검게 뜬다.
+   *
+   * 스크롤 위치에 따라 이 색을 바꾸는 건 포기했다. 사파리가 body 배경색을
+   * 계속 감시하지 않아서, 잉크→흰색 전환은 반영되지만 흰색→잉크로 되돌리는
+   * 전환이 반영되지 않는다(맨 위로 올라와도 흰색으로 남는다).
+   * 그래서 항상 잉크색으로 고정한다 — 히어로와 푸터, 즉 위아래 양 끝에 맞는 색이다.
+   */
+  background-color: var(--ink-900);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
