@@ -72,28 +72,15 @@ const AdminLogin = () => {
                         </p>
                     </div>
 
+                    {/*
+                        견적 시트(/admin/estimate)는 이 목록에서만 뺐다.
+                        라우트와 페이지는 그대로라 주소로 직접 들어가면 동작한다.
+                    */}
                     <div className="admin-login__grid">
-                        {/* 견적 시트 — 히어로 카드 */}
-                        <Link to="/admin/estimate" className="admin-login__card admin-login__card--hero">
-                            <div className="admin-login__card-icon">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <path d="M3 9h18M9 3v18" />
-                                </svg>
-                            </div>
-                            <div className="admin-login__card-body">
-                                <span className="admin-login__card-title">가격 견적 시트</span>
-                                <span className="admin-login__card-desc">엑셀 형식의 견적 시트 편집 및 저장</span>
-                            </div>
-                            <svg className="admin-login__card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                        </Link>
-
                         {/* 가격표 관리 */}
                         <Link to="/admin/price-table" className="admin-login__card admin-login__card--green">
                             <div className="admin-login__card-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="3" y="3" width="18" height="18" rx="2" />
                                     <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
                                 </svg>
@@ -107,7 +94,7 @@ const AdminLogin = () => {
                         {/* 로그인 기록 */}
                         <Link to="/admin/logs" className="admin-login__card admin-login__card--neutral">
                             <div className="admin-login__card-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="12" cy="12" r="10" />
                                     <polyline points="12 6 12 12 16 14" />
                                 </svg>

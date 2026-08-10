@@ -16,6 +16,9 @@
     align-items: center;
     padding: 60px 50px;
     box-sizing: border-box;
+    /* .admin-content 가 세로 가운데 정렬이라, 박스가 화면보다 길어지면
+       위아래가 잘린다. 여백을 줘서 붙지 않게 한다. */
+    margin-block: clamp(40px, 8vh, 96px);
 }
 
 .admin-login__logo {
@@ -123,7 +126,6 @@
 .admin-login__box--dashboard {
     width: 580px;
     padding: 40px 44px 44px;
-    margin: 100px 0;
 }
 
 .admin-login__dashboard-top {
@@ -143,16 +145,20 @@
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
     gap: 10px;
 }
 
-/* ── 카드 공통 ── */
+/*
+ * 카드 공통.
+ * 견적 시트(히어로 카드)를 빼면서 세로가 한 줄 비었다. 남은 카드들의 여백과
+ * 글자를 히어로에 쓰던 값 쪽으로 키워 박스가 헐거워 보이지 않게 맞췄다.
+ * 아이콘 크기는 그대로 둔다 — 키우면 옆의 설명 문구가 잘린다.
+ */
 .admin-login__card {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 18px 20px;
+    padding: 24px 20px;
     border-radius: 14px;
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
@@ -173,9 +179,9 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 46px;
+    height: 46px;
+    border-radius: 11px;
     background: rgba(255, 255, 255, 0.08);
 }
 
@@ -188,63 +194,19 @@
 }
 
 .admin-login__card-title {
-    font-size: 14.5px;
+    font-size: 15.5px;
     font-weight: 700;
     letter-spacing: -0.2px;
     white-space: nowrap;
 }
 
 .admin-login__card-desc {
-    font-size: 12px;
+    font-size: 12.5px;
     font-weight: 400;
     opacity: 0.65;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.admin-login__card-arrow {
-    flex-shrink: 0;
-    opacity: 0.6;
-    transition: opacity 0.2s, transform 0.2s;
-}
-
-.admin-login__card--hero:hover .admin-login__card-arrow {
-    opacity: 1;
-    transform: translateX(3px);
-}
-
-/* ── 히어로 카드 (견적 시트, 풀 너비) ── */
-.admin-login__card--hero {
-    grid-column: span 2;
-    background: rgba(81, 196, 136, 0.14);
-    border-color: rgba(81, 196, 136, 0.38);
-    color: #e8e8e8;
-    padding: 22px 24px;
-    box-shadow: 0 2px 12px rgba(81, 196, 136, 0.10);
-}
-
-.admin-login__card--hero:hover {
-    background: rgba(81, 196, 136, 0.22);
-    border-color: rgba(81, 196, 136, 0.55);
-    box-shadow: 0 6px 20px rgba(81, 196, 136, 0.18);
-    color: #ffffff;
-}
-
-.admin-login__card--hero .admin-login__card-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #51c488;
-}
-
-.admin-login__card--hero .admin-login__card-title {
-    font-size: 16px;
-}
-
-.admin-login__card--hero .admin-login__card-desc {
-    font-size: 12.5px;
 }
 
 /* ── 그린 카드 (가격표 관리) ── */
@@ -290,7 +252,7 @@
     border-color: rgba(220, 80, 80, 0.25);
     color: #e8e8e8;
     justify-content: center;
-    padding: 13px 20px;
+    padding: 16px 20px;
     gap: 10px;
 }
 
@@ -302,15 +264,15 @@
 }
 
 .admin-login__card--logout .admin-login__card-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
     background: rgba(220, 80, 80, 0.15);
     color: #ff9a9a;
 }
 
 .admin-login__card--logout .admin-login__card-title {
-    font-size: 14px;
+    font-size: 14.5px;
     font-weight: 600;
 }
 
@@ -330,7 +292,7 @@
 
     .admin-login__box--dashboard {
         width: 520px;
-        padding: 36px 36px 40px;
+        padding: 36px 36px 32px;
     }
 
     .admin-login__text {
@@ -370,8 +332,8 @@
         gap: 8px;
     }
 
-    .admin-login__card--hero {
-        padding: 18px 20px;
+    .admin-login__card {
+        padding: 20px;
     }
 
     .admin-login__text {
@@ -396,7 +358,6 @@
     .admin-login__box {
         padding: 30px 24px;
         border-radius: 24px;
-        margin: 60px 0;
     }
 
     .admin-login__box--dashboard {
@@ -409,7 +370,10 @@
         gap: 8px;
     }
 
-    .admin-login__card--hero,
+    .admin-login__card {
+        padding: 18px 18px;
+    }
+
     .admin-login__card--logout {
         grid-column: span 1;
     }
@@ -481,13 +445,3 @@
   cursor: not-allowed;
 }
 
-.admin-login__card {
-  border-radius: var(--r-md);
-  transition: border-color var(--dur) var(--ease-out),
-    background-color var(--dur) var(--ease-out),
-    transform var(--dur) var(--ease-out);
-}
-
-.admin-login__card:hover {
-  transform: translateY(-2px);
-}
