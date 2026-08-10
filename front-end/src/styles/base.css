@@ -13,8 +13,8 @@
 html {
   overflow-x: hidden;
   /* scroll-behavior 는 전역으로 켜지 않는다.
-     라우트 이동 시의 window.scrollTo(0, 0) 까지 애니메이션되어 버리고,
-     Home 의 커스텀 휠 스냅 로직과 충돌한다. 필요한 곳에서만 개별 지정. */
+     라우트 이동 시의 window.scrollTo(0, 0) 까지 애니메이션되어 버린다.
+     필요한 곳에서만 개별 지정. */
   /* 앵커 이동 시 고정 헤더에 가려지지 않게 */
   scroll-padding-top: calc(var(--header-h) + var(--sp-6));
   -webkit-text-size-adjust: 100%;
