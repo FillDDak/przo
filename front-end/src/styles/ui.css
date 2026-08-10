@@ -797,6 +797,36 @@ input[type='radio'] {
   }
 }
 
+/*
+ * 좁은 화면에서는 이동을 빼고 투명도만 바꾼다.
+ *
+ * transform 으로 움직이는 동안 요소는 별도 합성 레이어에 그려진다. 이때
+ * 글자의 안티에일리어싱 방식이 레이어용으로 바뀌었다가, 애니메이션이 끝나
+ * transform 이 none 이 되는 순간 레이어가 사라지며 다시 픽셀 그리드에 맞춰
+ * 그려진다. 위치는 그대로인데 글자가 '살짝 고쳐지는' 것처럼 보이는 이유다.
+ * 히어로 제목처럼 큰 글자, 그리고 clamp() 로 소수점 px 이 나오는 크기에서
+ * 특히 잘 보인다.
+ *
+ * 어차피 폭이 좁으면 20px 이동이 주는 효과도 크지 않으므로, 모바일에서는
+ * 이동을 없애 원인 자체를 지운다. 지속시간·이징·딜레이는 그대로 쓴다.
+ * (아래 reduced-motion 블록이 이 규칙보다 뒤에 있어야 계속 우선한다)
+ */
+@media (max-width: 768px) {
+  :root.reveal-ready .reveal:not([data-visible]) {
+    transform: none;
+  }
+
+  :root.reveal-ready .reveal[data-visible] {
+    animation-name: reveal-fade;
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root.reveal-ready .reveal:not([data-visible]) {
     opacity: 1;
