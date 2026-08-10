@@ -364,6 +364,17 @@
     flex-direction: column;
   }
 
+  /*
+   * 위 1024px 규칙의 flex:1 을 반드시 풀어야 한다.
+   * 가로 배치에서 flex-basis:0 은 '너비'를 나눠 갖는다는 뜻이지만,
+   * 세로로 바뀌는 순간 '높이'가 되어 .btn--lg 의 height:56px 을 덮는다.
+   * 그러면 버튼이 글자 높이(약 18px)까지 눌려 누르기 힘들어진다.
+   */
+  .footer__cta-actions .btn {
+    flex: none;
+    width: 100%;
+  }
+
   .footer__main {
     grid-template-columns: 1fr;
     gap: var(--sp-7);

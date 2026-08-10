@@ -177,7 +177,10 @@
     margin-top: var(--sp-7);
   }
 
+  /* flex:1 을 풀지 않으면 세로 배치에서 flex-basis:0 이 '높이'로 해석되어
+     위의 height:46px 을 덮고, 버튼이 글자 높이까지 눌린다. */
   .confirm-modal__btn {
+    flex: none;
     width: 100%;
   }
 }
