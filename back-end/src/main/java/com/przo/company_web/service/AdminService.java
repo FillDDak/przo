@@ -2,20 +2,14 @@ package com.przo.company_web.service;
 
 import com.przo.company_web.dto.AdminLoginRequest;
 import com.przo.company_web.dto.AdminLoginResponse;
-import com.przo.company_web.dto.GeoInfo;
 import com.przo.company_web.entity.Admin;
-import com.przo.company_web.entity.LoginAttemptLog;
 import com.przo.company_web.repository.AdminRepository;
-import com.przo.company_web.repository.LoginAttemptLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,8 +23,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
     private final LoginRateLimiter rateLimiter;
     private final CaptchaService captchaService;
-    private final GeoLocationService geoLocationService;
-    private final LoginAttemptLogRepository loginAttemptLogRepository;
+    private final LoginLogService loginLogService;
 
     @Value("${turnstile.site-key:}")
     private String captchaSiteKey;
@@ -43,7 +36,7 @@ public class AdminService {
         // 1. IP 차단 확인
         if (rateLimiter.isBlocked(ip)) {
             long remaining = rateLimiter.getRemainingBlockMinutes(ip);
-            saveLoginAttemptAsync(ip, request.getUsername(), false);
+            loginLogService.saveLoginAttempt(ip, request.getUsername(), false);
             return new AdminLoginResponse(false,
                     "로그인 시도가 너무 많습니다. " + remaining + "분 후에 다시 시도해주세요.",
                     null, null, false);
@@ -70,7 +63,7 @@ public class AdminService {
 
         if (!passwordMatch) {
             int failCount = rateLimiter.recordFailure(ip);
-            saveLoginAttemptAsync(ip, request.getUsername(), false);
+            loginLogService.saveLoginAttempt(ip, request.getUsername(), false);
             if (failCount >= 5) {
                 return new AdminLoginResponse(false,
                         "로그인 시도가 너무 많습니다. 30분 후에 다시 시도해주세요.",
@@ -88,21 +81,8 @@ public class AdminService {
 
         String token = UUID.randomUUID().toString();
         tokenStore.put(token, new TokenEntry(System.currentTimeMillis() + TOKEN_EXPIRY_MS, admin.getAdminName()));
-        saveLoginAttemptAsync(ip, request.getUsername(), true);
+        loginLogService.saveLoginAttempt(ip, request.getUsername(), true);
         return new AdminLoginResponse(true, "로그인 성공", token, admin.getAdminName(), false);
-    }
-
-    @Async
-    public void saveLoginAttemptAsync(String ip, String username, boolean success) {
-        GeoInfo geo = geoLocationService.lookup(ip);
-        LoginAttemptLog log = new LoginAttemptLog();
-        log.setIp(ip);
-        log.setCity(geo.city());
-        log.setCountry(geo.country());
-        log.setUsername(username);
-        log.setSuccess(success);
-        log.setAttemptedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        loginAttemptLogRepository.save(log);
     }
 
     public boolean validateToken(String token) {

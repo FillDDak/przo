@@ -2,13 +2,24 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ConfirmModal from "../components/ConfirmModal";
+import PageHero from "../components/PageHero";
+import Icon from "../components/Icon";
 import { getErrorMessage } from "../utils/errorMessage";
 import { Turnstile } from "@marsidev/react-turnstile";
 import "./QnaDetail.css";
-import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
-import fileIcon from "../assets/section7-icon/section7-icon-file.svg";
 
 const API_BASE_URL = "/api";
+const IMAGE_EXTS = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"];
+
+const BREADCRUMB = [
+  { label: "상담 서비스", to: "/qna" },
+  { label: "상담 문의", to: "/qna" },
+  { label: "문의 상세" },
+];
+
+const fileNameOf = (path) => path.split("/").pop();
+const isImage = (path) =>
+  IMAGE_EXTS.includes(path.split(".").pop().toLowerCase());
 
 const QnaDetail = () => {
   const { id } = useParams();
@@ -57,21 +68,27 @@ const QnaDetail = () => {
         setLoading(false);
       } else if (data.blocked) {
         setCaptchaRequired(false);
-        setError(`비밀번호 입력 횟수를 초과했습니다. 약 ${data.remainingMinutes}분 후에 다시 시도해주세요.`);
+        setError(
+          `비밀번호 입력 횟수를 초과했습니다. 약 ${data.remainingMinutes}분 후에 다시 시도해주세요.`
+        );
       } else if (data.captchaRequired) {
         setCaptchaRequired(true);
         setCaptchaSiteKey(data.captchaSiteKey || "");
         setCaptchaToken(null);
         captchaRef.current?.reset();
         if (data.attemptCount && data.maxAttempts) {
-          setError(`비밀번호가 일치하지 않습니다. (${data.attemptCount}/${data.maxAttempts}회)`);
+          setError(
+            `비밀번호가 일치하지 않습니다. (${data.attemptCount}/${data.maxAttempts}회)`
+          );
         } else {
           setError(data.message || "보안 확인을 완료해주세요.");
         }
       } else {
         setCaptchaToken(null);
         captchaRef.current?.reset();
-        setError(`비밀번호가 일치하지 않습니다. (${data.attemptCount}/${data.maxAttempts}회)`);
+        setError(
+          `비밀번호가 일치하지 않습니다. (${data.attemptCount}/${data.maxAttempts}회)`
+        );
       }
     } catch (error) {
       console.error("비밀번호 확인 오류:", error);
@@ -90,7 +107,13 @@ const QnaDetail = () => {
       }
     } catch (error) {
       console.error("문의를 불러오는데 실패했습니다:", error);
-      setModal({ title: "문의 내용을 불러오지 못했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      setModal({
+        title: "문의 내용을 불러오지 못했습니다.",
+        subtitle: getErrorMessage(error),
+        buttons: [
+          { label: "확인", variant: "confirm", onClick: () => setModal(null) },
+        ],
+      });
     } finally {
       setLoading(false);
     }
@@ -124,20 +147,31 @@ const QnaDetail = () => {
           setModal({
             title: "비밀번호 자동 확인에 실패했습니다.",
             subtitle: getErrorMessage(error),
-            buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }],
+            buttons: [
+              { label: "확인", variant: "confirm", onClick: () => setModal(null) },
+            ],
           });
         });
     } else {
       setLoading(false);
     }
-  }, [id, isAdmin, fetchInquiry, location.state?.autoVerified, location.state?.autoPassword]);
-
-
+  }, [
+    id,
+    isAdmin,
+    fetchInquiry,
+    location.state?.autoVerified,
+    location.state?.autoPassword,
+  ]);
 
   // 답변 등록
   const handleReplySubmit = async () => {
     if (!adminNote.trim()) {
-      setModal({ title: "답변 내용을 입력해주세요.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      setModal({
+        title: "답변 내용을 입력해주세요.",
+        buttons: [
+          { label: "확인", variant: "confirm", onClick: () => setModal(null) },
+        ],
+      });
       return;
     }
 
@@ -155,13 +189,37 @@ const QnaDetail = () => {
       const data = await response.json();
 
       if (data.success) {
-        setModal({ title: "답변이 등록되었습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => { setModal(null); setReplyMode(false); fetchInquiry(); } }] });
+        setModal({
+          title: "답변이 등록되었습니다.",
+          buttons: [
+            {
+              label: "확인",
+              variant: "confirm",
+              onClick: () => {
+                setModal(null);
+                setReplyMode(false);
+                fetchInquiry();
+              },
+            },
+          ],
+        });
       } else {
-        setModal({ title: data.message || "답변 등록에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        setModal({
+          title: data.message || "답변 등록에 실패했습니다.",
+          buttons: [
+            { label: "확인", variant: "confirm", onClick: () => setModal(null) },
+          ],
+        });
       }
     } catch (error) {
       console.error("답변 등록 오류:", error);
-      setModal({ title: "답변 등록 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+      setModal({
+        title: "답변 등록 중 오류가 발생했습니다.",
+        subtitle: getErrorMessage(error),
+        buttons: [
+          { label: "확인", variant: "confirm", onClick: () => setModal(null) },
+        ],
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -173,28 +231,54 @@ const QnaDetail = () => {
       title: "답변을 초기화하시겠습니까?",
       subtitle: "답변 내용이 삭제되고 미답변 상태로 변경됩니다.",
       buttons: [
-        { label: "초기화", variant: "confirm", onClick: async () => {
-          setModal(null);
-          try {
-            setIsSubmitting(true);
-            const response = await fetch(`${API_BASE_URL}/inquiries/${id}/reply`, {
-              method: "DELETE",
-              credentials: "include",
-            });
-            const data = await response.json();
-            if (data.success) {
-              setReplyMode(false);
-              setAdminNote("");
-              fetchInquiry();
-            } else {
-              setModal({ title: data.message || "초기화에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        {
+          label: "초기화",
+          variant: "confirm",
+          onClick: async () => {
+            setModal(null);
+            try {
+              setIsSubmitting(true);
+              const response = await fetch(
+                `${API_BASE_URL}/inquiries/${id}/reply`,
+                {
+                  method: "DELETE",
+                  credentials: "include",
+                }
+              );
+              const data = await response.json();
+              if (data.success) {
+                setReplyMode(false);
+                setAdminNote("");
+                fetchInquiry();
+              } else {
+                setModal({
+                  title: data.message || "초기화에 실패했습니다.",
+                  buttons: [
+                    {
+                      label: "확인",
+                      variant: "confirm",
+                      onClick: () => setModal(null),
+                    },
+                  ],
+                });
+              }
+            } catch (error) {
+              setModal({
+                title: "초기화 중 오류가 발생했습니다.",
+                subtitle: getErrorMessage(error),
+                buttons: [
+                  {
+                    label: "확인",
+                    variant: "confirm",
+                    onClick: () => setModal(null),
+                  },
+                ],
+              });
+            } finally {
+              setIsSubmitting(false);
             }
-          } catch (error) {
-            setModal({ title: "초기화 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
-          } finally {
-            setIsSubmitting(false);
-          }
-        }},
+          },
+        },
         { label: "취소", variant: "cancel", onClick: () => setModal(null) },
       ],
     });
@@ -206,94 +290,138 @@ const QnaDetail = () => {
       title: "정말로 이 문의를 삭제하시겠습니까?",
       subtitle: "삭제 후 복구할 수 없습니다.",
       buttons: [
-        { label: "삭제", variant: "confirm", onClick: async () => {
-          setModal(null);
-          try {
-            const response = await fetch(`${API_BASE_URL}/inquiries/${id}`, {
-              method: "DELETE",
-              credentials: "include",
-            });
-            const data = await response.json();
-            if (data.success) {
-              navigate("/qna");
-            } else {
-              setModal({ title: data.message || "삭제에 실패했습니다.", buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
+        {
+          label: "삭제",
+          variant: "confirm",
+          onClick: async () => {
+            setModal(null);
+            try {
+              const response = await fetch(`${API_BASE_URL}/inquiries/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+              });
+              const data = await response.json();
+              if (data.success) {
+                navigate("/qna");
+              } else {
+                setModal({
+                  title: data.message || "삭제에 실패했습니다.",
+                  buttons: [
+                    {
+                      label: "확인",
+                      variant: "confirm",
+                      onClick: () => setModal(null),
+                    },
+                  ],
+                });
+              }
+            } catch (error) {
+              console.error("삭제 오류:", error);
+              setModal({
+                title: "삭제 중 오류가 발생했습니다.",
+                subtitle: getErrorMessage(error),
+                buttons: [
+                  {
+                    label: "확인",
+                    variant: "confirm",
+                    onClick: () => setModal(null),
+                  },
+                ],
+              });
             }
-          } catch (error) {
-            console.error("삭제 오류:", error);
-            setModal({ title: "삭제 중 오류가 발생했습니다.", subtitle: getErrorMessage(error), buttons: [{ label: "확인", variant: "confirm", onClick: () => setModal(null) }] });
-          }
-        }},
+          },
+        },
         { label: "취소", variant: "cancel", onClick: () => setModal(null) },
       ],
     });
   };
 
+  const modalNode = modal && (
+    <ConfirmModal
+      title={modal.title}
+      subtitle={modal.subtitle}
+      onClose={() => setModal(null)}
+      buttons={modal.buttons}
+    />
+  );
+
+  /* ---------------------------------------------------------------- 로딩 */
   if (loading) {
     return (
       <div className="qna-detail">
-        <div className="qna-detail__loading">로딩 중...</div>
+        <PageHero eyebrow="Support" title="상담 문의" breadcrumb={BREADCRUMB} size="sm" />
+        <section className="qna-detail__main u-section u-page-tail">
+          <div className="u-container u-container--narrow">
+            <div className="qna-detail__card">
+              <span className="skeleton qna-detail__skeleton-title" />
+              <span className="skeleton qna-detail__skeleton-meta" />
+              <span className="skeleton qna-detail__skeleton-body" />
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
 
-  // 비밀번호 확인 전 화면 (관리자가 아닌 경우에만)
+  /* ------------------------------------------------ 비밀번호 확인 게이트 */
   if (!isVerified) {
     return (
       <>
-      {modal && (
-        <ConfirmModal
-          title={modal.title}
-          subtitle={modal.subtitle}
-          onClose={() => setModal(null)}
-          buttons={modal.buttons}
-        />
-      )}
-      <div className="qna-detail">
-        {/* 배너 섹션 */}
-        <section className="qna-detail__banner">
-          <div className="qna-detail__breadcrumb">
-            <Link to="/" className="qna-detail__breadcrumb-link">
-              <img src={homeIcon} alt="홈" className="qna-detail__breadcrumb-icon" />
-            </Link>
-            <span className="qna-detail__breadcrumb-separator">&gt;</span>
-            <span className="qna-detail__breadcrumb-text">문의</span>
-            <span className="qna-detail__breadcrumb-separator">&gt;</span>
-            <span className="qna-detail__breadcrumb-current">상담 문의</span>
-          </div>
-        </section>
+        {modalNode}
+        <div className="qna-detail">
+          <PageHero
+            eyebrow="Support"
+            title="상담 문의"
+            breadcrumb={BREADCRUMB}
+            size="sm"
+          />
 
-        {/* 비밀번호 입력 섹션 */}
-        <section className="qna-detail__main">
-          <div className="qna-detail__content">
-            <h1 className="qna-detail__title">상담 문의</h1>
-
-            <div className="qna-detail__password-form">
-              <div className="qna-detail__password-box">
-                <svg className="qna-detail__lock-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19 11H5C3.89543 11 3 11.8954 3 13V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V13C21 11.8954 20.1046 11 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <h2 className="qna-detail__password-title">비밀글입니다</h2>
-                <p className="qna-detail__password-desc">
-                  이 글을 보려면 비밀번호를 입력해주세요.
+          <section className="qna-detail__main u-section u-page-tail">
+            <div className="u-container u-container--narrow">
+              <div className="qna-gate">
+                <span className="qna-gate__icon">
+                  <Icon name="lock" size={26} />
+                </span>
+                <h2 className="qna-gate__title">비밀글입니다</h2>
+                <p className="qna-gate__desc">
+                  작성자 본인만 확인할 수 있습니다.
+                  <br />
+                  문의 작성 시 입력한 전화번호 뒤 4자리를 입력해 주세요.
                 </p>
-                <form onSubmit={handlePasswordSubmit} className="qna-detail__password-input-form">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="비밀번호 입력 (전화번호 뒤 4자리)"
-                    className="qna-detail__password-input"
-                  />
-                  {error && <p className="qna-detail__password-error">{error}</p>}
+
+                <form onSubmit={handlePasswordSubmit} className="qna-gate__form">
+                  <div className="field">
+                    <label className="sr-only" htmlFor="qna-password">
+                      비밀번호
+                    </label>
+                    <input
+                      id="qna-password"
+                      type="password"
+                      inputMode="numeric"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="비밀번호 (전화번호 뒤 4자리)"
+                      className={`input qna-gate__input ${
+                        error ? "input--error" : ""
+                      }`}
+                    />
+                    {error && (
+                      <p className="field__error qna-gate__error">
+                        <Icon name="alert" size={15} />
+                        {error}
+                      </p>
+                    )}
+                  </div>
+
                   {captchaRequired && (
-                    <p className="qna-detail__captcha-notice">
-                      보안을 위해 아래 보안 확인을 완료해주세요.
+                    <p className="qna-gate__captcha-notice">
+                      <Icon name="shield" size={16} />
+                      보안을 위해 아래 확인 절차를 완료해 주세요.
                     </p>
                   )}
                   {captchaRequired && captchaSiteKey && (
-                    <div className="qna-detail__captcha">
+                    <div className="qna-gate__captcha">
                       <Turnstile
                         ref={captchaRef}
                         siteKey={captchaSiteKey}
@@ -303,217 +431,271 @@ const QnaDetail = () => {
                       />
                     </div>
                   )}
-                  <div className="qna-detail__password-buttons">
-                    <button type="button" onClick={() => navigate("/qna")} className="qna-detail__password-cancel">
+
+                  <div className="qna-gate__buttons">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/qna")}
+                      className="btn btn--secondary"
+                    >
                       목록으로
                     </button>
-                    <button type="submit" className="qna-detail__password-submit">
+                    <button type="submit" className="btn btn--primary">
                       확인
                     </button>
                   </div>
                 </form>
               </div>
             </div>
-          </div>
-        </section>
-      </div>
+          </section>
+        </div>
       </>
     );
   }
 
+  /* ------------------------------------------------------------ 조회 실패 */
   if (!inquiry) {
     return (
       <div className="qna-detail">
-        <div className="qna-detail__not-found">문의를 찾을 수 없습니다.</div>
+        <PageHero eyebrow="Support" title="상담 문의" breadcrumb={BREADCRUMB} size="sm" />
+        <section className="qna-detail__main u-section u-page-tail">
+          <div className="u-container u-container--narrow">
+            <div className="empty-state">
+              <span className="empty-state__icon">
+                <Icon name="alert" size={28} />
+              </span>
+              <p className="empty-state__title">문의를 찾을 수 없습니다</p>
+              <p className="empty-state__desc">
+                삭제되었거나 주소가 잘못되었을 수 있습니다.
+              </p>
+              <Link to="/qna" className="btn btn--secondary u-mt-4">
+                목록으로
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
 
+  const attachments = inquiry.attachmentList || [];
+  const images = attachments.filter(isImage);
+  const files = attachments.filter((p) => !isImage(p));
+  const hasReply = Boolean(inquiry.adminNote);
+
+  /* ---------------------------------------------------------------- 본문 */
   return (
     <>
-    {modal && (
-      <ConfirmModal
-        title={modal.title}
-        subtitle={modal.subtitle}
-        onClose={() => setModal(null)}
-        buttons={modal.buttons}
-      />
-    )}
-    <div className="qna-detail">
-      {/* 배너 섹션 */}
-      <section className="qna-detail__banner">
-        {/* 브레드크럼 */}
-        <div className="qna-detail__breadcrumb">
-          <Link to="/" className="qna-detail__breadcrumb-link">
-            <img src={homeIcon} alt="홈" className="qna-detail__breadcrumb-icon" />
-          </Link>
-          <span className="qna-detail__breadcrumb-separator">&gt;</span>
-          <span className="qna-detail__breadcrumb-text">문의</span>
-          <span className="qna-detail__breadcrumb-separator">&gt;</span>
-          <span className="qna-detail__breadcrumb-current">상담 문의</span>
-        </div>
-      </section>
+      {modalNode}
+      <div className="qna-detail">
+        <PageHero
+          eyebrow="Support"
+          title="상담 문의"
+          breadcrumb={BREADCRUMB}
+          size="sm"
+        />
 
-      {/* 메인 컨텐츠 */}
-      <section className="qna-detail__main">
-        <div className="qna-detail__content">
-          <h1 className="qna-detail__title">상담 문의</h1>
-
-          <div className="qna-detail__form">
-            {/* 이름 & 업체명/주소 */}
-            <div className="qna-detail__row">
-              <div className="qna-detail__field">
-                <label className="qna-detail__label">이름</label>
-                <div className="qna-detail__value">{inquiry.name}</div>
-              </div>
-              <div className="qna-detail__field">
-                <label className="qna-detail__label">업체명/주소</label>
-                <div className="qna-detail__value">{inquiry.companyName || "-"}</div>
-              </div>
-            </div>
-
-            {/* 전화번호 */}
-            <div className="qna-detail__row">
-              <div className="qna-detail__field">
-                <label className="qna-detail__label">전화번호</label>
-                <div className="qna-detail__value">{inquiry.phone}</div>
-              </div>
-            </div>
-
-            {/* 제목 & 작성일 */}
-            <div className="qna-detail__row">
-              <div className="qna-detail__field">
-                <label className="qna-detail__label">제목</label>
-                <div className="qna-detail__value">{inquiry.title}</div>
-              </div>
-              <div className="qna-detail__field">
-                <label className="qna-detail__label">작성일</label>
-                <div className="qna-detail__value">{inquiry.createdAt || "-"}</div>
-              </div>
-            </div>
-
-            {/* 문의 내용 */}
-            <div className="qna-detail__field qna-detail__field--full">
-              <label className="qna-detail__label">문의 내용</label>
-              <div className="qna-detail__value qna-detail__value--content">
-                {inquiry.content}
-              </div>
-            </div>
-
-            {/* 첨부파일 */}
-            <div className="qna-detail__field qna-detail__field--full">
-              <label className="qna-detail__label">첨부파일</label>
-              {inquiry.attachmentList && inquiry.attachmentList.length > 0 ? (() => {
-                const IMAGE_EXTS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
-                const images = inquiry.attachmentList.filter(p => IMAGE_EXTS.includes(p.split('.').pop().toLowerCase()));
-                const files = inquiry.attachmentList.filter(p => !IMAGE_EXTS.includes(p.split('.').pop().toLowerCase()));
-                return (
-                  <div className="qna-detail__file-list">
-                    {images.map((path, i) => (
-                      <div key={i} className="qna-detail__file-image-wrapper">
-                        <img src={path} alt={path.split('/').pop()} className="qna-detail__attachment-img" />
-                      </div>
-                    ))}
-                    {images.map((path, i) => (
-                      <a key={`dl-img-${i}`} href={path} className="qna-detail__file-download" download>
-                        <img src={fileIcon} alt="다운로드" className="qna-detail__file-icon" />
-                        {path.split('/').pop()}
-                      </a>
-                    ))}
-                    {files.map((path, i) => (
-                      <div key={`file-${i}`} className="qna-detail__file">
-                        <a href={path} className="qna-detail__file-link" download>
-                          <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
-                          {path.split('/').pop()}
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })() : (
-                <div className="qna-detail__file">
-                  <img src={fileIcon} alt="첨부파일" className="qna-detail__file-icon" />
-                  <span className="qna-detail__file-empty">첨부파일 없음</span>
+        <section className="qna-detail__main u-section u-page-tail">
+          <div className="u-container u-container--narrow">
+            <article className="qna-detail__card">
+              {/* -- 글 머리 -- */}
+              <header className="qna-detail__head">
+                <div className="qna-detail__status">
+                  {hasReply ? (
+                    <span className="badge badge--success">
+                      <Icon name="check" size={13} />
+                      답변완료
+                    </span>
+                  ) : (
+                    <span className="badge badge--neutral">
+                      <span className="badge__dot" />
+                      답변 대기중
+                    </span>
+                  )}
+                  <span className="badge badge--neutral">
+                    <Icon name="lock" size={12} />
+                    비밀글
+                  </span>
                 </div>
+
+                <h2 className="qna-detail__subject">{inquiry.title}</h2>
+
+                <div className="qna-detail__meta">
+                  <span className="qna-detail__meta-item">
+                    <Icon name="user" size={15} />
+                    {inquiry.name}
+                  </span>
+                  <span className="qna-detail__meta-item">
+                    <Icon name="calendar" size={15} />
+                    {inquiry.createdAt || "-"}
+                  </span>
+                  <span className="qna-detail__meta-item">
+                    <Icon name="phone" size={15} />
+                    {inquiry.phone}
+                  </span>
+                  {inquiry.companyName && (
+                    <span className="qna-detail__meta-item">
+                      <Icon name="map-pin" size={15} />
+                      {inquiry.companyName}
+                    </span>
+                  )}
+                </div>
+              </header>
+
+              {/* -- 문의 내용 -- */}
+              <div className="qna-detail__body">{inquiry.content}</div>
+
+              {/* -- 첨부파일 -- */}
+              {attachments.length > 0 && (
+                <section className="qna-detail__attachments">
+                  <h3 className="qna-detail__section-label">
+                    <Icon name="paperclip" size={16} />
+                    첨부파일 <span>{attachments.length}</span>
+                  </h3>
+
+                  {images.length > 0 && (
+                    <div className="qna-detail__gallery">
+                      {images.map((path, i) => (
+                        <a
+                          key={`img-${i}`}
+                          href={path}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="qna-detail__thumb"
+                        >
+                          <img
+                            src={path}
+                            alt={fileNameOf(path)}
+                            loading="lazy"
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  <ul className="qna-detail__file-list">
+                    {[...images, ...files].map((path, i) => (
+                      <li key={`file-${i}`}>
+                        <a href={path} className="qna-detail__file" download>
+                          <Icon name="paperclip" size={15} />
+                          <span className="qna-detail__file-name">
+                            {fileNameOf(path)}
+                          </span>
+                          <Icon
+                            name="arrow-down"
+                            size={15}
+                            className="qna-detail__file-dl"
+                          />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               )}
-            </div>
 
-            {/* 유저 버튼 - 첨부파일 아래 */}
-            {!isAdmin && (
-              <div className="qna-detail__button-wrapper">
-                <Link to="/qna" className="qna-detail__list-btn">
-                  목록으로
-                </Link>
-                <button
-                  onClick={() => navigate(`/qna/${id}/edit`, { state: { password: verifiedPassword, inquiry } })}
-                  className="qna-detail__list-btn"
-                >
-                  수정하기
-                </button>
-              </div>
-            )}
+              {/* -- 답변 -- */}
+              <section
+                className={`qna-detail__answer ${
+                  hasReply ? "qna-detail__answer--filled" : ""
+                }`}
+              >
+                <h3 className="qna-detail__answer-label">
+                  <span className="qna-detail__answer-marker">A</span>
+                  프르조 답변
+                </h3>
+                {hasReply ? (
+                  <div className="qna-detail__answer-body">
+                    {inquiry.adminNote}
+                  </div>
+                ) : (
+                  <p className="qna-detail__answer-empty">
+                    아직 답변이 등록되지 않았습니다. 확인 후 순차적으로
+                    답변드리겠습니다.
+                  </p>
+                )}
+              </section>
 
-            {/* 답변 내용 */}
-            <div className={`qna-detail__answer ${!isAdmin ? 'qna-detail__answer--no-border' : ''}`}>
-              <label className="qna-detail__label">답변 내용</label>
-              <div className="qna-detail__answer-content">
-                {inquiry.adminNote || "아직 답변이 등록되지 않았습니다."}
-              </div>
-            </div>
-
-            {/* 관리자 답변 작성 폼 */}
-            {isAdmin && replyMode && (
-              <div className="qna-detail__reply-form">
-                <label className="qna-detail__label">{inquiry.adminNote ? "답변 재작성" : "답변 작성"}</label>
-                <textarea
-                  value={adminNote}
-                  onChange={(e) => setAdminNote(e.target.value)}
-                  className="qna-detail__reply-textarea"
-                  placeholder="답변 내용을 입력해주세요."
-                />
-                <button
-                  onClick={handleReplySubmit}
-                  className="qna-detail__reply-submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "등록 중..." : "답변 등록"}
-                </button>
-              </div>
-            )}
-
-            {/* 관리자 버튼 - 답변 아래 */}
-            {isAdmin && (
-              <div className="qna-detail__button-wrapper qna-detail__button-wrapper--no-border">
-                <Link to="/qna" className="qna-detail__list-btn">
-                  목록으로
-                </Link>
-                <button
-                  onClick={() => setReplyMode(!replyMode)}
-                  className="qna-detail__list-btn qna-detail__list-btn--admin"
-                >
-                  {replyMode ? "취소" : (inquiry.adminNote ? "수정하기" : "답변하기")}
-                </button>
-                {inquiry.adminNote && (
+              {/* -- 관리자 답변 작성 -- */}
+              {isAdmin && replyMode && (
+                <section className="qna-detail__reply-form">
+                  <label className="field__label" htmlFor="qna-reply">
+                    {hasReply ? "답변 재작성" : "답변 작성"}
+                  </label>
+                  <textarea
+                    id="qna-reply"
+                    value={adminNote}
+                    onChange={(e) => setAdminNote(e.target.value)}
+                    className="textarea"
+                    placeholder="답변 내용을 입력해주세요."
+                  />
                   <button
-                    onClick={handleReplyReset}
-                    className="qna-detail__list-btn qna-detail__list-btn--delete"
+                    onClick={handleReplySubmit}
+                    className="btn btn--primary"
                     disabled={isSubmitting}
                   >
-                    답변 초기화
+                    {isSubmitting ? "등록 중..." : "답변 등록"}
                   </button>
+                </section>
+              )}
+            </article>
+
+            {/* -- 하단 조작 -- */}
+            <div className="qna-detail__actions">
+              <Link to="/qna" className="btn btn--secondary">
+                <span className="btn__icon">
+                  <Icon name="arrow-left" size={17} />
+                </span>
+                목록으로
+              </Link>
+
+              <div className="qna-detail__actions-right">
+                {!isAdmin ? (
+                  <button
+                    onClick={() =>
+                      navigate(`/qna/${id}/edit`, {
+                        state: { password: verifiedPassword, inquiry },
+                      })
+                    }
+                    className="btn btn--primary"
+                  >
+                    <span className="btn__icon">
+                      <Icon name="pencil" size={17} />
+                    </span>
+                    수정하기
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setReplyMode(!replyMode)}
+                      className="btn btn--primary"
+                    >
+                      {replyMode ? "작성 취소" : hasReply ? "답변 수정" : "답변하기"}
+                    </button>
+                    {hasReply && (
+                      <button
+                        onClick={handleReplyReset}
+                        className="btn btn--secondary"
+                        disabled={isSubmitting}
+                      >
+                        답변 초기화
+                      </button>
+                    )}
+                    <button
+                      onClick={handleDelete}
+                      className="btn btn--danger-ghost"
+                    >
+                      <span className="btn__icon">
+                        <Icon name="trash" size={17} />
+                      </span>
+                      삭제
+                    </button>
+                  </>
                 )}
-                <button
-                  onClick={handleDelete}
-                  className="qna-detail__list-btn qna-detail__list-btn--delete"
-                >
-                  삭제하기
-                </button>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
     </>
   );
 };

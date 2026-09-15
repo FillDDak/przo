@@ -1,187 +1,304 @@
+/* =========================================================================
+   플로팅 상담 버튼
+   -------------------------------------------------------------------------
+   모든 페이지에 노출되므로 본문을 가리지 않도록 작게 유지하되,
+   배경 사진 위에서도 눈에 띄도록 버튼마다 불투명 배경을 준다.
+   "맨 위로"는 스크롤을 내렸을 때만 나타난다.
+
+   버튼 크기는 --fab-size 하나로만 정의한다. 브레이크포인트마다 .floating-btn
+   에 height 를 다시 선언하면 숨김 상태(height:0)와 우선순위가 같아져
+   "맨 위로"가 보이지 않는데도 자리를 차지하는 버그가 생긴다.
+   ========================================================================= */
+
 .floating-buttons {
+  --fab-size: 58px;
+  --fab-gap: var(--sp-3);
+
   position: fixed;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: var(--sp-6);
+  bottom: var(--sp-7);
+  z-index: var(--z-floating);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
-  /* 유리 효과 */
-  background: rgba(56, 176, 120, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  align-items: flex-end;
 }
 
+/* -------------------------------------------------------------------------
+   버튼 공통
+   ------------------------------------------------------------------------- */
+
 .floating-btn {
-  width: 90px;
-  height: 90px;
-  border: none;
-  cursor: pointer;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  width: var(--fab-size);
+  height: var(--fab-size);
   padding: 0;
-  background: transparent;
-  position: relative;
+  border: none;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  box-shadow: 0 8px 20px -6px rgba(13, 31, 24, 0.4),
+    0 2px 6px -2px rgba(13, 31, 24, 0.25);
+  transition: transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
 }
 
 .floating-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -8px rgba(13, 31, 24, 0.45),
+    0 3px 8px -2px rgba(13, 31, 24, 0.3);
 }
 
+.floating-btn:active {
+  transform: translateY(0);
+}
+
+/* 아이콘은 버튼 크기에 비례시켜 브레이크포인트마다 따로 만지지 않는다 */
+.floating-btn svg {
+  width: 54%;
+  height: 54%;
+}
+
+.floating-btn-wrapper {
+  position: relative;
+  margin-top: var(--fab-gap);
+}
+
+/* -- 개별 색상 ------------------------------------------------------------
+   해상도와 무관하게 항상 같은 색을 쓴다. 카카오만 브랜드 규정색(#FEE500)을
+   그대로 두어 무슨 버튼인지 한눈에 알아보게 했다. */
+
 .floating-btn--kakao {
-  border-radius: 32px 32px 0 0;
+  background-color: #fee500;
+  color: #1c1310;
+}
+
+.floating-btn--kakao:hover {
+  background-color: #ffef4d;
+}
+
+/* 카카오 말풍선은 면(fill) 아이콘이라 선 아이콘보다 커 보인다 */
+.floating-btn--kakao svg {
+  width: 50%;
+  height: 50%;
+}
+
+.floating-btn--phone {
+  background-image: linear-gradient(140deg, var(--brand-glow), var(--brand-500) 62%);
+  color: var(--ink-900);
+}
+
+.floating-btn--phone:hover {
+  box-shadow: 0 14px 28px -8px rgba(81, 196, 136, 0.5),
+    0 3px 8px -2px rgba(13, 31, 24, 0.3);
 }
 
 .floating-btn--top {
-  border-radius: 0 0 32px 32px;
+  background-color: rgba(255, 255, 255, 0.94);
+  color: var(--ink-900);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-/* 버튼 사이 구분선 */
-.floating-btn::after {
-  content: "";
+.floating-btn--top:hover {
+  background-color: #fff;
+}
+
+/* -- 라벨 : 마우스를 올렸을 때만 왼쪽으로 펼쳐진다 -- */
+
+.floating-btn__label {
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.3) 30%,
-    rgba(255, 255, 255, 0.3) 70%,
-    transparent 100%
-  );
+  right: calc(100% + var(--sp-2));
+  top: 50%;
+  padding: 6px var(--sp-3);
+  border-radius: var(--r-full);
+  background-color: var(--ink-900);
+  color: #fff;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(6px, -50%);
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.floating-btn--top::after {
-  display: none;
+.floating-btn:hover .floating-btn__label,
+.floating-btn:focus-visible .floating-btn__label {
+  opacity: 1;
+  transform: translate(0, -50%);
 }
 
-.floating-btn__icon {
-  width: 56px;
-  height: 56px;
+/* -------------------------------------------------------------------------
+   맨 위로 : 스크롤 위치에 따라 접힌다
+   ------------------------------------------------------------------------- */
+
+/* 자리(높이·간격)는 슬롯이, 모양(투명도·크기)은 버튼이 담당한다.
+   슬롯을 따로 둔 덕에 버튼에는 숨김용 height 선언이 필요 없다. */
+.floating-buttons__top-slot {
+  height: 0;
+  margin-top: 0;
+  transition: height var(--dur) var(--ease-out),
+    margin-top var(--dur) var(--ease-out);
 }
 
-/* 전화 버튼 wrapper */
-.floating-btn-wrapper {
-  position: relative;
+.floating-buttons__top-slot--visible {
+  height: var(--fab-size);
+  margin-top: var(--fab-gap);
 }
 
-/* 전화 툴팁 */
+.floating-btn--top {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+  transition: transform var(--dur) var(--ease-out),
+    opacity var(--dur) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.floating-buttons__top-slot--visible .floating-btn--top {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* 공통 hover 규칙의 translateY 가 위 scale 을 덮어쓰지 않도록 합성해 준다 */
+.floating-buttons__top-slot--visible .floating-btn--top:hover {
+  transform: scale(1) translateY(-2px);
+}
+
+.floating-buttons__top-slot--visible .floating-btn--top:active {
+  transform: scale(1);
+}
+
+/* =========================================================================
+   전화 툴팁
+   ========================================================================= */
+
 .phone-tooltip {
   position: absolute;
-  right: calc(100% + 12px);
+  right: calc(100% + var(--sp-3));
   top: 50%;
   transform: translateY(-50%);
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px 16px;
+  z-index: calc(var(--z-floating) + 1);
   display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  gap: var(--sp-3);
+  /* 기준 박스가 버튼(58px)뿐이라 auto 로 두면 shrink-to-fit 폭이 0 이 되고,
+     base.css 의 overflow-wrap:break-word 때문에 전화번호가 글자 단위로 쪼개진다. */
+  width: max-content;
+  max-width: calc(100vw - var(--sp-8));
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-lg);
   white-space: nowrap;
-  z-index: 1001;
+  animation: phone-tooltip-in var(--dur) var(--ease-spring);
 }
 
+@keyframes phone-tooltip-in {
+  from {
+    opacity: 0;
+    transform: translate(6px, -50%);
+  }
+}
+
+/* 말풍선 꼬리 */
 .phone-tooltip::after {
   content: "";
   position: absolute;
   right: -6px;
   top: 50%;
-  transform: translateY(-50%);
-  border: 6px solid transparent;
-  border-left-color: #fff;
+  transform: translateY(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background-color: var(--surface);
+  border-right: 1px solid var(--border);
+  border-top: 1px solid var(--border);
 }
 
 .phone-tooltip__close {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 20px;
-  height: 20px;
-  background: #999;
-  border: none;
-  border-radius: 50%;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  color: #fff;
+  top: -9px;
+  right: -9px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  background-color: var(--surface);
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
 .phone-tooltip__close:hover {
-  background: #666;
+  background-color: var(--n-800);
+  border-color: var(--n-800);
+  color: #fff;
 }
 
 .phone-tooltip__icon-wrapper {
-  width: 40px;
-  height: 40px;
-  background-color: #F8F8F8;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-}
-
-.phone-tooltip__icon {
-  width: 22px;
-  height: 22px;
-  filter: invert(58%) sepia(65%) saturate(432%) hue-rotate(103deg) brightness(92%) contrast(87%);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-full);
+  background-color: var(--brand-50);
+  color: var(--brand-600);
 }
 
 .phone-tooltip__number {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111111;
   margin: 0;
-  letter-spacing: 0.5px;
+  font-size: var(--fs-h4);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
 }
 
 .phone-tooltip__copy-btn {
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
   flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--brand-600);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .phone-tooltip__copy-btn:hover {
-  opacity: 0.7;
-}
-
-.phone-tooltip__copy-icon {
-  width: 24px;
-  height: 24px;
-  filter: invert(58%) sepia(65%) saturate(432%) hue-rotate(103deg) brightness(92%) contrast(87%);
+  background-color: var(--surface-muted);
 }
 
 .phone-tooltip__copied {
   position: absolute;
-  bottom: -28px;
+  bottom: -30px;
   right: 0;
-  background: #51C488;
-  color: #fff;
   padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: var(--r-xs);
+  background-color: var(--ink-900);
+  color: #fff;
+  font-size: var(--fs-2xs);
   font-weight: 600;
   white-space: nowrap;
   animation: fadeInOut 1.5s ease;
@@ -192,10 +309,7 @@
     opacity: 0;
     transform: translateY(4px);
   }
-  15% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  15%,
   85% {
     opacity: 1;
     transform: translateY(0);
@@ -206,84 +320,50 @@
   }
 }
 
-/* 반응형 */
-@media (max-width: 1400px) {
-  .floating-buttons {
-    right: 26px;
-  }
-
-  .floating-btn {
-    width: 84px;
-    height: 84px;
-  }
-
-  .floating-btn__icon {
-    width: 52px;
-    height: 52px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .floating-buttons {
-    right: 22px;
-  }
-
-  .floating-btn {
-    width: 76px;
-    height: 76px;
-  }
-
-  .floating-btn__icon {
-    width: 48px;
-    height: 48px;
-  }
-}
+/* =========================================================================
+   반응형 — 크기와 위치만 바꾸고 색·모양은 그대로 둔다
+   ========================================================================= */
 
 @media (max-width: 1024px) {
   .floating-buttons {
-    right: 18px;
-  }
-
-  .floating-btn {
-    width: 68px;
-    height: 68px;
-  }
-
-  .floating-btn__icon {
-    width: 44px;
-    height: 44px;
+    --fab-size: 54px;
+    right: var(--sp-4);
+    bottom: var(--sp-5);
   }
 }
 
 @media (max-width: 768px) {
   .floating-buttons {
-    right: 16px;
+    --fab-size: 50px;
+    --fab-gap: var(--sp-2);
+    right: var(--sp-4);
+    bottom: var(--sp-4);
+  }
+
+  /* 터치 기기에는 hover 가 없어 라벨이 뜨지 않는다 */
+  .floating-btn__label {
+    display: none;
+  }
+
+  /* 화면이 좁아 왼쪽에 툴팁을 띄우면 잘리므로 위로 올린다 */
+  .phone-tooltip {
+    right: 0;
     top: auto;
-    bottom: 24px;
+    bottom: calc(100% + var(--sp-3));
     transform: none;
-    border-radius: 28px;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border: none;
-    box-shadow: none;
   }
 
-  .floating-btn {
-    width: 60px;
-    height: 60px;
+  .phone-tooltip::after {
+    right: 18px;
+    top: auto;
+    bottom: -6px;
+    transform: rotate(135deg);
   }
 
-  .floating-btn--kakao {
-    border-radius: 28px 28px 0 0;
-  }
-
-  .floating-btn--top {
-    border-radius: 0 0 28px 28px;
-  }
-
-  .floating-btn__icon {
-    width: 50px;
-    height: 50px;
+  @keyframes phone-tooltip-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
   }
 }

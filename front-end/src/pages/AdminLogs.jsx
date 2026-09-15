@@ -59,7 +59,14 @@ const AdminLogs = () => {
         <div className="admin-logs">
             <div className="admin-logs__panel">
                 <div className="admin-logs__header">
-                    <h1 className="admin-logs__title">로그인 시도 기록</h1>
+                    <div className="admin-logs__title-area">
+                        {/* 관리자 홈의 '로그인 기록' 카드와 같은 시계 아이콘 */}
+                        <svg className="admin-logs__title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        <h1 className="admin-logs__title">로그인 시도 기록</h1>
+                    </div>
                     <button className="admin-logs__back" onClick={() => navigate("/admin")}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: "block" }}>
                             <path d="M19 12H5M12 5l-7 7 7 7"/>

@@ -1,24 +1,18 @@
-import { Link } from "react-router-dom";
 import "./PolicyPage.css";
-import homeIcon from "../assets/other-page-icon-image/home-icon.svg";
+import PageHero from "../components/PageHero";
 
 const CookiePolicy = () => {
   return (
     <div className="policy">
-      <section className="policy__banner">
-        <div className="policy__breadcrumb">
-          <Link to="/" className="policy__breadcrumb-link">
-            <img src={homeIcon} alt="홈" className="policy__breadcrumb-icon" />
-          </Link>
-          <span className="policy__breadcrumb-separator">&gt;</span>
-          <span className="policy__breadcrumb-current">쿠키 정책</span>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Cookie Policy"
+        title="쿠키 정책"
+        breadcrumb={[{ label: "쿠키 정책" }]}
+        size="sm"
+      />
 
-      <section className="policy__main">
-        <div className="policy__content">
-          <h1 className="policy__title">쿠키 정책</h1>
-
+      <section className="policy__main u-section u-page-tail">
+        <div className="u-container u-container--narrow">
           <div className="policy__body">
             <p className="policy__updated">시행일: 2026년 3월 18일</p>
 

@@ -1,136 +1,133 @@
 .about {
   width: 100%;
-  padding-top: 90px;
-  background-color: #ffffff;
+  background-color: var(--surface);
 }
 
-.about__content {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 50px;
+/* =========================================================================
+   약속 카드 — 히어로 위로 끌어올려 겹친다
+   ========================================================================= */
+
+/*
+ * 카드가 히어로 하단에 걸치는 구성.
+ * 히어로 쪽 아래 여백을 카드가 파고들 만큼 더 확보해 두어야
+ * 히어로의 설명 문구를 카드가 덮지 않는다.
+ */
+.about .page-hero {
+  padding-bottom: calc(var(--sp-11) + var(--sp-10));
 }
 
-/* 배너 섹션 */
-.about__banner {
+.about__promise {
   position: relative;
-  width: 100%;
-  height: 280px;
-  overflow: hidden;
+  z-index: 2;
+  margin-top: calc(var(--sp-11) * -1);
 }
 
-.about__banner-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.2;
-}
-
-.about__banner-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-}
-
-.about__banner-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  width: 100%;
-  padding: 0 20px;
-}
-
-.about__banner-title {
-  font-size: 32px;
-  font-weight: 600;
-  color: #1f1f1f;
-  margin: 0 0 16px 0;
-}
-
-.about__banner-subtitle {
-  font-size: 40px;
-  font-weight: 600;
-  color: #1f1f1f;
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* 브레드크럼 */
-.about__breadcrumb {
-  position: absolute;
-  top: 16px;
-  left: 120px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 10;
-}
-
-.about__breadcrumb-link {
-  text-decoration: none;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-
-.about__breadcrumb-icon {
-  width: 12px;
-  height: 12px;
-}
-
-.about__breadcrumb-separator {
-  color: #767676;
-  font-size: 12px;
-}
-
-.about__breadcrumb-current {
-  color: #51c488;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-/* To our customers 섹션 */
-.about__customers {
-  padding: 80px 0;
-}
-
-.about__customers-title {
-  font-size: 28px;
-  font-weight: 600;
-  color: #51c488;
-  margin: 0 0 48px 0;
-}
-
-.about__customers-grid {
+.about__promise-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 100px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
 }
 
-.about__customers-col p {
-  font-size: 20px;
-  font-weight: 400;
-  color: #444;
-  line-height: 1.8;
-  margin: 0 0 20px 0;
-  text-align: left;
+.about__promise-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-7);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
 }
 
-.about__customers-col p:last-child {
-  margin-bottom: 0;
+.about__promise-card:hover {
+  border-color: var(--brand-300);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.about__promise-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: var(--sp-5);
+  border-radius: var(--r-md);
+  background-color: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.about__promise-title {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.about__promise-desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text-muted);
+}
+
+/* =========================================================================
+   대표 인사말
+   ========================================================================= */
+
+.about__greeting-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 1.5fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+.about__greeting-aside {
+  position: sticky;
+  top: calc(var(--header-h) + var(--sp-9));
+}
+
+.about__greeting-title {
+  margin: var(--sp-4) 0 var(--sp-5);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: var(--tracking-heading);
+  color: var(--text-strong);
+}
+
+/* 왼쪽 브랜드 룰이 있는 리드 문단 — 인용구처럼 읽힌다 */
+.about__greeting-lead {
+  margin: 0;
+  padding-left: var(--sp-5);
+  border-left: 3px solid var(--brand-500);
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: var(--text-muted);
+}
+
+.about__greeting-body p {
+  margin: 0 0 var(--sp-6);
+  font-size: var(--fs-lead);
+  line-height: 1.9;
+  color: var(--text-muted);
+}
+
+/* 첫 문단만 조금 더 진하게 — 자연스러운 진입점이 생긴다 */
+.about__greeting-body p:first-child {
+  color: var(--text-strong);
+  font-weight: 500;
 }
 
 .about__signature {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  margin-top: 40px;
-  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-4);
+  margin-top: var(--sp-9);
+  padding-top: var(--sp-7);
+  border-top: 1px solid var(--border);
 }
 
 .about__signature-logo {
@@ -138,246 +135,291 @@
   width: auto;
 }
 
-.about__signature-company {
-  font-size: 20px;
-  font-weight: 700;
-  color: #51c488;
-}
-
 .about__signature-name {
-  font-size: 20px;
-  color: #111111;
-}
-
-/* 찾아오시는길 섹션 */
-.about__location {
-  padding: 60px 0 210px;
-  background-color: #ffffff;
-}
-
-.about__location-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-}
-
-.about__location-title {
-  font-size: 32px;
+  font-size: var(--fs-lead);
   font-weight: 600;
-  color: #1f1f1f;
-  margin: 0 0 8px 0;
+  color: var(--text-strong);
 }
 
-.about__location-address {
-  font-size: 18px;
-  font-weight: 400;
-  color: #666;
+/* =========================================================================
+   일하는 방식 — 다크 섹션
+   ========================================================================= */
+
+.about__values {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ink-900);
+}
+
+/* 히어로와 같은 격자 텍스처로 상·하단의 통일감을 만든다 */
+.about__values::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(
+    100% 90% at 100% 0%,
+    #000 5%,
+    transparent 65%
+  );
+  mask-image: radial-gradient(100% 90% at 100% 0%, #000 5%, transparent 65%);
+  pointer-events: none;
+}
+
+.about__values > * {
+  position: relative;
+}
+
+.about__values-head {
+  max-width: 56ch;
+}
+
+.about__values-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-4);
+}
+
+.about__value {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-8) var(--sp-7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-lg);
+  background-color: rgba(255, 255, 255, 0.03);
+  transition: border-color var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out);
+}
+
+.about__value:hover {
+  border-color: rgba(120, 255, 181, 0.4);
+  background-color: rgba(81, 196, 136, 0.07);
+}
+
+.about__value-no {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--brand-500);
+  opacity: 0.55;
+}
+
+.about__value-title {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  color: #fff;
+}
+
+.about__value-desc {
   margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* =========================================================================
+   찾아오시는 길
+   ========================================================================= */
+
+.about__location {
+  scroll-margin-top: calc(var(--header-h) + var(--sp-6));
+}
+
+.about__location-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  gap: var(--sp-6);
+  align-items: stretch;
+}
+
+.about__location-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-8);
+  background-color: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+.about__location-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-7);
+}
+
+.about__location-row dt {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-subtle);
+}
+
+.about__location-row dt svg {
+  color: var(--brand-600);
+  flex-shrink: 0;
+}
+
+.about__location-row dd {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  color: var(--text-strong);
+}
+
+.about__location-note {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  color: var(--text-subtle);
+}
+
+.about__location-tel {
+  font-size: var(--fs-h4);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--brand-700);
 }
 
 .about__location-link {
-  color: #111111;
-  font-size: 20px;
-  font-weight: 500;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.2s;
-}
-
-.about__location-link:hover {
-  color: #51c488;
-  text-decoration: underline;
+  margin-top: auto;
 }
 
 .about__map {
-  width: 100%;
-  height: 600px;
-  border-radius: 8px;
+  min-height: 460px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface-muted);
 }
 
-/* 반응형 */
-@media (max-width: 1200px) {
-  .about__customers-grid {
-    gap: 60px;
+/* =========================================================================
+   반응형
+   ========================================================================= */
+
+@media (max-width: 1100px) {
+  .about__promise-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .about__customers-col p {
-    font-size: 18px;
+  .about__values-list {
+    grid-template-columns: 1fr;
+  }
+
+  .about__value {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--sp-6);
+    padding: var(--sp-6);
+  }
+
+  .about__value-no {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    padding-top: 2px;
   }
 }
 
 @media (max-width: 1024px) {
-  .about {
-    padding-top: 70px;
+  .about__greeting-layout {
+    grid-template-columns: 1fr;
+    gap: var(--sp-9);
   }
 
-  .about__content {
-    padding: 0 60px;
+  .about__greeting-aside {
+    position: static;
   }
 
-  .about__banner {
-    height: 240px;
+  .about__greeting-body p {
+    font-size: var(--fs-body);
+    line-height: 1.85;
   }
 
-  .about__breadcrumb {
-    left: 24px;
-  }
-
-  .about__banner-title {
-    font-size: 28px;
-  }
-
-  .about__banner-subtitle {
-    font-size: 32px;
-  }
-
-  .about__customers-grid {
-    gap: 40px;
-  }
-
-  .about__customers-col p {
-    font-size: 17px;
-  }
-
-  .about__location-address {
-    font-size: 16px;
+  .about__location-layout {
+    grid-template-columns: 1fr;
   }
 
   .about__map {
-    height: 500px;
+    min-height: 380px;
+    order: -1;
   }
 }
 
 @media (max-width: 768px) {
-  .about {
-    padding-top: 60px;
+  .about .page-hero {
+    padding-bottom: calc(var(--sp-9) + var(--sp-8));
   }
 
-  .about__content {
-    padding: 0 60px;
+  .about__promise {
+    margin-top: calc(var(--sp-8) * -1);
   }
 
-  .about__banner {
-    height: 200px;
+  .about__promise-card {
+    padding: var(--sp-6);
   }
 
-  .about__breadcrumb {
-    left: 20px;
+  .about__promise-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: var(--sp-4);
   }
 
-  .about__banner-title {
-    font-size: 22px;
+  .about__signature {
+    justify-content: flex-start;
+    margin-top: var(--sp-7);
+    padding-top: var(--sp-6);
   }
 
-  .about__banner-subtitle {
-    font-size: 22px;
-  }
-
-  .about__customers {
-    padding: 60px 0;
-  }
-
-  .about__customers-title {
-    font-size: 24px;
-    margin-bottom: 32px;
-  }
-
-  .about__customers-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .about__customers-col:first-child p:last-child {
-    margin-bottom: 20px;
-  }
-
-  .about__customers-col p {
-    font-size: 16px;
-  }
-
-  .about__signature-name {
-    font-size: 18px;
-  }
-
-  .about__location-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .about__location-title {
-    font-size: 26px;
-  }
-
-  .about__location-address {
-    font-size: 15px;
-  }
-
-  .about__location-link {
-    font-size: 16px;
+  .about__location-card {
+    padding: var(--sp-6);
   }
 
   .about__map {
-    height: 400px;
-  }
-
-  .about__location {
-    padding: 40px 0 60px;
+    min-height: 300px;
   }
 }
 
-@media (max-width: 480px) {
-  .about__banner {
-    height: 160px;
+@media (max-width: 560px) {
+  .about__promise-grid {
+    grid-template-columns: 1fr;
   }
 
-  .about__banner-title {
-    font-size: 18px;
-    margin-bottom: 10px;
+  /* 아이콘을 제목 왼쪽으로 붙여 세로 길이를 줄인다 */
+  .about__promise-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0 var(--sp-4);
   }
 
-  .about__banner-subtitle {
-    font-size: 16px;
+  .about__promise-icon {
+    width: 38px;
+    height: 38px;
+    margin-bottom: 0;
   }
 
-  .about__customers {
-    padding: 40px 0;
+  .about__promise-desc {
+    grid-column: 1 / -1;
+    margin-top: var(--sp-3);
   }
 
-  .about__customers-title {
-    font-size: 20px;
-    margin-bottom: 24px;
-  }
-
-  .about__customers-col p {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-
-  .about__signature-name {
-    font-size: 16px;
-  }
-
-  .about__location-title {
-    font-size: 22px;
-  }
-
-  .about__location-address {
-    font-size: 13px;
-  }
-
-  .about__location-link {
-    font-size: 14px;
-  }
-
-  .about__map {
-    height: 320px;
-  }
-
-  .about__location {
-    padding: 30px 0 50px;
+  .about__value {
+    flex-direction: column;
+    gap: var(--sp-3);
   }
 }

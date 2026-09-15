@@ -1,278 +1,171 @@
 .review-detail {
   width: 100%;
-  padding-top: 90px;
-  background-color: #ffffff;
+  background-color: var(--surface);
 }
 
-.review-detail__loading,
-.review-detail__not-found {
+/* =========================================================================
+   본문
+   ========================================================================= */
+
+.review-detail__article {
+  padding-bottom: var(--sp-9);
+  border-bottom: 1px solid var(--border);
+}
+
+.review-detail__head {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  font-size: 16px;
-  color: #999;
-}
-
-/* 배너 섹션 */
-.review-detail__banner {
-  position: relative;
-  width: 100%;
-  height: 80px;
-  background-color: #ffffff;
-}
-
-/* 브레드크럼 */
-.review-detail__breadcrumb {
-  position: absolute;
-  top: 16px;
-  left: 120px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 10;
-}
-
-.review-detail__breadcrumb-link {
-  text-decoration: none;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-
-.review-detail__breadcrumb-icon {
-  width: 12px;
-  height: 12px;
-}
-
-.review-detail__breadcrumb-separator {
-  color: #767676;
-  font-size: 12px;
-}
-
-.review-detail__breadcrumb-text {
-  color: #767676;
-  font-size: 14px;
-}
-
-.review-detail__breadcrumb-current {
-  color: #51c488;
-  font-size: 14px;
-  font-weight: 500;
-  max-width: 300px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* 메인 섹션 */
-.review-detail__main {
-  padding: 0 0 120px;
-}
-
-.review-detail__content {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 0 40px;
-}
-
-/* 메타 영역 */
-.review-detail__meta {
-  padding-bottom: 20px;
-  border-bottom: 1px solid #dddddd;
-  margin-bottom: 32px;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-7);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--border);
 }
 
 .review-detail__date {
-  display: block;
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 12px;
-}
-
-.review-detail__title-row {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.review-detail__title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1f1f1f;
+  align-items: center;
+  gap: var(--sp-2);
   margin: 0;
-  line-height: 1.4;
-  flex: 1;
-  min-width: 0;
-  word-break: break-word;
+  font-size: var(--fs-sm);
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
 }
 
-/* 관리자 버튼 */
+.review-detail__date svg {
+  color: var(--n-400);
+}
+
 .review-detail__admin-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--sp-2);
   flex-shrink: 0;
-  padding-top: 4px;
 }
 
-.review-detail__admin-btn {
-  padding: 7px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid;
-}
+/* -------------------------------------------------------------------------
+   에디터 산출물 스타일링
+   -------------------------------------------------------------------------
+   Quill 이 만든 HTML 은 클래스가 거의 없으므로 요소 선택자로 다듬는다.
+   ------------------------------------------------------------------------- */
 
-.review-detail__admin-btn--edit {
-  color: #51c488;
-  border-color: #51c488;
-  background-color: #ffffff;
-}
-
-.review-detail__admin-btn--edit:hover {
-  background-color: #51c488;
-  color: #ffffff;
-}
-
-.review-detail__admin-btn--delete {
-  color: #e74c3c;
-  border-color: #e74c3c;
-  background-color: #ffffff;
-}
-
-.review-detail__admin-btn--delete:hover {
-  background-color: #e74c3c;
-  color: #ffffff;
-}
-
-/* 본문 */
 .review-detail__body {
-  font-size: 16px;
-  line-height: 1.8;
-  color: #333;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  font-size: var(--fs-body);
+  line-height: 1.85;
+  color: var(--text);
 }
 
-.review-detail__body img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin: 16px 0;
+.review-detail__body > * + * {
+  margin-top: var(--sp-4);
 }
 
 .review-detail__body p {
-  margin: 0 0 8px 0;
+  margin: 0;
+  min-height: 1em;
 }
 
-.review-detail__body p:last-child {
-  margin-bottom: 0;
+.review-detail__body h1,
+.review-detail__body h2,
+.review-detail__body h3 {
+  margin-top: var(--sp-9);
+  margin-bottom: var(--sp-3);
+  color: var(--text-strong);
+}
+
+.review-detail__body h1:first-child,
+.review-detail__body h2:first-child,
+.review-detail__body h3:first-child {
+  margin-top: 0;
+}
+
+.review-detail__body img {
+  width: 100%;
+  height: auto;
+  margin-block: var(--sp-6);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+
+.review-detail__body a {
+  color: var(--brand-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .review-detail__body ul,
 .review-detail__body ol {
-  margin: 0 0 8px 0;
-  padding-left: 24px;
+  padding-left: var(--sp-6);
+  list-style: disc;
 }
 
-.review-detail__body strong {
-  font-weight: 700;
+.review-detail__body ol {
+  list-style: decimal;
 }
 
-.review-detail__body em {
-  font-style: italic;
+.review-detail__body li::marker {
+  color: var(--brand-500);
 }
 
-/* 푸터 */
+.review-detail__body blockquote {
+  padding: var(--sp-3) var(--sp-5);
+  border-left: 3px solid var(--brand-500);
+  background-color: var(--surface-sunken);
+  color: var(--text-muted);
+}
+
+/* Quill 정렬 클래스 보존 */
+.review-detail__body .ql-align-center {
+  text-align: center;
+}
+.review-detail__body .ql-align-right {
+  text-align: right;
+}
+.review-detail__body .ql-align-justify {
+  text-align: justify;
+}
+
+/* =========================================================================
+   하단
+   ========================================================================= */
+
 .review-detail__footer {
   display: flex;
-  justify-content: center;
-  margin-top: 48px;
-  padding-top: 40px;
-  border-top: 1px solid #dddddd;
-}
-
-.review-detail__list-btn {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 12px 40px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #1f1f1f;
-  background-color: #ffffff;
-  border: 1px solid #1f1f1f;
-  border-radius: 4px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-top: var(--sp-8);
 }
 
-.review-detail__list-btn:hover {
-  background-color: #1f1f1f;
-  color: #ffffff;
+/* =========================================================================
+   스켈레톤
+   ========================================================================= */
+
+.review-detail__skeleton {
+  display: block;
+  height: 420px;
+  border-radius: var(--r-lg);
 }
 
-/* 반응형 */
-@media (max-width: 1024px) {
-  .review-detail {
-    padding-top: 70px;
-  }
-
-  .review-detail__breadcrumb {
-    left: 24px;
-  }
-}
+/* =========================================================================
+   반응형
+   ========================================================================= */
 
 @media (max-width: 768px) {
-  .review-detail {
-    padding-top: 60px;
-  }
-
-  .review-detail__breadcrumb {
-    left: 20px;
-  }
-
-  .review-detail__content {
-    padding: 0 20px;
-  }
-
-  .review-detail__main {
-    padding: 0 0 80px;
-  }
-
-  .review-detail__title {
-    font-size: 22px;
-  }
-
-  .review-detail__body {
-    font-size: 15px;
+  .review-detail__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
   }
 
   .review-detail__admin-actions {
-    gap: 6px;
+    width: 100%;
   }
 
-  .review-detail__admin-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .review-detail__title {
-    font-size: 20px;
+  .review-detail__admin-actions .btn {
+    flex: 1;
   }
 
-  .review-detail__body {
-    font-size: 14px;
-  }
-
-  .review-detail__breadcrumb-current {
-    max-width: 140px;
+  .review-detail__footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 }
