@@ -2,11 +2,15 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" href="/favicon/przo-favicon.png" />
-    <link rel="icon" sizes="48x48" href="/favicon/przo-favicon.png">
+    <!--
+      파비콘은 소비자별로 모양이 다르다. 검색엔진(구글·네이버·빙)은 원형 컨테이너에 넣으므로
+      ICO·PNG는 원형, 브라우저 탭용 SVG는 둥근 사각형, iOS 홈 화면은 OS가 직접 둥글리므로 꽉 찬 정사각형.
+      ICO의 sizes를 48x48로 두는 것이 핵심 — 16/32나 any로 두면 크롬이 SVG 대신 ICO를 탭에 쓴다(실측).
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon/przo-favicon-192.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon/przo-favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/przo-favicon-180.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>프르조 | 인천 및 경기지역 방역·해충 방제 전문 업체</title>
     <meta name="application-name" content="프르조" />
